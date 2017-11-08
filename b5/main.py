@@ -78,7 +78,7 @@ def main():
     print('')  # empty line
 
     script = construct_script_source(project_path, run_path, config, taskfiles, args.command, args.args)
-    print(script)
+    # print(script)
     result = subprocess.run(
         args.shell,
         input=script.encode('utf-8'),

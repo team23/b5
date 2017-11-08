@@ -10,7 +10,7 @@ Then you will be able to call the new python `b5` command.
 
 ## Notes
 
-The current functionality does not allow older files to be run. Create a file like this in build/Taskfile:
+The current functionality does not allow older Taskfile's to be run (for now). Create a file like this in build/Taskfile:
 
 ```bash
 task:test() {
@@ -23,7 +23,7 @@ task:test() {
 }
 ```
 
-In addition add a config.yml with this contents:
+In addition add a build/config.yml with this contents:
 
 ```yaml
 modules:

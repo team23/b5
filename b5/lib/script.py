@@ -17,7 +17,8 @@ def construct_script_source(project_path, run_path, config, taskfiles, command, 
     script += 'TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t[1]) for t in taskfiles])
 
     script += 'BUILD_PATH=%s\n' % shlex.quote(run_path)  # backwards compatibility
-    script += 'TASKFILE_PATH=%s\n' % shlex.quote(taskfiles[0][1])  # backwards compatibility
+    if taskfiles:
+        script += 'TASKFILE_PATH=%s\n' % shlex.quote(taskfiles[0][1])  # backwards compatibility
 
     if 'modules' in config:
         for module_key in config['modules']:

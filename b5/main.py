@@ -11,7 +11,10 @@ from . import VERSION
 
 def main():
     # Parse all arguments
-    parser = argparse.ArgumentParser(prog='b5', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(
+        prog='b5',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
     parser.add_argument(
         '-p', '--project-path', nargs='?',
         help='Project path if not part of parent paths, normally b5 tries to get the project path by itself',

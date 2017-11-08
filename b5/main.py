@@ -25,6 +25,7 @@ def main():
         help='Path inside the project b5 will execute in (cd into)',
         dest='run_path', default='build',
     )
+    # TODO: Add config params
     parser.add_argument(
         '-d', '--detect', nargs='?',
         help='Project detection',

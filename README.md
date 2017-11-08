@@ -19,9 +19,18 @@ task:test() {
     do
         echo $i
     done
+    test:test "$@"
 }
 ```
 
+In addition add a config.yml with this contents:
+
+```yaml
+modules:
+  test:
+```
+
 Then call `b5 test` or `b5 test foo "bar bla"`
+
 
 

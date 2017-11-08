@@ -2,22 +2,7 @@ from ..modules import MODULES
 from .importutils import import_string
 
 
-class BaseModule(object):
-    def __init__(self, name, config, global_config, **kwargs):
-        self.name = name
-        self.config = config
-        self.global_config = global_config
-        self.kwargs = kwargs
-        self.validate_config()
-
-    def validate_config(self):
-        pass
-
-    def get_script(self):
-        raise NotImplementedError('Subsclass must provide this')
-
-
-def module_load(module_key, module_config, config):
+def module_load(project_path, run_path, module_key, module_config, config):
     module_class_key = module_key
     if isinstance(module_config, dict) and 'class' in module_config:
         module_class_key = module_config['class']
@@ -32,6 +17,8 @@ def module_load(module_key, module_config, config):
     module = module_class(
         name=module_key,
         config=module_config,
+        project_path=project_path,
+        run_path=run_path,
         global_config=config,
     )
     return module

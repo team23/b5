@@ -22,7 +22,7 @@ def construct_script_source(project_path, run_path, config, taskfiles, command, 
     if 'modules' in config:
         for module_key in config['modules']:
             module_config = config['modules'][module_key]
-            module = module_load(module_key, module_config, config)
+            module = module_load(project_path, run_path, module_key, module_config, config)
             script += module.get_script()
 
     script += 'cd %s\n' % shlex.quote(run_path)

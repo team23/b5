@@ -13,9 +13,9 @@ def main():
     # Parse all arguments
     parser = argparse.ArgumentParser(prog='b5', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        '-p', '--project', nargs='?',
-        help='Project path if not part of parent paths, normally b5 tried to get the project path by itself',
-        dest='project',
+        '-p', '--project-path', nargs='?',
+        help='Project path if not part of parent paths, normally b5 tries to get the project path by itself',
+        dest='project_path',
     )
     parser.add_argument(
         '-r', '--run-path', nargs='?',
@@ -53,7 +53,7 @@ def main():
         args.ignore_missing = True
 
     # State vars
-    project_path = args.project
+    project_path = args.project_path
     run_path = None
     taskfiles = []
     config = {}
@@ -63,6 +63,8 @@ def main():
         project_path = detect_project_path(os.getcwd(), args.detect)
     if project_path is not None:
         run_path = os.path.join(project_path, args.run_path)
+        if not os.path.exists(run_path) or not os.path.isdir(run_path):
+            raise RuntimeError('Run path does not exist')
         taskfiles = find_taskfiles(project_path, args.taskfiles, args.ignore_missing)
         config = load_config(run_path)
 
@@ -76,7 +78,7 @@ def main():
     print('')  # empty line
 
     script = construct_script_source(project_path, run_path, config, taskfiles, args.command, args.args)
-    #print(script)
+    print(script)
     result = subprocess.run(
         args.shell,
         input=script.encode('utf-8'),

@@ -1,10 +1,12 @@
-from ..lib.module import BaseModule
+from . import BaseModule
 
 
 class TestModule(BaseModule):
+    def test(self, args):
+        print(args)
+    test.task_executable = True
+
     def get_script(self):
-        return '''
-test:fun() {
-    echo "fun"
-}
-        '''
+        script = super(TestModule, self).get_script()
+        script += self._script_function_call('test')
+        return script

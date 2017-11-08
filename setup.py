@@ -17,6 +17,7 @@ setup(
     entry_points={
         'console_scripts': [
             'b5 = b5.main:main',
+            'b5e = b5.execute:main',
         ]
     },
     zip_safe=False,

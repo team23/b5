@@ -12,6 +12,7 @@ setup(
     packages=find_packages(exclude=['tests.*', 'tests']),
     install_requires=[
         # 'TODO'
+        'pyyaml',
     ],
     entry_points={
         'console_scripts': [

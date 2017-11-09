@@ -83,7 +83,8 @@ def main():
 
     # Construct and execute bash script (and Taskfile)
     script = construct_script_source(project_path, run_path, config, taskfiles, args.command, args.args)
-    os.chdir(run_path)
+    if run_path:
+        os.chdir(run_path)
     # print(script)
     result = subprocess.run(
         args.shell,

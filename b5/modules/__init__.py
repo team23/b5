@@ -1,5 +1,6 @@
 MODULES = {
     'test': 'b5.modules.test.TestModule',
+    'legacy': 'b5.modules.legacy.LegacyModule',
 }
 
 

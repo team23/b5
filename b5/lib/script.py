@@ -47,7 +47,6 @@ def construct_script_source(project_path, run_path, config, taskfiles, command, 
     script = []
     script.append(open(os.path.join(B5_BASH_PATH, 'init.sh'), 'r').read())
     script.append(open(os.path.join(B5_BASH_PATH, 'functions.sh'), 'r').read())
-    script.append(open(os.path.join(B5_BASH_PATH, 'legacy.sh'), 'r').read())
     script.append(open(os.path.join(B5_BASH_PATH, 'default_tasks.sh'), 'r').read())
 
     script.append('PROJECT_PATH=%s\n' % shlex.quote(project_path))

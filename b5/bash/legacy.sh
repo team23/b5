@@ -4,6 +4,8 @@ b5:warn_legacy() {
     b5:warn "DEPRECATION: You used a legacy function, better stop that (${1:-})"
 }
 
+b5:warn_legacy "legacy module"
+
 # b5 install module part
 
 b5:install() {
@@ -118,3 +120,20 @@ b5:module_run_all() {
         fi
     done
 }
+
+# Legacy tasks
+
+if [ ! -z "${PROJECT_PATH}" ]
+then
+    task:install() {
+        b5:module_run_all install
+    }
+
+    task:update() {
+        b5:module_run_all update
+    }
+
+    task:clean() {
+        b5:module_run_all clean
+    }
+fi

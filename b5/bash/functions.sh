@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Core functions
+
 b5:warn() {
     echo -e "${B5_FONT_YELLOW}${1:-}${B5_FONT_RESTORE}"
 }
@@ -73,4 +75,18 @@ b5:help() {
 b5:run() {
     "$@"
     echo -e "\n${B5_FONT_GREEN}Task exited ok${B5_FONT_RESTORE}"
+}
+
+# Config
+
+b5:config_get() {
+    if [ -z "${1:-}" ]
+    then
+        echo "Usage: config_get <variable_name> [default]"
+        exit 1
+    fi
+
+    local config_name="CONFIG_$1"
+    local default="$2"
+    eval "echo \"\${${config_name}:-${default}}\""
 }

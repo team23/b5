@@ -8,6 +8,6 @@ class TestModule(BaseModule):
     test.task_executable = True
 
     def get_script(self):
-        script = super(TestModule, self).get_script()
-        script += self._script_function_call('test')
-        return script
+        script = [super(TestModule, self).get_script()]
+        script.append(self._script_function_call('test'))
+        return '\n'.join(script)

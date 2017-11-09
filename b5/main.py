@@ -25,7 +25,7 @@ def main():
         help='Path inside the project b5 will execute in (cd into)',
         dest='run_path', default='build',
     )
-    # TODO: Add config params
+    # TODO: Add config params (config.yml/local.yml)
     parser.add_argument(
         '-d', '--detect', nargs='?',
         help='Project detection',
@@ -81,7 +81,9 @@ def main():
     print('Executing task %s' % args.command)
     print('')  # empty line
 
+    # Construct and execute bash script (and Taskfile)
     script = construct_script_source(project_path, run_path, config, taskfiles, args.command, args.args)
+    os.chdir(run_path)
     # print(script)
     result = subprocess.run(
         args.shell,

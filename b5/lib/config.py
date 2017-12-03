@@ -2,9 +2,9 @@ import yaml
 import os
 
 
-def load_config(run_path):
-    CONFIG_FILE = os.path.join(run_path, 'config.yml')
-    LOCAL_CONFIG_FILE = os.path.join(run_path, 'local.yml')
+def load_config(state):
+    CONFIG_FILE = os.path.join(state.run_path, 'config.yml')
+    LOCAL_CONFIG_FILE = os.path.join(state.run_path, 'local.yml')
 
     if os.path.exists(CONFIG_FILE):
         fh = open(CONFIG_FILE, 'r')

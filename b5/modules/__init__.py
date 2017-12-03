@@ -5,12 +5,10 @@ MODULES = {
 
 
 class BaseModule(object):
-    def __init__(self, name, config, project_path, run_path, global_config, **kwargs):
+    def __init__(self, name, config, state, **kwargs):
         self.name = name
         self.config = config
-        self.project_path = project_path
-        self.run_path = run_path
-        self.global_config = global_config
+        self.state = state
         self.kwargs = kwargs
         self.validate_config()
 
@@ -20,13 +18,12 @@ class BaseModule(object):
     def _script_function_call(self, method, args=None, kwargs=None):
         return '''
 {module}:{method}() {{
-    b5e --project-path {project_path} --run-path {run_path} --module {module} --method {method} "$@"
+    b5-execute --state-file {state_file} --module {module} --method {method} "$@"
 }}
         '''.format(
             module=self.name,
             method=method,
-            project_path=self.project_path,
-            run_path=self.run_path,
+            state_file=self.state.stored_name,
         )
 
     def get_script(self):

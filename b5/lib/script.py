@@ -1,20 +1,21 @@
 import os
 import shlex
+import tempfile
+import os
 
-from .module import module_load
+from .module import load_module
 
 
-def _modules_script_source(project_path, run_path, config):
+def _modules_script_source(state):
     script = []
-    if 'modules' in config:
-        for module_key in config['modules']:
-            module_config = config['modules'][module_key]
-            module = module_load(project_path, run_path, module_key, module_config, config)
+    if 'modules' in state.config:
+        for module_key in state.config['modules']:
+            module = load_module(state, module_key)
             script.append(module.get_script())
     return '\n'.join(script)
 
 
-def _config_script_source(config):
+def _config_script_source(state):
     CONFIG_SUB = '%s_%s'
     CONFIG_KEYS = '%s_KEYS'
 
@@ -38,39 +39,68 @@ def _config_script_source(config):
 
         return '\n'.join(script)
 
-    return _gen_config(config, 'CONFIG')
+    return _gen_config(state.config, 'CONFIG')
 
 
-def construct_script_source(project_path, run_path, config, taskfiles, command, args):
+def construct_script_source(state):
     from .. import B5_BASH_PATH
 
     script = []
+
+    # Basic script initialisation
     script.append(open(os.path.join(B5_BASH_PATH, 'init.sh'), 'r').read())
     script.append(open(os.path.join(B5_BASH_PATH, 'functions.sh'), 'r').read())
     script.append(open(os.path.join(B5_BASH_PATH, 'default_tasks.sh'), 'r').read())
 
-    script.append('PROJECT_PATH=%s\n' % shlex.quote(project_path))
-    script.append('RUN_PATH=%s\n' % shlex.quote(run_path))
-    script.append('TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t[1]) for t in taskfiles]))
+    # State
+    script.append('PROJECT_PATH=%s\n' % shlex.quote(state.project_path))
+    script.append('RUN_PATH=%s\n' % shlex.quote(state.run_path))
+    script.append('TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t[1]) for t in state.taskfiles]))
+    script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
 
     # BACKWARDS COMPATIBILITY AND LEGACY CODE
-    script.append('BUILD_PATH=%s\n' % shlex.quote(run_path))  # backwards compatibility
-    if taskfiles:
-        script.append('TASKFILE_PATH=%s\n' % shlex.quote(taskfiles[0][1]))  # backwards compatibility
+    script.append('BUILD_PATH=%s\n' % shlex.quote(state.run_path))  # backwards compatibility
+    if state.taskfiles:
+        script.append('TASKFILE_PATH=%s\n' % shlex.quote(state.taskfiles[0][1]))  # backwards compatibility
     script.append('LEGACY_MODULES_PATH=%s\n' % shlex.quote(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'legacy', 'modules')))  # legacy
 
-    script.append(_modules_script_source(project_path, run_path, config))
-    script.append(_config_script_source(config))
+    # Generated sources
+    script.append(_config_script_source(state))
+    script.append(_modules_script_source(state))
 
-    script.append('cd %s\n' % shlex.quote(run_path))
-    for taskfile in taskfiles:
+    # run_path and parse Taskfile's
+    script.append('cd %s\n' % shlex.quote(state.run_path))
+    for taskfile in state.taskfiles:
         script.append('source %s\n' % shlex.quote(taskfile[1]))
 
+    # Run everything
     script.append('b5:function_exists %s && b5:run %s || b5:error "Task not found" \n' % (
-        shlex.quote('task:%s' % command),
+        shlex.quote('task:%s' % state.args.command),
         ' '.join(
-            [shlex.quote('task:%s' % command)] + [shlex.quote(a) for a in args]
+            [shlex.quote('task:%s' % state.args.command)] + [shlex.quote(a) for a in state.args.command_args]
         )
     ))
 
     return '\n'.join(script)
+
+
+class StoredScriptSource(object):
+    def __init__(self, state):
+        self.state = state
+        self.source = construct_script_source(state)
+        self.fh = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
+        self.fh.write(self.source.encode('utf-8'))
+        self.fh.close()
+
+    def close(self):
+        os.unlink(self.fh.name)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    @property
+    def name(self):
+        return self.fh.name

@@ -13,11 +13,11 @@ def detect_project_path(path, detect):
     return path
 
 
-def find_taskfiles(project_path, taskfiles, ignore_missing=False):
-    project_path = os.path.realpath(project_path)
+def find_taskfiles(state, taskfiles, ignore_missing=False):
+    run_path = os.path.realpath(state.run_path)
     found_taskfiles = []
     for taskfile in taskfiles:
-        taskfile_path = os.path.join(project_path, os.path.expanduser(taskfile))
+        taskfile_path = os.path.join(run_path, os.path.expanduser(taskfile))
         if os.path.exists(taskfile_path):
             found_taskfiles.append((taskfile, taskfile_path))
         elif not ignore_missing:

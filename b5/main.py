@@ -1,11 +1,13 @@
 import argparse
 import os
 import subprocess
+import sys
 
 from .lib.config import load_config
 from .lib.project import detect_project_path, find_taskfiles
-from .lib.script import construct_script_source
+from .lib.script import StoredScriptSource
 from .lib.detect import DETECT
+from .lib.state import State
 from . import VERSION
 
 
@@ -50,48 +52,56 @@ def main():
         default='/bin/bash',
     )
     parser.add_argument('command')
-    parser.add_argument('args', nargs=argparse.REMAINDER)
-    args = parser.parse_args()
+    parser.add_argument('command_args', nargs=argparse.REMAINDER)
+    sys_args = sys.argv[1:]
+    if not sys_args:
+        sys_args = ['help']
+    args = parser.parse_args(args=sys_args)
     if args.taskfiles is None:
-        args.taskfiles = ['~/.b5/Taskfile', 'build/Taskfile', 'build/Taskfile.local']
+        args.taskfiles = ['~/.b5/Taskfile', 'Taskfile', 'Taskfile.local']
         args.ignore_missing = True
 
     # State vars
-    project_path = args.project_path
-    run_path = None
-    taskfiles = []
-    config = {}
+    state = State(
+        project_path = args.project_path,
+        run_path = None,
+        taskfiles = [],
+        config = {},
+        args = args
+    )
 
     # Find project dir
-    if project_path is None:
-        project_path = detect_project_path(os.getcwd(), args.detect)
-    if project_path is not None:
-        run_path = os.path.join(project_path, args.run_path)
-        if not os.path.exists(run_path) or not os.path.isdir(run_path):
+    if state.project_path is None:
+        state.project_path = detect_project_path(os.getcwd(), args.detect)
+    if state.project_path is not None:
+        state.run_path = os.path.join(state.project_path, args.run_path)
+        if not os.path.exists(state.run_path) or not os.path.isdir(state.run_path):
             raise RuntimeError('Run path does not exist')
-        taskfiles = find_taskfiles(project_path, args.taskfiles, args.ignore_missing)
-        config = load_config(run_path)
+        state.taskfiles = find_taskfiles(state, args.taskfiles, args.ignore_missing)
+        state.config = load_config(state)
 
     # Run header
     print('b5 %s' % VERSION)
-    if project_path is not None:
-        print('Found project path (%s)' % project_path)
-        if taskfiles:
-            print('Found Taskfile (%s)' % ', '.join([t[0] for t in taskfiles]))
+    if state.project_path is not None:
+        print('Found project path (%s)' % state.project_path)
+        if state.taskfiles:
+            print('Found Taskfile (%s)' % ', '.join([t[0] for t in state.taskfiles]))
     print('Executing task %s' % args.command)
     print('')  # empty line
 
-    # Construct and execute bash script (and Taskfile)
-    script = construct_script_source(project_path, run_path, config, taskfiles, args.command, args.args)
-    if run_path:
-        os.chdir(run_path)
-    # print(script)
-    result = subprocess.run(
-        args.shell,
-        input=script.encode('utf-8'),
-        #stdout=subprocess.PIPE,
-        #stderr=subprocess.PIPE,
-        shell=False,
-        check=True,
-    )
-    #print(result)
+    with state.stored() as _stored_state:
+        # Construct and execute bash script (and Taskfile)
+        with StoredScriptSource(state) as source:
+            # print(source.source)
+            # return
+            if state.run_path:
+                os.chdir(state.run_path)
+            result = subprocess.run(
+                [
+                    args.shell,
+                    source.name,
+                ],
+                shell=False,
+                check=True,
+            )
+            #print(result)

@@ -27,7 +27,9 @@ b5:install() {
 # Module handling
 
 declare -a LEGACY_MODULES_LOADED
-LEGACY_MODULES_LOADED=("b5" "Taskfile" "Taskfile.local")
+LEGACY_MODULES_LOADED+=("b5")
+LEGACY_MODULES_LOADED+=("Taskfile")
+LEGACY_MODULES_LOADED+=("Taskfile.local")
 
 b5:module_exists() {
     b5:warn_legacy "b5:module_exists"

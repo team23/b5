@@ -2,23 +2,29 @@ from ..modules import MODULES
 from .importutils import import_string
 
 
-def module_load(project_path, run_path, module_key, module_config, config):
+def load_module(state, module_key):
+    if not 'modules' in state.config or not module_key in state.config['modules']:
+        raise RuntimeError('Module %s is not defined in config' % module_key)
+    module_config = state.config['modules'][module_key]
+
     module_class_key = module_key
     if isinstance(module_config, dict) and 'class' in module_config:
         module_class_key = module_config['class']
-    if not module_class_key in MODULES:
-        raise RuntimeError('Module not found (%s)' % module_key)
+
+    module_import_path = module_class_key
+    if module_class_key in MODULES:
+        module_import_path = MODULES[module_class_key]
+    if not '.' in module_import_path:
+        raise RuntimeError('Module seems not to be valid (%s/%s)' % (module_key, module_import_path))
 
     try:
-        module_class = import_string(MODULES[module_class_key])
+        module_class = import_string(module_import_path)
     except ImportError:
         raise RuntimeError('Module could not be imported (%s)' % module_key)
 
     module = module_class(
         name=module_key,
         config=module_config,
-        project_path=project_path,
-        run_path=run_path,
-        global_config=config,
+        state=state,
     )
     return module

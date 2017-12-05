@@ -41,4 +41,4 @@ def main():
         raise RuntimeError('Method not executable')
 
     os.chdir(state.run_path)
-    method(args.args)
+    method(state, args.args)

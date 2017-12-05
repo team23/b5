@@ -4,7 +4,9 @@ import subprocess
 import sys
 
 from .lib.config import load_config
-from .lib.project import detect_project_path, find_taskfiles
+from .lib.project import detect_project_path
+from .lib.taskfile import find_taskfiles
+from .lib.config import find_configs
 from .lib.script import StoredScriptSource
 from .lib.detect import DETECT
 from .lib.state import State
@@ -27,7 +29,6 @@ def main():
         help='Path inside the project b5 will execute in (cd into)',
         dest='run_path', default='build',
     )
-    # TODO: Add config params (config.yml/local.yml)
     parser.add_argument(
         '-d', '--detect', nargs='?',
         help='Project detection',
@@ -35,15 +36,14 @@ def main():
         dest='detect',
     )
     parser.add_argument(
-        '-t', '--taskfile', nargs='?', action='append',
-        help='Path to Taskfile inside project',
-        dest='taskfiles',
+        '-c', '--config', nargs='?', action='append',
+        help='Path to config (inside run path)',
+        dest='configfiles',
     )
     parser.add_argument(
-        '-m', '--ignore-missing', nargs='?',
-        help='Ignore missing Taskfile, probably only necessary if you use multiple -t/--taskfile',
-        dest='ignore_missing',
-        default=False,
+        '-t', '--taskfile', nargs='?', action='append',
+        help='Path to Taskfile (inside run path)',
+        dest='taskfiles',
     )
     parser.add_argument(
         '-s', '--shell', nargs='?',
@@ -59,7 +59,8 @@ def main():
     args = parser.parse_args(args=sys_args)
     if args.taskfiles is None:
         args.taskfiles = ['~/.b5/Taskfile', 'Taskfile', 'Taskfile.local']
-        args.ignore_missing = True
+    if args.configfiles is None:
+        args.configfiles = ['~/.b5/config.yml', 'config.yml', 'local.yml']
 
     # State vars
     state = State(
@@ -77,7 +78,8 @@ def main():
         state.run_path = os.path.join(state.project_path, args.run_path)
         if not os.path.exists(state.run_path) or not os.path.isdir(state.run_path):
             raise RuntimeError('Run path does not exist')
-        state.taskfiles = find_taskfiles(state, args.taskfiles, args.ignore_missing)
+        state.taskfiles = find_taskfiles(state, args.taskfiles)
+        state.configfiles = find_configs(state, args.configfiles)
         state.config = load_config(state)
 
     # Run header
@@ -85,7 +87,7 @@ def main():
     if state.project_path is not None:
         print('Found project path (%s)' % state.project_path)
         if state.taskfiles:
-            print('Found Taskfile (%s)' % ', '.join([t[0] for t in state.taskfiles]))
+            print('Found Taskfile (%s)' % ', '.join([t['taskfile'] for t in state.taskfiles]))
     print('Executing task %s' % args.command)
     print('')  # empty line
 

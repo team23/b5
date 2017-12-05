@@ -1,4 +1,4 @@
-import json
+import yaml
 import tempfile
 import os
 
@@ -11,10 +11,10 @@ class StoredState(object):
 
         self.fh = tempfile.NamedTemporaryFile(suffix='b5-state', mode='w', encoding='utf-8', delete=False)
         self.state.stored_name = self.name
-        json.dump({
+        yaml.dump({
             key: getattr(self.state, key)
             for key in state.KEYS
-        }, self.fh)
+        }, self.fh, default_flow_style=False)
         self.fh.close()
 
     def close(self):
@@ -33,7 +33,7 @@ class StoredState(object):
 
 
 class State(object):
-    KEYS = ('project_path', 'run_path', 'taskfiles', 'config', 'args', 'stored_name')
+    KEYS = ('project_path', 'run_path', 'taskfiles', 'configfiles', 'config', 'args', 'stored_name')
 
     def __init__(self, **kwargs):
         for key in self.KEYS:
@@ -49,4 +49,4 @@ class State(object):
 
     @classmethod
     def load(cls, fh):
-        return cls(**json.load(fh))
+        return cls(**yaml.load(fh))

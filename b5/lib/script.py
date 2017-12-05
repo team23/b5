@@ -55,13 +55,13 @@ def construct_script_source(state):
     # State
     script.append('PROJECT_PATH=%s\n' % shlex.quote(state.project_path))
     script.append('RUN_PATH=%s\n' % shlex.quote(state.run_path))
-    script.append('TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t[1]) for t in state.taskfiles]))
+    script.append('TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t['path']) for t in state.taskfiles]))
     script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
 
     # BACKWARDS COMPATIBILITY AND LEGACY CODE
     script.append('BUILD_PATH=%s\n' % shlex.quote(state.run_path))  # backwards compatibility
     if state.taskfiles:
-        script.append('TASKFILE_PATH=%s\n' % shlex.quote(state.taskfiles[0][1]))  # backwards compatibility
+        script.append('TASKFILE_PATH=%s\n' % shlex.quote(state.taskfiles[0]['path']))  # backwards compatibility
     script.append('LEGACY_MODULES_PATH=%s\n' % shlex.quote(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'legacy', 'modules')))  # legacy
 
     # Generated sources
@@ -71,7 +71,7 @@ def construct_script_source(state):
     # run_path and parse Taskfile's
     script.append('cd %s\n' % shlex.quote(state.run_path))
     for taskfile in state.taskfiles:
-        script.append('source %s\n' % shlex.quote(taskfile[1]))
+        script.append('source %s\n' % shlex.quote(taskfile['path']))
 
     # Run everything
     script.append('b5:function_exists %s && b5:run %s || b5:error "Task not found" \n' % (

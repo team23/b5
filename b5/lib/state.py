@@ -1,4 +1,4 @@
-import pickle
+import json
 import tempfile
 import os
 
@@ -9,13 +9,13 @@ class StoredState(object):
         if not self.state.stored_name is None:
             raise RuntimeError('You may only store the state once')
 
-        self.fh = tempfile.NamedTemporaryFile(suffix='b5-state', delete=False)
-        pickle.dump({
+        self.fh = tempfile.NamedTemporaryFile(suffix='b5-state', mode='w', encoding='utf-8', delete=False)
+        self.state.stored_name = self.name
+        json.dump({
             key: getattr(self.state, key)
             for key in state.KEYS
         }, self.fh)
         self.fh.close()
-        self.state.stored_name = self.name
 
     def close(self):
         os.unlink(self.fh.name)
@@ -49,4 +49,4 @@ class State(object):
 
     @classmethod
     def load(cls, fh):
-        return cls(**pickle.load(fh))
+        return cls(**json.load(fh))

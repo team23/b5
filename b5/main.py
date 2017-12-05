@@ -67,7 +67,7 @@ def main():
         run_path = None,
         taskfiles = [],
         config = {},
-        args = args
+        args = vars(args)
     )
 
     # Find project dir

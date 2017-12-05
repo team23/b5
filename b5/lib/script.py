@@ -75,9 +75,9 @@ def construct_script_source(state):
 
     # Run everything
     script.append('b5:function_exists %s && b5:run %s || b5:error "Task not found" \n' % (
-        shlex.quote('task:%s' % state.args.command),
+        shlex.quote('task:%s' % state.args['command']),
         ' '.join(
-            [shlex.quote('task:%s' % state.args.command)] + [shlex.quote(a) for a in state.args.command_args]
+            [shlex.quote('task:%s' % state.args['command'])] + [shlex.quote(a) for a in state.args['command_args']]
         )
     ))
 

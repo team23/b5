@@ -14,6 +14,7 @@ class VirtualenvModule(BaseModule):
     '''
 
     DEFAULT_CONFIG = {
+        'base_path': '.',
         'python_bin': 'python3',
         'env_path': 'ENV',
         'requirements_file': 'requirements.txt',
@@ -34,6 +35,7 @@ class VirtualenvModule(BaseModule):
             python_bin=shlex.quote(self.config['python_bin']),
             env_path=shlex.quote(os.path.join(
                 self.state.run_path,
+                self.config['base_path'],
                 self.config['env_path'],
             )),
             name=self.name,
@@ -42,19 +44,28 @@ class VirtualenvModule(BaseModule):
         script.append(self._script_function_script('update', '''
             {name}:pip install -U -r {requirements_file}
         '''.format(
-            requirements_file=shlex.quote(self.config['requirements_file']),
+            requirements_file=shlex.quote(os.path.join(
+                self.state.run_path,
+                self.config['base_path'],
+                self.config['requirements_file'],
+            )),
             name=self.name,
         )))
 
         script.append(self._script_function_script('run', '''
             (
-                cd {run_path} && \\
+                cd {base_path} && \\
                 source {activate_path} && \\
                 "$@"
             )
         '''.format(
-            run_path=self.state.run_path,
+            base_path=os.path.join(
+                self.state.run_path,
+                self.config['base_path'],
+            ),
             activate_path=shlex.quote(os.path.join(
+                self.state.run_path,
+                self.config['base_path'],
                 self.config['env_path'],
                 'bin',
                 'activate'

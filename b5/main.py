@@ -4,11 +4,10 @@ import subprocess
 import sys
 
 from .lib.config import load_config
-from .lib.project import detect_project_path
+from .lib.detect import detect_project_path, DETECT
 from .lib.taskfile import find_taskfiles
 from .lib.config import find_configs
 from .lib.script import StoredScriptSource
-from .lib.detect import DETECT
 from .lib.state import State
 from . import VERSION
 

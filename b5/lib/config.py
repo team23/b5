@@ -17,11 +17,11 @@ def find_configs(state, configs):
     return found_configs
 
 
-def _merge_config(cur_config, new_config):
+def merge_config(cur_config, new_config):
     result_config = cur_config.copy()
     for key, value in new_config.items():
         if isinstance(value, dict):
-            result_config[key] = _merge_config(cur_config.get(key, {}), value)
+            result_config[key] = merge_config(cur_config.get(key, {}), value)
         elif isinstance(value, list):
             result_config[key] = value
         elif isinstance(value, (str, bytes, int, float)):
@@ -41,7 +41,7 @@ def load_config(state):
         file_config = yaml.load(fh)
         if file_config is None:
             file_config = {}
-        config = _merge_config(config, file_config)
+        config = merge_config(config, file_config)
 
     return config
 

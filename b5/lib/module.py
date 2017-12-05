@@ -8,7 +8,9 @@ def load_module(state, module_key):
     module_config = state.config['modules'][module_key]
 
     module_class_key = module_key
-    if isinstance(module_config, dict) and 'class' in module_config:
+    if not isinstance(module_config, dict):
+        module_config = {}
+    if 'class' in module_config:
         module_class_key = module_config['class']
 
     module_import_path = module_class_key

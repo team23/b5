@@ -2,10 +2,10 @@ from . import BaseModule
 
 
 class TestModule(BaseModule):
-    def test(self, state, args):
+    def execute_test(self, state, args):
         print('Hello from python called via the Taskfile')
         print(args)
-    test.task_executable = True
+    execute_test.task_executable = True
 
     def get_script(self):
         script = [super(TestModule, self).get_script()]

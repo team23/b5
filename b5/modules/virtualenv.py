@@ -20,11 +20,6 @@ class VirtualenvModule(BaseModule):
         'requirements_file': 'requirements.txt',
     }
 
-    def test(self, state, args):
-        print('Hello from python called via the Taskfile')
-        print(args)
-    test.task_executable = True
-
     def get_script(self):
         script = [super(VirtualenvModule, self).get_script()]
 

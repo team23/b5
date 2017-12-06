@@ -1,5 +1,8 @@
 from ..lib.config import merge_config
+import re
 
+
+CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
 MODULES = {
     'test': 'b5.modules.test.TestModule',
     'legacy': 'b5.modules.legacy.LegacyModule',
@@ -16,9 +19,18 @@ class BaseModule(object):
         self.state = state
         self.kwargs = kwargs
         self.validate_config()
+        self.prepare_config()
 
     def validate_config(self):
         pass
+
+    def prepare_config(self):
+        pass
+
+    def _script_config_vars(self):
+        from ..lib.script import config_script_source
+
+        return config_script_source(self.config, prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper()))
 
     def _script_function_call(self, external_method, method=None):
         return '''
@@ -32,15 +44,15 @@ class BaseModule(object):
             method=method if method else 'execute_%s' % external_method,
         )
 
-    def _script_function_script(self, external_method, script):
+    def _script_function_source(self, external_method, source):
         return '''
 {module}:{external_method}() {{
-    {script}
+    {source}
 }}
         '''.format(
             module=self.name,
             external_method=external_method,
-            script=script,
+            source=source,
         )
 
     def get_script(self):

@@ -1,4 +1,3 @@
-import os
 import shlex
 import tempfile
 import os
@@ -6,7 +5,7 @@ import os
 from .module import load_module
 
 
-def _modules_script_source(state):
+def modules_script_source(state):
     script = []
     if 'modules' in state.config:
         for module_key in state.config['modules']:
@@ -15,7 +14,7 @@ def _modules_script_source(state):
     return '\n'.join(script)
 
 
-def _config_script_source(state):
+def config_script_source(config, prefix='CONFIG'):
     CONFIG_SUB = '%s_%s'
     CONFIG_KEYS = '%s_KEYS'
 
@@ -39,7 +38,7 @@ def _config_script_source(state):
 
         return '\n'.join(script)
 
-    return _gen_config(state.config, 'CONFIG')
+    return _gen_config(config, prefix)
 
 
 def construct_script_source(state):
@@ -66,8 +65,8 @@ def construct_script_source(state):
         script.append('TASKFILE_PATH=%s\n' % shlex.quote(state.taskfiles[0]['path']))  # backwards compatibility
 
     # Generated sources
-    script.append(_config_script_source(state))
-    script.append(_modules_script_source(state))
+    script.append(config_script_source(state.config))
+    script.append(modules_script_source(state))
 
     # run_path and parse Taskfile's
     script.append('cd %s\n' % shlex.quote(state.run_path))

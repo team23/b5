@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(
         prog='b5-execute',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description='b5e is not intended to be called directly!'
+        description='b5-execute is not intended to be called directly!'
     )
     parser.add_argument(
         '--state-file', nargs='?',

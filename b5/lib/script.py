@@ -56,13 +56,14 @@ def construct_script_source(state):
     script.append('PROJECT_PATH=%s\n' % shlex.quote(state.project_path))
     script.append('RUN_PATH=%s\n' % shlex.quote(state.run_path))
     script.append('TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t['path']) for t in state.taskfiles]))
-    script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
+    script.append('CONFIG_PATHS=(%s)\n' % ' '.join([shlex.quote(c['path']) for c in state.configfiles]))
+    if state.stored_name:
+        script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
 
     # BACKWARDS COMPATIBILITY AND LEGACY CODE
     script.append('BUILD_PATH=%s\n' % shlex.quote(state.run_path))  # backwards compatibility
     if state.taskfiles:
         script.append('TASKFILE_PATH=%s\n' % shlex.quote(state.taskfiles[0]['path']))  # backwards compatibility
-    script.append('LEGACY_MODULES_PATH=%s\n' % shlex.quote(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'legacy', 'modules')))  # legacy
 
     # Generated sources
     script.append(_config_script_source(state))

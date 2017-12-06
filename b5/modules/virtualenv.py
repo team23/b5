@@ -8,6 +8,7 @@ class VirtualenvModule(BaseModule):
     '''Virtualenv module
 
     Config:
+        base_path: .
         python_bin: python3
         env_path: ENV
         requirements: requirements.txt
@@ -15,6 +16,7 @@ class VirtualenvModule(BaseModule):
 
     DEFAULT_CONFIG = {
         'base_path': '.',
+        'virtualenv_bin': 'virtualenv',
         'python_bin': 'python3',
         'env_path': 'ENV',
         'requirements_file': 'requirements.txt',
@@ -24,9 +26,10 @@ class VirtualenvModule(BaseModule):
         script = [super(VirtualenvModule, self).get_script()]
 
         script.append(self._script_function_script('install', '''
-            virtualenv --python={python_bin} {env_path} && \\
+            {virtualenv_bin} --python={python_bin} {env_path} && \\
             {name}:update
         '''.format(
+            virtualenv_bin=shlex.quote(self.config['virtualenv_bin']),
             python_bin=shlex.quote(self.config['python_bin']),
             env_path=shlex.quote(os.path.join(
                 self.state.run_path,

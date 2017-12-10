@@ -10,8 +10,14 @@ setup(
     author_email='danier@team23.de',
     url='http://www.team23.de/b5',
     packages=find_packages(exclude=['tests.*', 'tests']),
+    package_data = {
+        'b5': [
+            'bash/*',
+            'legacy/*',
+            'legacy/modules/*',
+        ],
+    },
     install_requires=[
-        # 'TODO'
         'pyyaml',
     ],
     entry_points={

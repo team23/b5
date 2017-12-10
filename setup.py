@@ -18,7 +18,7 @@ setup(
         ],
     },
     install_requires=[
-        'pyyaml',
+        'pyyaml >=3.12',
     ],
     entry_points={
         'console_scripts': [

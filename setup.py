@@ -19,6 +19,7 @@ setup(
     },
     install_requires=[
         'pyyaml >=3.12',
+        'termcolor >=1.1.0',
     ],
     entry_points={
         'console_scripts': [

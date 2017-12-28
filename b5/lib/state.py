@@ -35,6 +35,10 @@ class StoredState(object):
 class State(object):
     KEYS = ('project_path', 'run_path', 'taskfiles', 'configfiles', 'config', 'args', 'stored_name')
 
+    taskfiles = []
+    configfiles = []
+    args = {}
+
     def __init__(self, **kwargs):
         for key in self.KEYS:
             if not hasattr(self, key):

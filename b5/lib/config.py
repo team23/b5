@@ -1,6 +1,8 @@
 import yaml
 import os
 
+from ..exceptions import B5ExecutionError
+
 
 def find_configs(state, configs):
     run_path = os.path.realpath(state.run_path)
@@ -12,8 +14,8 @@ def find_configs(state, configs):
                 'config': config,
                 'path': config_path,
             })
-    if not found_configs:
-        raise RuntimeError('No configs found')
+    #if not found_configs:
+    #    raise B5ExecutionError('No config found, tried %s inside %s' % (', '.join(configs), run_path))
     return found_configs
 
 

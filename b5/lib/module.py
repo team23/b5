@@ -1,4 +1,5 @@
 from ..modules import MODULES
+from ..exceptions import B5ExecutionError
 from .importutils import import_string
 
 
@@ -17,12 +18,12 @@ def load_module(state, module_key):
     if module_class_key in MODULES:
         module_import_path = MODULES[module_class_key]
     if not '.' in module_import_path:
-        raise RuntimeError('Module seems not to be valid (%s/%s)' % (module_key, module_import_path))
+        raise B5ExecutionError('Module seems not to be valid (%s/%s), please check config' % (module_key, module_import_path))
 
     try:
         module_class = import_string(module_import_path)
     except ImportError:
-        raise RuntimeError('Module could not be imported (%s)' % module_key)
+        raise B5ExecutionError('Module could not be imported (%s), please check config' % module_key)
 
     module = module_class(
         name=module_key,

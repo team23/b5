@@ -1,5 +1,7 @@
 import os
 
+from ..exceptions import B5ExecutionError
+
 
 def find_taskfiles(state, taskfiles):
     run_path = os.path.realpath(state.run_path)
@@ -12,6 +14,6 @@ def find_taskfiles(state, taskfiles):
                 'path': taskfile_path,
             })
     if not found_taskfiles:
-        raise RuntimeError('No Taskfiles found')
+        raise B5ExecutionError('No Taskfiles found, tried %s inside %s' % (', '.join(taskfiles), run_path))
     return found_taskfiles
 

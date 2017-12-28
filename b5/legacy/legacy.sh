@@ -4,7 +4,7 @@ b5:warn_legacy() {
     b5:warn "DEPRECATION: You used a legacy function, better stop that (${1:-})"
 }
 
-b5:warn_legacy "legacy module"
+b5:warn_legacy "legacy module itself, see config.yml"
 
 # b5 install module part
 

@@ -101,14 +101,18 @@ def main():
                 # return
                 if state.run_path:
                     os.chdir(state.run_path)
-                result = subprocess.run(
-                    [
-                        args.shell,
-                        source.name,
-                    ],
-                    shell=False,
-                    check=True,
-                )
+                try:
+                    result = subprocess.run(
+                        [
+                            args.shell,
+                            source.name,
+                        ],
+                        shell=False,
+                        check=True,
+                    )
+                except subprocess.CalledProcessError:
+                    termcolor.cprint('Task execution failed, see above', color='red')
+                    sys.exit(1)
                 #print(result)
     except B5ExecutionError as e:
         termcolor.cprint(str(e), 'red')

@@ -50,9 +50,10 @@ config.yml:
 modules:
   virtualenv_build:
     base_path: .
+    requirements_file: PYTHON_REQUIREMENTS
   virtualenv_web:
     base_path: ../web
-    requirements_file: PYTHON_REQUIREMENTS
+    python_bin: python2
 ```
 
 Taskfile:

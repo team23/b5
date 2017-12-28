@@ -1,6 +1,6 @@
 import os
 
-VERSION = '0.9.1'
+VERSION = '0.9.2'
 B5_PATH = os.path.realpath(os.path.dirname(__file__))
 B5_BASH_PATH = os.path.join(B5_PATH, 'bash')
 B5_TEMPLATES_PATH = os.path.join(B5_PATH, 'templates')

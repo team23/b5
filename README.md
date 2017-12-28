@@ -25,15 +25,25 @@ pip install -U -r requirements.txt
 pip install .
 ```
 
-#### Dev installation
+### Dev installation
+
+```bash
+cd work/path/
+git clone git@git.team23.de:build/b5.git
+cd b5
+virtualenv --python=python3 ENV  
+source ENV/bin/activate  
+pip install -U -r requirements.txt
+pip install -e . 
+```
+
+or if you have b5 installed already
 
 ```bash
 cd installation/path/
 git clone git@git.team23.de:build/b5.git
 cd b5
-virtualenv --python=python3 ENV  
-source ENV/bin/activate  
-pip install -e . 
+b5 install  # ;-)
 ```
 
 ### Starting your project

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# b5 Taskfile, see https://git.team23.de/build/b5 for details
+
+task:install() {
+    virtualenv:install
+}
+
+task:update() {
+    virtualenv:update
+    (
+        cd .. &&
+        virtualenv:pip install -e .
+    )
+}
+
+task:b5() {
+    # Runs the dev version of b5 inside the virtualenv
+    # Use Taskfile.local and local.yml for testing
+    virtualenv:run b5 "$@"
+}

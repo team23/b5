@@ -51,6 +51,9 @@ b5 initialized your project with an example Taskfile (see `build/Taskfile`). For
 write bash functions prefixed with `task:`, like:
 
 ```bash
+#!/usr/bin/env bash
+# b5 Taskfile, see https://git.team23.de/build/b5 for details
+
 task:make_it_happen() {
     echo "Yeah, it happened"
 }

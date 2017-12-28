@@ -16,6 +16,9 @@ For defining tasks you will need to add functions following the `task:name`-sche
 ## Example
 
 ```bash
+#!/usr/bin/env bash
+# b5 Taskfile, see https://git.team23.de/build/b5 for details
+
 task:css() {
     sassc input.scss output.css
 }

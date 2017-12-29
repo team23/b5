@@ -7,6 +7,9 @@ MODULES = {
     'test': 'b5.modules.test.TestModule',
     'legacy': 'b5.modules.legacy.LegacyModule',
     'virtualenv': 'b5.modules.virtualenv.VirtualenvModule',
+    'npm': 'b5.modules.npm.NpmModule',
+    'composer': 'b5.modules.composer.ComposerModule',
+    'docker': 'b5.modules.docker.DockerModule',
 }
 
 

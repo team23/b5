@@ -19,7 +19,6 @@ class ComposerModule(BaseModule):
             self.state.run_path,
             self.config['base_path'],
         ))
-
         self.config['vendor_path'] = os.path.realpath(os.path.join(
             self.config['base_path'],
             self.config['vendor_path'],

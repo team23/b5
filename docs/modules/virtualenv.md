@@ -18,6 +18,17 @@ Handling of your virtualenv's.
 * **run:** Can be used to run commands inside the virtualenv, for example if command line tools were installed.
 * **pip:** Will call `pip` inside the virtualenv, similar to using `virtualenv:run pip …`
 
+## Environment provided
+
+```bash
+VIRTUALENV_base_path=/path/to/project/build/
+VIRTUALENV_virtualenv_bin=virtualenv
+VIRTUALENV_python_bin=python3
+VIRTUALENV_env_path=/path/to/project/build/ENV
+VIRTUALENV_requirements_file=/path/to/project/build/requirements.txt
+VIRTUALENV_KEYS=(base_path virtualenv_bin python_bin env_path requirements_file)
+```
+
 ## Example usage
 
 ### Example 1 - default configuration

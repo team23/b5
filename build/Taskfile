@@ -18,3 +18,11 @@ task:b5() {
     # Use Taskfile.local and local.yml for testing
     virtualenv:run b5 "$@"
 }
+
+task:shell() {
+    (
+        source "${VIRTUALENV_env_path}/bin/activate"
+        echo -e "${B5_FONT_GREEN}Starting /bin/zsh in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
+        /bin/zsh
+    )
+}

@@ -58,6 +58,14 @@ development server may be started inside a docker container using docker-compose
 
 Stops the development server.
 
+### shell
+
+Execute a development shell for the project. May differ based on the project.
+
+**Note:** Django projects will not use `b5 shell` to execute the `python manage.py shell` as `b5 shell` will
+most commonly start a docker shell (`docker-composer run --rm web /bin/bash --login`). We use `b5 django_shell`
+instead. This behavior is true for other frameworks providing its own development shell, too.   
+
 ## Deployment
 
 ### deploy
@@ -72,10 +80,7 @@ Like `deploy` but will only setup the project on the server. It will not try to 
 updating the project as these will fail (example: running database migrations without having configured
 the database connection is a bad idea).
 
-## Optional tasks
-
-The following tasks are optional and may be available. We define how the tasks work so these optional tasks
-work the same for all projects, if present.
+## Further tasks
 
 TODO!
 
@@ -88,7 +93,7 @@ TODO!
 
 ## Mandatory tasks
 
-The following tasks should be available in **every** project:
+The following tasks must be available in **every** project:
 
 * install
 * update

@@ -97,8 +97,8 @@ def main():
         with state.stored() as _stored_state:
             # Construct and execute bash script (and Taskfile)
             with StoredScriptSource(state) as source:
-                # print(source.source)
-                # return
+                print(source.source)
+                return
                 if state.run_path:
                     os.chdir(state.run_path)
                 try:

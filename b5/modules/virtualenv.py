@@ -17,15 +17,15 @@ class VirtualenvModule(BaseModule):
     }
 
     def prepare_config(self):
-        self.config['base_path'] = os.path.join(
+        self.config['base_path'] = os.path.realpath(os.path.join(
             self.state.run_path,
             self.config['base_path'],
-        )
-        self.config['env_path'] = shlex.quote(os.path.join(
+        ))
+        self.config['env_path'] = os.path.realpath(os.path.join(
             self.config['base_path'],
             self.config['env_path'],
         ))
-        self.config['requirements_file'] = shlex.quote(os.path.join(
+        self.config['requirements_file'] = os.path.realpath(os.path.join(
             self.config['base_path'],
             self.config['requirements_file'],
         ))

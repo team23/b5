@@ -14,10 +14,10 @@ class NpmModule(BaseModule):
     }
 
     def prepare_config(self):
-        self.config['base_path'] = os.path.join(
+        self.config['base_path'] = os.path.realpath(os.path.join(
             self.state.run_path,
             self.config['base_path'],
-        )
+        ))
 
     def get_script(self):
         script = [super(NpmModule, self).get_script()]

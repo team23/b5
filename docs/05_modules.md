@@ -119,7 +119,14 @@ See source of module for details.
 
 Reenables legacy module loading using `b5:module_load`. Do not use.
 
+### npm
+
+Use npm to install JS dependencies. See [documentation](modules/npm.md).
+
+### composer
+
+Use composer to install PHP dependencies. See [documentation](modules/composer.md).
+
 ### virtualenv
 
 Handling of your virtualenv's. See [documentation](modules/virtualenv.md).
-

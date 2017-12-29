@@ -63,7 +63,7 @@ Stops the development server.
 Execute a development shell for the project. May differ based on the project.
 
 **Note:** Django projects will not use `b5 shell` to execute the `python manage.py shell` as `b5 shell` will
-most commonly start a docker shell (`docker-composer run --rm web /bin/bash --login`). We use `b5 django_shell`
+most commonly start a docker shell (`docker-compose run --rm web /bin/bash --login`). We use `b5 django_shell`
 instead. This behavior is true for other frameworks providing its own development shell, too.   
 
 ## Deployment

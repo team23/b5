@@ -10,7 +10,7 @@ from .lib.config import load_config
 from .lib.detect import detect_project_path, DETECT
 from .lib.taskfile import find_taskfiles
 from .lib.config import find_configs
-from .lib.script import StoredScriptSource
+from .lib.script import StoredScriptSource, construct_script_source, construct_script_run
 from .lib.state import State
 from . import VERSION
 
@@ -96,7 +96,11 @@ def main():
 
         with state.stored() as _stored_state:
             # Construct and execute bash script (and Taskfile)
-            with StoredScriptSource(state) as source:
+            script_source = '\n'.join([
+                construct_script_source(state),
+                construct_script_run(state),
+            ])
+            with StoredScriptSource(state, script_source) as source:
                 # print(source.source)
                 # return
                 if state.run_path:

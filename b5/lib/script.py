@@ -73,21 +73,23 @@ def construct_script_source(state):
     for taskfile in state.taskfiles:
         script.append('source %s\n' % shlex.quote(taskfile['path']))
 
+    return '\n'.join(script)
+
+
+def construct_script_run(state):
     # Run everything
-    script.append('b5:function_exists %s && b5:run %s || b5:error "Task not found" \n' % (
+    return 'b5:function_exists %s && b5:run %s || b5:error "Task not found" \n' % (
         shlex.quote('task:%s' % state.args['command']),
         ' '.join(
             [shlex.quote('task:%s' % state.args['command'])] + [shlex.quote(a) for a in state.args['command_args']]
         )
-    ))
-
-    return '\n'.join(script)
+    )
 
 
 class StoredScriptSource(object):
-    def __init__(self, state):
+    def __init__(self, state, source):
         self.state = state
-        self.source = construct_script_source(state)
+        self.source = source
         self.fh = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
         self.fh.write(self.source.encode('utf-8'))
         self.fh.close()

@@ -31,6 +31,29 @@ class DockerModule(BaseModule):
             else:
                 self.config['project_name'] = os.path.basename(self.state.project_path)
 
+    def get_script_env(self):
+        import os
+
+        params = {
+            'project_name': shlex.quote(self.config['project_name']),
+            'docker_host_system': shlex.quote(os.uname().sysname.lower()),
+            'docker_host_username': shlex.quote(os.getlogin()),
+            'docker_host_unix_uid': '',
+            'docker_host_unix_gid': '',
+        }
+        if params['docker_host_system'] in ('linux', 'darwin'):
+            params.update({
+                'docker_host_unix_uid': shlex.quote(str(os.getuid())),
+                'docker_host_unix_gid': shlex.quote(str(os.getgid())),
+            })
+
+        return '''
+            export COMPOSE_PROJECT_NAME={project_name}
+            export DOCKER_HOST_SYSTEM={docker_host_system}
+            export DOCKER_HOST_USERNAME={docker_host_username}
+            export DOCKER_HOST_UNIX_UID={docker_host_unix_uid}
+            export DOCKER_HOST_UNIX_GID={docker_host_unix_gid}
+        '''.format(**params)
 
     def get_script(self):
         script = [super(DockerModule, self).get_script()]
@@ -51,12 +74,12 @@ class DockerModule(BaseModule):
 
         script.append(self._script_function_source('run', '''
             (
-                export COMPOSE_PROJECT_NAME={project_name}
+                {docker_env}
                 cd {base_path} && \\
                 "$@"
             )
         '''.format(
-            project_name=shlex.quote(self.config['project_name']),
+            docker_env=self.get_script_env(),
             base_path=shlex.quote(self.config['base_path']),
         )))
 
@@ -68,7 +91,13 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('container_run', '''
-            {name}:run run --rm "$@"
+            local options=""
+            if [ "$1" == "-T" ]
+            then
+                options="-T $options"
+                shift
+            fi
+            {name}:docker-compose run $options --rm "$@"
         '''.format(
             name=self.name,
         )))

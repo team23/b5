@@ -10,9 +10,12 @@ class DockerModule(BaseModule):
 
     DEFAULT_CONFIG = {
         'base_path': '.',
+        'docker_bin': 'docker',
         'docker_compose_bin': 'docker-compose',
+        'docker_machine_bin': 'docker-machine',
         'data_path': None,
         'project_name': None,
+        'docker_machine': None,
     }
 
     def prepare_config(self):
@@ -40,11 +43,16 @@ class DockerModule(BaseModule):
             'docker_host_username': shlex.quote(os.getlogin()),
             'docker_host_unix_uid': '',
             'docker_host_unix_gid': '',
+            'docker_machine_env': '',
         }
         if params['docker_host_system'] in ('linux', 'darwin'):
             params.update({
                 'docker_host_unix_uid': shlex.quote(str(os.getuid())),
                 'docker_host_unix_gid': shlex.quote(str(os.getgid())),
+            })
+        if self.config['docker_machine']:
+            params.update({
+                'docker_machine_env': 'eval $(docker-machine env %s)' % shlex.quote(self.config['docker_machine']),
             })
 
         return '''
@@ -53,6 +61,7 @@ class DockerModule(BaseModule):
             export DOCKER_HOST_USERNAME={docker_host_username}
             export DOCKER_HOST_UNIX_UID={docker_host_unix_uid}
             export DOCKER_HOST_UNIX_GID={docker_host_unix_gid}
+            {docker_machine_env}
         '''.format(**params)
 
     def get_script(self):
@@ -83,11 +92,25 @@ class DockerModule(BaseModule):
             base_path=shlex.quote(self.config['base_path']),
         )))
 
+        script.append(self._script_function_source('docker', '''
+            {name}:run {docker_bin} "$@"
+        '''.format(
+            name=self.name,
+            docker_bin=shlex.quote(self.config['docker_bin']),
+        )))
+
         script.append(self._script_function_source('docker-compose', '''
             {name}:run {docker_compose_bin} "$@"
         '''.format(
             name=self.name,
             docker_compose_bin=shlex.quote(self.config['docker_compose_bin']),
+        )))
+
+        script.append(self._script_function_source('docker-machine', '''
+            {name}:run {docker_machine_bin} "$@"
+        '''.format(
+            name=self.name,
+            docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
         )))
 
         script.append(self._script_function_source('container_run', '''

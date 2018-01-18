@@ -31,9 +31,37 @@ example:function() {
 
 This is important when calling module functions and for understanding how to write your own modules.
 
+### Provided environment
+
+All parameters passed to the module will be available in the bash environment using the following schema:
+`{MODULE_NAME}_{variable_key}`
+
+The example above will generate the following environment for `modulewithparams`:
+```bash
+MODULEWITHPARAMS_param1="value1"
+MODULEWITHPARAMS_param2="value2"
+```
+
+Please note, that the provided environment will represent the internal values of the module. This
+means that in most cases some preprocessing/cleanup of values might have happened. For paths
+this for example may mean the paths are converted to absolute paths. This means:
+
+```yaml
+modules:
+  example:
+    some_path: ../web
+```
+
+Will most certainly become:
+
+```bash
+EXAMPLE_some_path="/absolute/path/to/project/web"
+```
+
+
 ### Using modules
 
-Some generic tasks may need to call the used modukles. This is currently used for the following tasks:
+Some generic tasks may need to call the used modules. This is currently used for the following tasks:
 * install
 * update
 * clean
@@ -70,6 +98,15 @@ task:install() {
     virtualenv_build:install
     virtualenv_web:install
 }
+```
+
+The following environment will be provided in this case:
+
+```bash
+VIRTUALENV_BUILD_base_path="/path/to/project/build"
+VIRTUALENV_BUILD_...="more variables of virtualenv module"
+VIRTUALENV_WEB_base_path="/path/to/project/web"
+VIRTUALENV_WEB_...="more variables of virtualenv module"
 ```
 
 ### Example

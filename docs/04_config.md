@@ -34,6 +34,9 @@ variables. In general all options are broken down to variables like this (prefix
 Example config.xml:
 
 ```yaml
+project:
+  name: Some project
+  key: example
 paths:
   web: ../web
   docker_data: ../_docker_data

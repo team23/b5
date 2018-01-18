@@ -164,6 +164,10 @@ Use npm to install JS dependencies. See [documentation](modules/npm.md).
 
 Use composer to install PHP dependencies. See [documentation](modules/composer.md).
 
+### docker
+
+Allow simple usage of docker. See [documentation](modules/docker.md).
+
 ### virtualenv
 
 Handling of your virtualenv's. See [documentation](modules/virtualenv.md).

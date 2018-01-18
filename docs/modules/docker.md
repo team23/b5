@@ -1,6 +1,7 @@
 # Docker
 
-Necessary tools to handling docker containers.
+Necessary tools to handling docker containers. Intended to be used in combination with a `docker-compose.yml`, which
+you probably want to put inside build/, too.
 
 ## Parameters
 

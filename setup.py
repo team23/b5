@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='b5',
-    version='0.9.2',
+    version='0.10.0',
     description='b5 - sane task runner',
     author='David Danier',
     author_email='danier@team23.de',
@@ -29,7 +29,7 @@ setup(
     },
     zip_safe=False,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
@@ -37,6 +37,7 @@ setup(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Operating System :: POSIX',
+        'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.4',

@@ -23,7 +23,11 @@ def merge_config(cur_config, new_config):
     result_config = cur_config.copy()
     for key, value in new_config.items():
         if isinstance(value, dict):
-            result_config[key] = merge_config(cur_config.get(key, {}), value)
+            cur_value = cur_config.get(key, {})
+            if isinstance(cur_value, dict):
+                result_config[key] = merge_config(cur_value, value)
+            else:
+                result_config[key] = value
         elif isinstance(value, list):
             result_config[key] = value
         elif isinstance(value, (str, bytes, int, float)):

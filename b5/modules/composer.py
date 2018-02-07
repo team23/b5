@@ -35,8 +35,10 @@ class ComposerModule(BaseModule):
             name=self.name,
         )))
 
+        # "composer install" will update the dependencies, "composer update" will
+        # upgrade the installed version. So we use "composer install" here, too.
         script.append(self._script_function_source('update', '''
-            {name}:composer update
+            {name}:composer install
         '''.format(
             name=self.name,
         )))

@@ -12,6 +12,8 @@ class DockerModule(BaseModule):
         'base_path': '.',
         'docker_bin': 'docker',
         'docker_compose_bin': 'docker-compose',
+        'docker_compose_configs': None,
+        'docker_compose_config_override': None,
         'docker_machine_bin': 'docker-machine',
         'data_path': None,
         'project_name': None,
@@ -33,6 +35,12 @@ class DockerModule(BaseModule):
                 self.config['project_name'] = self.state.config['project']['key']
             else:
                 self.config['project_name'] = os.path.basename(self.state.project_path)
+        if self.config['docker_compose_config_override'] is not None:
+            override_config_file = 'docker-compose.%s.yml' % self.config['docker_compose_config_override']
+            if isinstance(self.config['docker_compose_configs'], list):
+                self.config['docker_compose_configs'].append(override_config_file)
+            else:
+                self.config['docker_compose_configs'] = ['docker-compose.yml', override_config_file]
 
     def get_script_env(self):
         import os
@@ -100,10 +108,12 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('docker-compose', '''
-            {name}:run {docker_compose_bin} "$@"
+            {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
         '''.format(
             name=self.name,
             docker_compose_bin=shlex.quote(self.config['docker_compose_bin']),
+            docker_compose_configs='-f %s' % ' -f '.join(map(shlex.quote, self.config['docker_compose_configs'])) \
+                                    if self.config['docker_compose_configs'] else '',
         )))
 
         script.append(self._script_function_source('docker-machine', '''

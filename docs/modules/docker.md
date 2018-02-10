@@ -8,6 +8,8 @@ you probably want to put inside build/, too.
 * **base_path:** Base path for all further paths/files. Defaults to ".", which normally means build/.
 * **docker_bin:** docker binary to be used. Defaults to "docker".
 * **docker_compose_bin:** docker-compose binary to be used, defaults to "docker-compose".
+* **docker_compose_configs:** List of configuration files to be used. `docker-compose` defaults to `docker-compose.yml`, `docker-compose.override.yml` by default. 
+* **docker_compose_config_override:** Shortcut for adding an additional configuration file. Passing "something" will set `configs` to `docker-compose.yml`, `docker-compose.something.yml`.
 * **docker_machine_bin:** docker-machine binary to be used, defaults to "docker-machine".
 * **data_path:** Path to shared data folder. Might be set for further operations on this path. Defaults to None.
 * **project_name:** Project name used for docker-compose. Defaults to $config.project.key, will fallback to projects path basename.

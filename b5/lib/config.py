@@ -45,7 +45,7 @@ def load_config(state):
     for configfile in configfiles:
         fh = open(configfile['path'], 'r')
         file_config = yaml.load(fh)
-        if file_config is None:
+        if not isinstance(file_config, dict):
             file_config = {}
         config = merge_config(config, file_config)
 

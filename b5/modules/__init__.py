@@ -10,6 +10,7 @@ MODULES = {
     'npm': 'b5.modules.npm.NpmModule',
     'composer': 'b5.modules.composer.ComposerModule',
     'docker': 'b5.modules.docker.DockerModule',
+    'jinja2': 'b5.modules.jinja2.Jinja2Module',
 }
 
 

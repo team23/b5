@@ -40,7 +40,7 @@ class DockerModule(BaseModule):
             if isinstance(self.config['docker_compose_configs'], list):
                 self.config['docker_compose_configs'].append(override_config_file)
             else:
-                self.config['docker_compose_configs'] = ['docker-compose.yml', override_config_file]
+                self.config['docker_compose_configs'] = ['docker-compose.yml', override_config_file, 'docker-compose.override.yml']
 
     def get_script_env(self):
         import os

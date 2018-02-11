@@ -8,7 +8,8 @@ Handling of your virtualenv's.
 * **virtualenv_bin:** Virtualenv binary to be called for initializing the virtualenv. Defaults to "virtualenv".
 * **python_bin:** Python binary to be used, defaults to "python3".
 * **env_path:** Path to virtualenv, will be created inside `base_path`. Defaults to "ENV" (meaning build/ENV).
-* **requirements_file:** Path to requirements.txt, will be searched for inside `base_path`. Defaults to "requirements.txt" (Meaning build/requirements.txt).
+* **requirements_file:** Path to requirements.txt, will be searched for inside `base_path`. Defaults to
+  "requirements.txt" (Meaning build/requirements.txt).
 
 ## Functions provided
 

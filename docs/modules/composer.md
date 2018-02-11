@@ -6,7 +6,8 @@ Handling of your PHP packages using composer.
 
 * **base_path:** Base path for all further paths/files. Defaults to ".", which normally means build/.
 * **composer_bin:** composer binary to be used, defaults to "composer".
-* **vendor_path:** Path to vendor/, necessary for calling command line tools installed by composer. Defaults to "vendor", which normally means build/vendor/.
+* **vendor_path:** Path to vendor/, necessary for calling command line tools installed by composer. Defaults to
+  "vendor", which normally means build/vendor/.
 
 ## Functions provided
 

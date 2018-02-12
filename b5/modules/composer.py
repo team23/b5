@@ -46,7 +46,6 @@ class ComposerModule(BaseModule):
         script.append(self._script_function_source('run', '''
             (
                 export PATH="{vendor_path}/bin/:$PATH"
-                cd {base_path} && \\
                 "$@"
             )
         '''.format(
@@ -55,8 +54,12 @@ class ComposerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('composer', '''
-            {name}:run {composer_bin} "$@"
+            (
+                cd {base_path} && \\
+                {name}:run {composer_bin} "$@"
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             name=self.name,
             composer_bin=shlex.quote(self.config['composer_bin']),
         )))

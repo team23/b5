@@ -36,9 +36,13 @@ class VirtualenvModule(BaseModule):
         script.append(self._script_config_vars())
 
         script.append(self._script_function_source('install', '''
-            {virtualenv_bin} --python={python_bin} {env_path} && \\
-            {name}:update
+            (
+                cd {base_path} && \\
+                {virtualenv_bin} --python={python_bin} {env_path} && \\
+                {name}:update
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             virtualenv_bin=shlex.quote(self.config['virtualenv_bin']),
             python_bin=shlex.quote(self.config['python_bin']),
             env_path=shlex.quote(self.config['env_path']),
@@ -46,15 +50,18 @@ class VirtualenvModule(BaseModule):
         )))
 
         script.append(self._script_function_source('update', '''
-            {name}:pip install -U -r {requirements_file}
+            (
+                cd {base_path} && \\
+                {name}:pip install -U -r {requirements_file}
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             requirements_file=shlex.quote(self.config['requirements_file']),
             name=self.name,
         )))
 
         script.append(self._script_function_source('run', '''
             (
-                cd {base_path} && \\
                 source {activate_path} && \\
                 "$@"
             )

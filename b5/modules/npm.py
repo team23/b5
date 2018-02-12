@@ -39,7 +39,6 @@ class NpmModule(BaseModule):
         script.append(self._script_function_source('run', '''
             (
                 export PATH="{base_path}/node_modules/.bin:$PATH"
-                cd {base_path} && \\
                 "$@"
             )
         '''.format(
@@ -47,8 +46,12 @@ class NpmModule(BaseModule):
         )))
 
         script.append(self._script_function_source('npm', '''
-            {name}:run {npm_bin} "$@"
+            (
+                cd {base_path} && \\
+                {name}:run {npm_bin} "$@"
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             name=self.name,
             npm_bin=shlex.quote(self.config['npm_bin']),
         )))

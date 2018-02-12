@@ -95,7 +95,6 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('run', '''
             (
                 {docker_env}
-                cd {base_path} && \\
                 "$@"
             )
         '''.format(
@@ -104,15 +103,23 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('docker', '''
-            {name}:run {docker_bin} "$@"
+            (
+                cd {base_path} && \\
+                {name}:run {docker_bin} "$@"
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             name=self.name,
             docker_bin=shlex.quote(self.config['docker_bin']),
         )))
 
         script.append(self._script_function_source('docker-compose', '''
-            {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
+            (
+                cd {base_path} && \\
+                {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             name=self.name,
             docker_compose_bin=shlex.quote(self.config['docker_compose_bin']),
             docker_compose_configs='-f %s' % ' -f '.join(map(shlex.quote, self.config['docker_compose_configs'])) \
@@ -120,8 +127,12 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('docker-machine', '''
-            {name}:run {docker_machine_bin} "$@"
+            (
+                cd {base_path} && \\
+                {name}:run {docker_machine_bin} "$@"
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             name=self.name,
             docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
         )))
@@ -133,8 +144,12 @@ class DockerModule(BaseModule):
                 options="-T $options"
                 shift
             fi
-            {name}:docker-compose run $options --rm "$@"
+            (
+                cd {base_path} && \\
+                {name}:docker-compose run $options --rm "$@"
+            )
         '''.format(
+            base_path=shlex.quote(self.config['base_path']),
             name=self.name,
         )))
 

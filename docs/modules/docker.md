@@ -34,7 +34,7 @@ you probably want to put inside build/, too.
     use `docker:run docker-compose exec …` if the container is already running. This will reduce the necessary
     overhead to run your command.
 * **is_running:** Will return 0 or 1 whether one container or any container is running. Usage: `docker:is_running`
-    for checking is any container is running, `docker:is_running $SERVICE` when chacking for an particular
+    for checking if any container is running, `docker:is_running $SERVICE` when checking for an particular
     service. May be used like: `if $( docker:is_running ) ; then … ; fi`.
 
 ## Additional environment provided when using docker:run

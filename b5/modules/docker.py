@@ -137,6 +137,23 @@ class DockerModule(BaseModule):
             docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
         )))
 
+        script.append(self._script_function_source('is_running', '''
+            (
+                cd {base_path} || return 1
+                local pslist=$( {name}:docker-compose ps -q "$@" )
+                if [ -z "$pslist" ]
+                then
+                    return 1
+                else
+                    return 0
+                fi
+            )
+        '''.format(
+            base_path=shlex.quote(self.config['base_path']),
+            name=self.name,
+            docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
+        )))
+
         script.append(self._script_function_source('container_run', '''
             local options=""
             if [ "$1" == "-T" ]
@@ -144,9 +161,20 @@ class DockerModule(BaseModule):
                 options="-T $options"
                 shift
             fi
+            local container="${{1:-}}"
+            if [ -z "$container" ]
+            then
+                b5:error "You need to pass the container name"
+                return 1
+            fi
             (
-                cd {base_path} && \\
-                {name}:docker-compose run $options --rm "$@"
+                cd {base_path} || return 1
+                if {name}:is_running "$container"
+                then
+                    {name}:docker-compose exec $options "$@"
+                else
+                    {name}:docker-compose run $options --rm "$@"
+                fi
             )
         '''.format(
             base_path=shlex.quote(self.config['base_path']),

@@ -13,7 +13,7 @@ def main():
         parser = argparse.ArgumentParser(
             prog='b5-execute',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            description='b5-execute is not intended to be called directly!'
+            description='b5-execute is not intended to be called directly!',
         )
         parser.add_argument(
             '--state-file', nargs='?',
@@ -27,7 +27,10 @@ def main():
             '--method', nargs='?',
             dest='method',
         )
-        parser.add_argument('args', nargs=argparse.REMAINDER)
+        parser.add_argument(
+            '--args', nargs=argparse.REMAINDER,
+            dest='args'
+        )
         args = parser.parse_args()
 
         if not args.state_file or not args.module or not args.method:

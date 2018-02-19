@@ -10,7 +10,7 @@ MODULES = {
     'npm': 'b5.modules.npm.NpmModule',
     'composer': 'b5.modules.composer.ComposerModule',
     'docker': 'b5.modules.docker.DockerModule',
-    'jinja2': 'b5.modules.jinja2.Jinja2Module',
+    'template': 'b5.modules.template.TemplateModule',
 }
 
 
@@ -39,7 +39,7 @@ class BaseModule(object):
     def _script_function_call(self, external_method, method=None):
         return '''
 {module}:{external_method}() {{
-    b5-execute --state-file {state_file} --module {module} --method {method} "$@"
+    b5-execute --state-file {state_file} --module {module} --method {method} --args "$@"
 }}
         '''.format(
             module=self.name,

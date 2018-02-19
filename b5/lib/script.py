@@ -71,14 +71,22 @@ def construct_script_source(state):
     # run_path and parse Taskfile's
     script.append('cd %s\n' % shlex.quote(state.run_path))
     for taskfile in state.taskfiles:
-        script.append('source %s\n' % shlex.quote(taskfile['path']))
+        #script.append('source %s\n' % shlex.quote(taskfile['path']))
+        script.append(open(taskfile['path'], 'r').read())
 
     return '\n'.join(script)
 
 
 def construct_script_run(state):
     # Run everything
-    return 'b5:function_exists %s && b5:run %s || b5:error "Task not found" \n' % (
+    return '''
+if b5:function_exists %s
+then
+   b5:run %s
+else
+    b5:error "Task not found"
+fi     
+    ''' % (
         shlex.quote('task:%s' % state.args['command']),
         ' '.join(
             [shlex.quote('task:%s' % state.args['command'])] + [shlex.quote(a) for a in state.args['command_args']]

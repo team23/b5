@@ -63,7 +63,7 @@ def main():
         if args.taskfiles is None:
             args.taskfiles = ['~/.b5/Taskfile', 'Taskfile', 'Taskfile.local']
         if args.configfiles is None:
-            args.configfiles = ['~/.b5/config.yml', 'config.yml', 'local.yml']
+            args.configfiles = ['~/.b5/config.yml', 'config.yml', 'config.local.yml', 'local.yml']
 
         # State vars
         state = State(

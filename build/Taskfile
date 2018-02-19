@@ -19,6 +19,12 @@ task:b5() {
     virtualenv:run b5 "$@"
 }
 
+task:b5-init() {
+    # Runs the dev version of b5 inside the virtualenv
+    # Use Taskfile.local and local.yml for testing
+    virtualenv:run b5-init "$@"
+}
+
 task:shell() {
     (
         source "${VIRTUALENV_env_path}/bin/activate"

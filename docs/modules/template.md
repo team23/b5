@@ -20,7 +20,7 @@ b5 will provide the configuration as `config` as template context. Also the full
 `state` of the current b5 run will be available. Template context will look like:
 
 ```json
-{"config": {"modules": {"template": None},
+{"config": {"modules": {"template": null},
             "paths": {"web": "../web"},
             "project": {"key": "example",
                         "name": "Example",
@@ -31,13 +31,13 @@ b5 will provide the configuration as `config` as template context. Also the full
                                     "config.yml",
                                     "local.yml"],
                     "detect": "git",
-                    "project_path": None,
+                    "project_path": null,
                     "run_path": "build",
                     "shell": "/bin/bash",
                     "taskfiles": ["~/.b5/Taskfile",
                                   "Taskfile",
                                   "Taskfile.local"]},
-           "config": {/* see above */},
+           "config": {"see": "above ;-)"},
            "configfiles": [{"config": "config.yml",
                             "path": "/path/to/project/build/config.yml"}],
            "project_path": "/path/to/project/",

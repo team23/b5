@@ -2,6 +2,11 @@
 
 * TODO
 
+# v0.11.2
+
+* Removed template module debug output
+* Note to myself: No more late releases
+
 # v0.11.1
 
 * Support for config.local.yml added (should be preferred over local.yml)

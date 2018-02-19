@@ -70,12 +70,6 @@ class TemplateModule(BaseModule):
                         return
 
         try:
-            from pprint import pprint
-            pprint({
-                'state': vars(state),
-                'config': state.config,
-                'module': vars(self),
-            })
             rendered = template.render(
                 state=state,
                 config=state.config,

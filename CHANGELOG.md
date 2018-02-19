@@ -2,6 +2,11 @@
 
 * TODO
 
+# v0.11.1
+
+* Support for config.local.yml added (should be preferred over local.yml)
+* Sorry, docs for v0.11 already stated to use config.local.yml, which was not true :/
+
 # v0.11
 
 * Error handling working as expected again (one failing command will make b5 stop further execution)
@@ -16,9 +21,8 @@
   - docker:container_run will now use `docker-compose exec` if container is already
     running
 * in general $module:run will no longer do a forced path switch, this will simplify usage
-* Support for config.local.yml added (should be preferred over local.yml)
 
-# v0.10
+# v0.9.0 to v0.10.5
 
 * FIRST version of python based b5 implementation
 * License added, MIT/BSD

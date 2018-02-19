@@ -51,7 +51,7 @@ b5 install  # ;-)
 **NOT READY YET:** This task is currently missing from the python implementation.
 
 ```bash
-b5 init example
+b5-init example
 cd example
 ```
 

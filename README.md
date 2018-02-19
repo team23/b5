@@ -102,5 +102,5 @@ to handle local configuration.
 See [modules](docs/05_modules.md) for looking further into modules b5 already provides for a healthy
 project setup.
 
-See [templates](docs/06_templates.md) for more information about how to `b5 init` a project.
+See [project initialization](docs/06_project_init.md) for more information about how to `b5-init` a project.
 

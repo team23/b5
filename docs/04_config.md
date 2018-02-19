@@ -16,7 +16,7 @@ developer.
 Common usage may include Sass paths, PostCSS configuration, deployment details and so on. You may not
 use the key "local" inside the generic configuration file.
 
-### local.yml
+### config.local.yml
 
 The local configuration should never be put into versioning and are purely for usage by each developer.
 All configurations options here are merged with the global configuration using the following schema:
@@ -24,7 +24,8 @@ All configurations options here are merged with the global configuration using t
 * if value under key is a dictionary, merge both
 * otherwise replace the value (local overwrites global)
 
-An example for the `local.yml` can be provided as `local.example.yml`.
+An example for the `config.local.yml` can be provided as `config.local.example.yml`. For more complex
+usage of local configuration use the [template module](modules/template.md). See module example.
 
 ## Taskfile configuration access
 

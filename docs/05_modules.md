@@ -171,3 +171,7 @@ Allow simple usage of docker. See [documentation](modules/docker.md).
 ### virtualenv
 
 Handling of your virtualenv's. See [documentation](modules/virtualenv.md).
+
+### template
+
+Allows for easy template rendering using Jinja2. See [documentation](modules/template.md).

@@ -1,14 +1,14 @@
-# Templates
+# Project initialization
 
 **NOT READY YET:** This is currently missing from the python implementation.
 
-Templates are provided for initial project setup using `b5 init`. By default b5 will initialize new projects
+Project templates are provided for initial project setup using `b5-init`. By default b5 will initialize new projects
 using a "minimal" template which only provides a basic layout.
 
 ## Usage
 
 ```console
-$ b5 init TEST-PROJECT
+$ b5-init TEST-PROJECT
 b5 0.6.0
 PROJECT_PATH could not be found. I looked for a .git directory in all parent paths.
 (Only default tasks are available)
@@ -56,7 +56,3 @@ Task exited ok
 ### minimal
 
 Minimal example project.
-
-### typo3-test
-
-Test setup for TYPO3, not intended for production use. Installs TYPO3 using composer.

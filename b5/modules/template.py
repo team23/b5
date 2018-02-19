@@ -16,7 +16,7 @@ class TemplateModule(BaseModule):
         parser.add_argument(
             '-o', '--overwrite', nargs='?',
             help='Control if existing files should be overwritten',
-            dest='overwrite', default='yes',
+            dest='overwrite', default='ask',
             choices=['yes', 'if-older', 'no', 'ask', 'ask-if-older']
         )
         parser.add_argument('template_file')
@@ -70,6 +70,12 @@ class TemplateModule(BaseModule):
                         return
 
         try:
+            from pprint import pprint
+            pprint({
+                'state': vars(state),
+                'config': state.config,
+                'module': vars(self),
+            })
             rendered = template.render(
                 state=state,
                 config=state.config,

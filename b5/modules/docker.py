@@ -81,6 +81,7 @@ class DockerModule(BaseModule):
         script.append(self._script_config_vars())
 
         script.append(self._script_function_source('install', '''
+            {name}:docker-compose pull
             {name}:docker-compose build
         '''.format(
             name=self.name,

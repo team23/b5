@@ -29,10 +29,21 @@ you probably want to put inside build/, too.
 * **docker-compose:** Will call `docker-compose` with env etc. set, similar to using `docker:run docker-compose …`
 * **docker-machine:** Will call `docker-machine` with env etc. set, similar to using `docker:run docker-machine …`
 * **container_run:** Will use `docker-compose` to run one single command inside a named docker container. Similar to
-    using `docker:run docker-compose run --rm $CONTAINER $COMMAND`. You may use `docker:container_run -T …` to disable
-    pseudo-tty allocation (Will be necessary for some tools like mysqldump). Be aware, that `container_run` will
+    using `docker:run docker-compose run --rm $CONTAINER $COMMAND`. Be aware, that `container_run` will
     use `docker:run docker-compose exec …` if the container is already running. This will reduce the necessary
-    overhead to run your command.
+    overhead to run your command. (*Note:* It will currently use `docker exec …` in reality, as `docker-compose exec`
+    is [broken](https://github.com/docker/compose/issues/3352))
+    
+    You may use `--force-exec` or `--force-run` to force the execution model and
+    skip auto-detection (note `--force-exec` will fail, if container is not running). When using this command inside
+    shell pipes use `--pipe-in` (meaning `something | docker:container_run …`) or `--pipe-out`
+    (meaning `docker:container_run … | something`) for easy configuration of TTY usage.  
+    You may use `docker:container_run -T …` to disable pseudo-tty allocation manually, but better use
+    `--pipe-in` or `--pipe-out`.
+    
+    The following options will also be available: `-w`/`--workdir`, `-u`/`--user`, `-e`/`--env`. For `--force-run`
+    the following options are available in addition:  `--no-deps`, `-l`/`--label`. See `docker`/`docker-compose`
+    documentation for details.
 * **is_running:** Will return 0 or 1 whether one container or any container is running. Usage: `docker:is_running`
     for checking if any container is running, `docker:is_running $SERVICE` when checking for an particular
     service. May be used like: `if $( docker:is_running ) ; then … ; fi`.

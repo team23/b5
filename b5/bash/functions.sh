@@ -3,15 +3,15 @@
 # Core functions
 
 b5:warn() {
-    echo -e "${B5_FONT_YELLOW}${1:-}${B5_FONT_RESTORE}"
+    echo -e "${B5_FONT_YELLOW}${1:-}${B5_FONT_RESTORE}" >&2
 }
 
 b5:error() {
-    echo -e "${B5_FONT_RED}${1:-}${B5_FONT_RESTORE}"
+    echo -e "${B5_FONT_RED}${1:-}${B5_FONT_RESTORE}" >&2
 }
 
 b5:abort() {
-    b5:error "$@"
+    b5:error "$@" >&2
     exit 1
 }
 

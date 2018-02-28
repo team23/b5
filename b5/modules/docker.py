@@ -155,26 +155,157 @@ class DockerModule(BaseModule):
             docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
         )))
 
+        # See https://github.com/docker/compose/issues/3352 for why we are not using docker-compose exec here,
+        # this basically is broken on many levels. See for example this comment:
+        # https://github.com/docker/compose/issues/3352#issuecomment-299868032
         script.append(self._script_function_source('container_run', '''
+            # docker-compose options
             local options=""
-            if [ "$1" == "-T" ]
-            then
-                options="-T $options"
-                shift
-            fi
+            local exec_options=""
+            local run_options="--rm"
+            local use_tty=1
+            # raw docker options (prefix "d_")
+            local d_options=""
+            local d_exec_options=""
+            local d_run_options="--rm"
+            local d_use_tty=1
+            
+            local has_valid_options=1
+            local force_run=0
+            local force_exec=0
+            
+            # Parse command line options
+            while [ $has_valid_options -gt 0 ]
+            do
+                case "${{1:-}}" in
+                    # Own options
+                    --force-run)
+                        force_run=1
+                        shift
+                        ;;
+                    --force-exec)
+                        force_exec=1
+                        shift
+                        ;;
+                    --pipe-in)
+                        d_options="-i $d_options"
+                        d_use_tty=0
+                        shift
+                        ;;
+                    --pipe-out)
+                        d_use_tty=0
+                        use_tty=0
+                        shift
+                        ;;
+                    # Generic options
+                    -T)
+                        use_tty=0
+                        d_use_tty=0
+                        shift
+                        ;;
+                    -u|--user)
+                        if [ -z "${{2:-}}" ]
+                        then
+                            b5:abort "-u can only be used with a user set (additional parameter)"
+                        fi
+                        options="-u '$2' $options"
+                        d_options="-u '$2' $d_options"
+                        shift
+                        ;;
+                    -e|--env)
+                        if [ -z "${{2:-}}" ]
+                        then
+                            b5:abort "-e can only be used with a env set (additional parameter)"
+                        fi
+                        options="-e '$2' $options"
+                        d_options="-e '$2' $d_options"
+                        shift
+                        shift
+                        ;;
+                    -w|--workdir)
+                        if [ -z "${{2:-}}" ]
+                        then
+                            b5:abort "-w can only be used with a path set (additional parameter)"
+                        fi
+                        options="-w '$2' $options"
+                        d_options="-w '$2' $d_options"
+                        shift
+                        shift
+                        ;;
+                    # RUN options
+                    --no-deps)
+                       run_options="--no-deps $options"
+                       force_run=1
+                       shift
+                       ;;
+                    -l|--label)
+                        if [ -z "${{2:-}}" ]
+                        then
+                            b5:abort "-l can only be used with a label set (additional parameter)"
+                        fi
+                        run_options="-l '$2' $options"
+                        d_run_options="-l '$2' $d_options"
+                        force_run=1
+                        shift
+                        shift
+                        ;;
+                    *)
+                      has_valid_options=0
+                      ;;
+                esac
+            done
+            
+            # Parse container name
             local container="${{1:-}}"
+            shift
             if [ -z "$container" ]
             then
                 b5:error "You need to pass the container name"
                 return 1
             fi
+            
+            # Decide which strategy to use
+            local command_strategy='run'
+            if {name}:is_running "$container"
+            then
+                command_strategy='exec'
+            fi
+            if [ $force_exec -gt 0 ]
+            then
+                command_strategy='exec'
+                if ! {name}:is_running "$container"
+                then
+                    b5:abort "exec not possible as container is not running"
+                fi
+            fi
+            if [ $force_run -gt 0 ]
+            then
+                command_strategy='run'
+            fi
+            if [ $force_exec -gt 0 ] && [ $force_run -gt 0 ]
+            then
+                b5:abort "Trying to force run and exec, not possible"
+            fi
+            
+            # Finalize options
+            if [ $use_tty -lt 1 ]
+            then
+                options="-T $options"
+            fi
+            if [ $d_use_tty -gt 0 ]
+            then
+                d_options="-t $d_options"
+            fi
+            
             (
                 cd {base_path} || return 1
-                if {name}:is_running "$container"
+                
+                if [ $command_strategy == 'exec' ]
                 then
-                    {name}:docker-compose exec $options "$@"
+                    local container_id=$( {name}:docker-compose ps -q $container | head -n 1 )
+                    {name}:docker exec $d_options $d_exec_options $container_id "$@"
                 else
-                    {name}:docker-compose run $options --rm "$@"
+                    {name}:docker-compose run $options $run_options $container "$@"
                 fi
             )
         '''.format(

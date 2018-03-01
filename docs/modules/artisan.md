@@ -1,10 +1,10 @@
-# Composer
+# Artisan
 
-Handling of your PHP packages using composer.
+The Laravel Console.
 
 ## Parameters
 
-* **base_path:** Base path for all further paths/files. Defaults to ".", which normally means build/.
+* **base_path:** Base path for all further paths/files. Defaults to "../web", which normally means web/.
 * **php_bin:** php binary to be used
 * **artisan_bin:** artisan binary to be used
 
@@ -26,7 +26,8 @@ Taskfile:
 ```bash
 task:artisan(){
     artisan:run "$@"
-}
+}  
+
 task:serve() {
     artisan:run serve
 }

@@ -29,6 +29,6 @@ task:shell() {
     (
         source "${VIRTUALENV_env_path}/bin/activate"
         echo -e "${B5_FONT_GREEN}Starting /bin/zsh in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
-        /bin/zsh
+        ${SHELL:-/bin/zsh} "$@"
     )
 }

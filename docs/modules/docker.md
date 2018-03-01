@@ -84,7 +84,7 @@ task:run() {
     docker:docker-compose up "$@"
 }
 
-task:stop() {
+task:halt() {
     docker:docker-compose down "$@"
 }
 

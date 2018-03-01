@@ -160,14 +160,14 @@ class DockerModule(BaseModule):
         # https://github.com/docker/compose/issues/3352#issuecomment-299868032
         script.append(self._script_function_source('container_run', '''
             # docker-compose options
-            local options=""
-            local exec_options=""
-            local run_options="--rm"
+            local options=()
+            local exec_options=()
+            local run_options=("--rm")
             local use_tty=1
             # raw docker options (prefix "d_")
-            local d_options=""
-            local d_exec_options=""
-            local d_run_options="--rm"
+            local d_options=()
+            local d_exec_options=()
+            local d_run_options=("--rm")
             local d_use_tty=1
             
             local has_valid_options=1
@@ -188,7 +188,7 @@ class DockerModule(BaseModule):
                         shift
                         ;;
                     --pipe-in)
-                        d_options="-i $d_options"
+                        d_options+=("-i")
                         d_use_tty=0
                         shift
                         ;;
@@ -208,8 +208,10 @@ class DockerModule(BaseModule):
                         then
                             b5:abort "-u can only be used with a user set (additional parameter)"
                         fi
-                        options="-u '$2' $options"
-                        d_options="-u '$2' $d_options"
+                        options+=("-u")
+                        options+=("$2")
+                        d_options+=("-u")
+                        d_options+=("$2")
                         shift
                         ;;
                     -e|--env)
@@ -217,8 +219,10 @@ class DockerModule(BaseModule):
                         then
                             b5:abort "-e can only be used with a env set (additional parameter)"
                         fi
-                        options="-e '$2' $options"
-                        d_options="-e '$2' $d_options"
+                        options+=("-e")
+                        options+=("$2")
+                        d_options+=("-e")
+                        d_options+=("$2")
                         shift
                         shift
                         ;;
@@ -227,14 +231,16 @@ class DockerModule(BaseModule):
                         then
                             b5:abort "-w can only be used with a path set (additional parameter)"
                         fi
-                        options="-w '$2' $options"
-                        d_options="-w '$2' $d_options"
+                        options+=("-w")
+                        options+=("$2")
+                        d_options+=("-w")
+                        d_options+=("$2")
                         shift
                         shift
                         ;;
                     # RUN options
                     --no-deps)
-                       run_options="--no-deps $options"
+                       run_options+=("--no-deps")
                        force_run=1
                        shift
                        ;;
@@ -243,8 +249,10 @@ class DockerModule(BaseModule):
                         then
                             b5:abort "-l can only be used with a label set (additional parameter)"
                         fi
-                        run_options="-l '$2' $options"
-                        d_run_options="-l '$2' $d_options"
+                        options+=("-l")
+                        options+=("$2")
+                        d_options+=("-l")
+                        d_options+=("$2")
                         force_run=1
                         shift
                         shift
@@ -290,11 +298,11 @@ class DockerModule(BaseModule):
             # Finalize options
             if [ $use_tty -lt 1 ]
             then
-                options="-T $options"
+                options+=("-T")
             fi
             if [ $d_use_tty -gt 0 ]
             then
-                d_options="-t $d_options"
+                d_options+=("-t")
             fi
             
             (
@@ -302,10 +310,10 @@ class DockerModule(BaseModule):
                 
                 if [ $command_strategy == 'exec' ]
                 then
-                    local container_id=$( {name}:docker-compose ps -q $container | head -n 1 )
-                    {name}:docker exec $d_options $d_exec_options $container_id "$@"
+                    local container_id=$( {name}:docker-compose ps -q "$container" | head -n 1 )
+                    {name}:docker exec "${{d_options[@]}}" "${{d_exec_options[@]}}" "$container_id" "$@"
                 else
-                    {name}:docker-compose run $options $run_options $container "$@"
+                    {name}:docker-compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"
                 fi
             )
         '''.format(

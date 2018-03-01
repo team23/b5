@@ -9,8 +9,9 @@ class ArtisanModule(BaseModule):
     '''
 
     DEFAULT_CONFIG = {
-        'base_path': './../web',
-        'artisan_bin': 'php artisan',
+        'base_path': '../web',
+        'php_bin': 'php',
+        'artisan_bin': 'artisan',
     }
 
     def prepare_config(self):
@@ -27,10 +28,12 @@ class ArtisanModule(BaseModule):
         script.append(self._script_function_source('run', '''
             (
                 cd {base_path} && \\
-                php artisan "$@"
+                {php_bin} {artisan_bin} "$@"
             )
         '''.format(
-            base_path=shlex.quote(self.config['base_path'])
+            base_path=shlex.quote(self.config['base_path']),
+            php_bin=shlex.quote(self.config['php_bin']),
+            artisan_bin=shlex.quote(self.config['artisan_bin'])
         )))
 
         return '\n'.join(script)

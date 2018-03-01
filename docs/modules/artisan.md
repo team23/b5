@@ -10,7 +10,7 @@ The Laravel Console.
 
 ## Functions provided
 
-* **run:** Can be used to pass any artisan command.
+* **local:** Can be used to pass any artisan command.
 
 ## Example usage
 
@@ -25,14 +25,18 @@ modules:
 Taskfile:
 ```bash
 task:artisan(){
-    artisan:run "$@"
+    artisan:local "$@"
 }  
 
 task:serve() {
-    artisan:run serve
+    artisan:local serve
 }
 
 task:migrate-fresh() {
-    artisan:run migrate:fresh --seed
+    artisan:local migrate:fresh --seed
 }
 ```
+
+## Roadmap
+
+* Add docker function which supports passing artisan commands to a docker container

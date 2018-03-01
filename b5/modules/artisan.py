@@ -25,7 +25,7 @@ class ArtisanModule(BaseModule):
 
         script.append(self._script_config_vars())
 
-        script.append(self._script_function_source('run', '''
+        script.append(self._script_function_source('local', '''
             (
                 cd {base_path} && \\
                 {php_bin} {artisan_bin} "$@"

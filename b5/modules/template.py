@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import os
 import sys
 import termcolor
@@ -74,6 +75,12 @@ class TemplateModule(BaseModule):
                 state=state,
                 config=state.config,
                 module=self,
+                # Add some meta information about template rendering
+                meta={
+                    'now': datetime.datetime.now().isoformat(),
+                    'template_file': template_file,
+                    'output_file': output_file if output_file else '-',
+                },
             )
         except jinja2.UndefinedError as e:
             termcolor.cprint('Template could not be rendered (%s), error message' % args.template_file, color='red')

@@ -46,6 +46,29 @@ cd b5
 b5 install  # ;-)
 ```
 
+#### Additional dependencies
+
+You may need to install the following packages in addition, as our projects might/will
+need them:
+
+* python2 and python3
+* virtualenv
+* pyenv and pipenv
+* sassc
+* docker
+* composer
+* node/npm and yarn
+* rsync
+* wget and curl
+
+Use the following commands to install everything on Mac:
+```bash
+brew tap homebrew/php
+brew install python python@2 curl node pipenv pyenv rsync sassc wget yarn composer
+brew cask install docker
+sudo pip install virtualenv
+```
+
 ### Starting your project
 
 **NOT READY YET:** This task is currently missing from the python implementation.

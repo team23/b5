@@ -1,16 +1,19 @@
-# Artisan
+# Laravel
 
-The Laravel Console.
+The Laravel Console. Call artisan using b5.
 
 ## Parameters
 
 * **base_path:** Base path for all further paths/files. Defaults to "../web", which normally means web/.
 * **php_bin:** php binary to be used
 * **artisan_bin:** artisan binary to be used
+* **docker_module:** Docker module to use when `docker_service` is set. Defaults to "docker".
+* **docker_service:** Optional docker service to run command in. (**Note:** base_path will then be inside the
+  docker container).
 
 ## Functions provided
 
-* **local:** Can be used to pass any artisan command.
+* **artisan:** Can be used to pass any artisan command.
 
 ## Example usage
 
@@ -19,21 +22,21 @@ The Laravel Console.
 config.yml:
 ```yaml
 modules:
-  artisan:  # Using default configuration
+  laravel:  # Using default configuration
 ```
 
 Taskfile:
 ```bash
 task:artisan(){
-    artisan:local "$@"
+    laravel:artisan "$@"
 }  
 
 task:serve() {
-    artisan:local serve
+    laravel:artisan serve
 }
 
 task:migrate-fresh() {
-    artisan:local migrate:fresh --seed
+    laravel:artisan migrate:fresh --seed
 }
 ```
 

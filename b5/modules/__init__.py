@@ -11,7 +11,7 @@ MODULES = {
     'composer': 'b5.modules.composer.ComposerModule',
     'docker': 'b5.modules.docker.DockerModule',
     'template': 'b5.modules.template.TemplateModule',
-    'artisan': 'b5.modules.artisan.ArtisanModule',
+    'laravel': 'b5.modules.laravel.LaravelModule',
 }
 
 

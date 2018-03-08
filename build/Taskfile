@@ -2,32 +2,28 @@
 # b5 Taskfile, see https://git.team23.de/build/b5 for details
 
 task:install() {
-    virtualenv:install
+    pipenv:install
 }
 
 task:update() {
-    virtualenv:update
-    (
-        cd .. &&
-        virtualenv:pip install -e .
-    )
+    pipenv:update
 }
 
 task:b5() {
     # Runs the dev version of b5 inside the virtualenv
     # Use Taskfile.local and local.yml for testing
-    virtualenv:run b5 "$@"
+    pipenv:run b5 "$@"
 }
 
 task:b5-init() {
     # Runs the dev version of b5 inside the virtualenv
     # Use Taskfile.local and local.yml for testing
-    virtualenv:run b5-init "$@"
+    pipenv:run b5-init "$@"
 }
 
 task:shell() {
     (
-        source "${VIRTUALENV_env_path}/bin/activate"
+        source "$( pipenv:pipenv --venv )/bin/activate"
         echo -e "${B5_FONT_GREEN}Starting /bin/zsh in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
         ${SHELL:-/bin/zsh} "$@"
     )

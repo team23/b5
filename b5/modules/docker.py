@@ -302,7 +302,7 @@ class DockerModule(BaseModule):
             fi
             if [ $d_use_tty -gt 0 ]
             then
-                d_options+=("-t")
+                d_options+=("-it")
             fi
             
             (

@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# v0.11.7
+
+* Fixed docker exec not keeping the stream open, so shell execution breaks
+
 # v0.11.6
 
 * b5 now uses Pipfile for dependency management, using pipenv

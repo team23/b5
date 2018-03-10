@@ -1,13 +1,42 @@
-# dev
+# DEV
 
-* TODO
+* pipenv module added
+
+# v0.11.5
+
+* Added a note about additional dependencies to README.md
+* Added meta information to template rendering, so templates may include something like:  
+  ```php
+  <?php
+  
+  /*
+   * Template generated file, DO NOT EDIT.
+   *
+   * Original source: {{ meta.template_file }}
+   * Generated: {{ meta.now }}
+   */
+
+  actual_php_code();
+  ```
+
+# v0.11.4
+
+* docker:container_run now uses "docker exec" instead of "docker-compose exec" when the
+  container is already running. "docker-compose exec" is broken.
+* Updated docker documentation to use "halt" instead of "stop"
+
+# v0.11.3
+
+* Pull images ob docker:install
+* Write b5 error messages to stderr
+* More robust docker:container_run
 
 # v0.11.2
 
 * Removed template module debug output
 * Note to myself: No more late releases
 
-# v0.11.1
+# v0.11.1q
 
 * Support for config.local.yml added (should be preferred over local.yml)
 * Sorry, docs for v0.11 already stated to use config.local.yml, which was not true :/

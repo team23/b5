@@ -1,6 +1,10 @@
 # DEV
 
-* pipenv module added
+* b5 now uses Pipfile for dependency management, using pipenv
+* pipenv module added, including some documentation
+  - pipenv module includes pyenv support to install a particular python version, independent
+    of the system version
+* We now recommend using pipenv over virtualenv
 
 # v0.11.5
 

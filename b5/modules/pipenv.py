@@ -12,8 +12,8 @@ class PipenvModule(BaseModule):
         'base_path': '.',
         'pipenv_bin': 'pipenv',
         'pyenv_bin': 'pyenv',
-        'install_dev': True,
         'use_pyenv': True,
+        'install_dev': True,
         'store_venv_in_project': True,  # Sets PIPENV_VENV_IN_PROJECT to 1
         'pipfile': 'Pipfile',  # Sets PIPENV_PIPFILE
     }

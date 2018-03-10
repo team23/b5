@@ -11,11 +11,11 @@
 <?php
 
 /*
-* Template generated file, DO NOT EDIT.
-*
-* Original source: {{ meta.template_file }}
-* Generated: {{ meta.now }}
-*/
+ * Template generated file, DO NOT EDIT.
+ *
+ * Original source: {{ meta.template_file }}
+ * Generated: {{ meta.now }}
+ */
 
 actual_php_code();
 ```

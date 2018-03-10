@@ -49,7 +49,7 @@ actual_php_code();
 * Removed template module debug output
 * Note to myself: No more late releases
 
-# v0.11.1q
+# v0.11.1
 
 * Support for config.local.yml added (should be preferred over local.yml)
 * Sorry, docs for v0.11 already stated to use config.local.yml, which was not true :/

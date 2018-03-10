@@ -6,18 +6,19 @@
 
 * Added a note about additional dependencies to README.md
 * Added meta information to template rendering, so templates may include something like:  
-  ```php
-  <?php
-  
-  /*
-   * Template generated file, DO NOT EDIT.
-   *
-   * Original source: {{ meta.template_file }}
-   * Generated: {{ meta.now }}
-   */
 
-  actual_php_code();
-  ```
+```php
+<?php
+
+/*
+* Template generated file, DO NOT EDIT.
+*
+* Original source: {{ meta.template_file }}
+* Generated: {{ meta.now }}
+*/
+
+actual_php_code();
+```
 
 # v0.11.4
 

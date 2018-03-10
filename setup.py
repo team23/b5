@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name='b5',
     version='0.11.5',
-    description='b5 - sane task runner',
+    description='b5 - simple and sane task runner',
     author='David Danier',
     author_email='danier@team23.de',
     url='http://www.team23.de/b5',

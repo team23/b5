@@ -24,7 +24,7 @@ task:b5-init() {
 task:shell() {
     (
         source "$( pipenv:pipenv --venv )/bin/activate"
-        echo -e "${B5_FONT_GREEN}Starting /bin/zsh in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
+        echo -e "${B5_FONT_GREEN}Starting ${SHELL:-/bin/zsh} in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
         ${SHELL:-/bin/zsh} "$@"
     )
 }

@@ -1,7 +1,7 @@
 # DEV
 
 * work in progress ;-)
-* Use "docker-compose build --pull", so newer versions of images are always pulles upon build
+* Use "docker-compose build --pull", so newer versions of images are always pulled upon build
 
 # v0.11.7
 

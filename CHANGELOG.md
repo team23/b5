@@ -1,7 +1,11 @@
 # DEV
 
 * work in progress ;-)
+
+# v0.11.8
+
 * Use "docker-compose build --pull", so newer versions of images are always pulled upon build
+* Serialize boolean values as 0/1 for bash
 
 # v0.11.7
 

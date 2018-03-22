@@ -30,7 +30,7 @@ def merge_config(cur_config, new_config):
                 result_config[key] = value
         elif isinstance(value, list):
             result_config[key] = value
-        elif isinstance(value, (str, bytes, int, float)):
+        elif isinstance(value, (str, bytes, bool, int, float)):
             result_config[key] = value
         elif value is None:
             result_config[key] = value

@@ -60,6 +60,8 @@ def construct_script_source(state):
     script.append('CONFIG_PATHS=(%s)\n' % ' '.join([shlex.quote(c['path']) for c in state.configfiles]))
     if state.stored_name:
         script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
+        # Provide state for subshells and called programs (B5 prefix added)
+        script.append('export B5_STATE_FILE="${STATE_FILE}"')
 
     # BACKWARDS COMPATIBILITY AND LEGACY CODE
     script.append('BUILD_PATH=%s\n' % shlex.quote(state.run_path))  # backwards compatibility

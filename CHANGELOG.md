@@ -1,6 +1,7 @@
 # DEV
 
 * work in progress ;-)
+* export B5_STATE_FILE for access to STATE_FILE in subshells and similar
 
 # v0.11.8
 

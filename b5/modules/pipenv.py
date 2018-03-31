@@ -43,10 +43,12 @@ class PipenvModule(BaseModule):
 
         script.append(self._script_function_source('install', '''
             (
+                {environment}
                 cd {base_path} && \\
                 {pipenv_bin} install {install_dev}
             )
         '''.format(
+            environment=self._pipenv_environment(),
             base_path=shlex.quote(self.config['base_path']),
             pipenv_bin=shlex.quote(self.config['pipenv_bin']),
             install_dev='--dev' if self.config['install_dev'] else '',

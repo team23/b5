@@ -2,6 +2,8 @@
 
 * work in progress ;-)
 * export B5_STATE_FILE for access to STATE_FILE in subshells and similar
+* pipenv not uses right environment even on pipenv:install/update
+
 
 # v0.11.8
 

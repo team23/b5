@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+
+# v0.11.9
+
 * export B5_STATE_FILE for access to STATE_FILE in subshells and similar
 * pipenv not uses right environment even on pipenv:install/update
 * docker_compose_config_overrides added to allow multiple overrides

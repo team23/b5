@@ -11,7 +11,7 @@ jobs.
 #### Mac OS X
 
 ```bash
-brew tap team23/b5 git@git.team23.de:build/homebrew-b5.git
+brew tap team23/b5 https://git.team23.de/build/homebrew-b5.git
 brew install b5
 ```
 

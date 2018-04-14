@@ -83,6 +83,5 @@ markupsafe = ">=1.0"
 [requires]
 
 python_version = "3.6"
-
 ```
 

@@ -61,7 +61,7 @@ DOCKER_HOST_UNIX_UID=1000  # user id
 DOCKER_HOST_UNIX_GID=1000  # user group id
 ```
 
-If $config.docker_machine is set `eval $(docker-machine env "{docker_machine}")` will we executed in addition.
+If config option "docker_machine" is set `eval $(docker-machine env "{docker_machine}")` will we executed in addition.
 
 ## Example usage
 

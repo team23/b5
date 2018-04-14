@@ -44,10 +44,13 @@ b5 will provide the configuration as `config` as template context. Also the full
            "run_path": "/path/to/project/build",
            "stored_name": "/path/to/stored/state",
            "taskfiles": [{"path": "/path/to/project/build/Taskfile",
-                          "taskfile": "Taskfile"}]}}
+                          "taskfile": "Taskfile"}]},
+ "meta": {"now": "CURRENT ISO TIME",
+          "template_file": "/path/to/template/file.jinja2",
+          "output_file": "/path/to/output/file.ext"}}
 ```
 
-Normally using the config should be enough for template rendering. 
+Normally using the config should be enough for template rendering.
 
 ## Example usage
 
@@ -63,9 +66,11 @@ Taskfile:
 ```bash
 task:install() {
     template:render --overwrite ask-if-older templates/config.local.yml.jinja2 config.local.yml
+    echo "Please edit config.local.yml now and then run 'b5 update' to create project configuration files"
 }
 
 task:update() {
+    template:render --overwrite ask-if-older templates/config.local.yml.jinja2 config.local.yml
     template:render --overwrite yes templates/settings.php.jinja2 ../web/settings.php
 }
 ```

@@ -112,6 +112,11 @@ Now you can use `b5 make_it_happen` and your code inside the function will run. 
 bash script you may use your normal command line tools. Feel free to use gulp, grunt, fabric, … for more
 complex task excution - and call these using your Taskfile.
 
+**Note:** The Taskfile is always executed inside the "run-path", which defaults to `build/`. Make
+sure to switch path, when neccessary. I recommend using a subshell (see
+["( … )" subshell syntax](http://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)) when
+doing so.
+
 ## Basic usage
 
 `b5 taskname` will look for the Taskfile found under build/ in your project root. It will then execute

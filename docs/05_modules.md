@@ -12,7 +12,7 @@ Inside your config.yml you may just put the desired modules inside the "modules"
 
 ```yaml
 modules:
-  modulename:
+  examplemodule:
   modulewithparams:
     param1: value1
     param2: value2
@@ -24,7 +24,7 @@ Example module: "example"
 
 ```bash
 # The functions provided by the modules will be prefixed by it's name 
-example:function() {
+examplemodule:function() {
     echo "Did something"
 }
 ```
@@ -150,7 +150,7 @@ packages.
 
 ## Existing modules
 
-See source of module for details.
+**Note:** See source of module for details, beyond documentation.
 
 ### legacy
 

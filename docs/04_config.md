@@ -10,11 +10,10 @@ Configuration basically is done using two configuration files:
 ### config.yml
 
 This file includes the main project configuration and is shared between all developers of the project.
-It may therefore not include any system-specifix paths and options that may differ from developer to
+It may therefore not include any system-specific paths and options that may differ from developer to
 developer.
 
-Common usage may include Sass paths, PostCSS configuration, deployment details and so on. You may not
-use the key "local" inside the generic configuration file.
+Common usage may include Sass paths, PostCSS configuration, deployment details and so on.
 
 ### config.local.yml
 
@@ -38,6 +37,7 @@ Example config.xml:
 project:
   name: Some project
   key: example
+  url: https://www.domain.com
 paths:
   web: ../web
   docker_data: ../_docker_data
@@ -46,15 +46,21 @@ paths:
 gets transformed into
 
 ```bash
+CONFIG_project_name="Some project"
+CONFIG_project_key="example"
+CONFIG_project_url="https://www.domain.com"
+CONFIG_project_KEYS=("name" "key", "url")
 CONFIG_paths_web="../web"
 CONFIG_paths_docker_data="../_docker_data"
 CONFIG_paths_KEYS=("web" "docker_data")
 ```
 
+**Note:** The `…_KEYS` are added for iterating over the configuration values - when neccessary.
+
 ## config.yml example with comments
 
 ```yaml
-# This is the central configuration for all tools we use/execute. It is parsed inside
+# This is the central configuration for all tools we use/execute. It is available inside
 # the Taskfile, too. See $CONFIG_project_name for example.
 
 # Generic project settings
@@ -79,10 +85,27 @@ paths:
   
   # Path for database dumps, should be added to .gitignore
   db: ../_db
-  
-  # Path for shared docker data, containers should get a subfolder with
-  # their name in this path for persisting data.
-  # Example: db-Container (MySQL) will use _docker_data/db to mount /var/lib/mysql
-  # (MANDATORY - if using docker)
-  #docker_data: ../_docker_data
 ```
+
+## config.local.yml example with comments
+
+```yaml
+# The local configuration might change values from the global configuration file:
+project:
+  # Might be neccessary when having two compies of the project running. The key is used
+  # as the docker-compose project name, so we need to avoid name clashes.
+  key: projectcopy
+  
+# All application-specific configuration should live under the key "application" and will
+# normally only be set inside the local configuration:
+application:
+  # Example database configuration:
+  database:
+    host: db
+    database: docker
+    username: docker
+    password: docker
+```
+
+**Note:** The application configuration might be used to generate the configuration files neccessary for the
+project. See [the template module](modules/template.md).

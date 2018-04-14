@@ -12,7 +12,7 @@ Handling of your PHP packages using composer.
 ## Functions provided
 
 * **install:** Runs `composer install` to fetch all required dependencies.
-* **update:** Calls `composer update` to update the dependencies.
+* **update:** Calls `composer install` to update the dependencies.
 * **run:** Can be used to run command line tools installed inside vendor/.
 * **composer:** Will call `composer`, similar to using `composer:run composer …`
 

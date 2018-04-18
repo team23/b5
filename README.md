@@ -79,8 +79,8 @@ need them:
 
 Use the following commands to install everything on Mac:
 ```bash
-brew tap homebrew/php
 brew install python python@2 curl node pipenv pyenv rsync sassc wget yarn composer
+brew postinstall python
 brew cask install docker
 sudo pip install virtualenv
 ```

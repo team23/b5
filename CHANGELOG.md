@@ -1,6 +1,8 @@
 # DEV
 
 * work in progress ;-)
+* Added docker:command:… shortcut for running commands inside docker (see `commands` configuration
+  option)
 
 # v0.11.9
 

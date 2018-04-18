@@ -22,6 +22,9 @@ you probably want to put inside build/, too.
   path basename.
 * **docker_machine:** Docker machine to be used for all docker commands. The module will set the environment
   accordingly. Defaults to None, so local docker will be used.
+* **commands:** Create shortcut commands for running tasks inside the container. Uses `container_run` (see below) for
+  command execution. See example below. Commands are provided as `docker:command:…`. You may use `--pipe-out` or
+  `--pipe-in` to handle pipes (see `container_run`).
 
 ## Functions provided
 
@@ -100,4 +103,60 @@ task:docker-compose() {
 }
 ```
 
+### Example 2 - command definition
+
+docker-compose.yml:
+```yaml
+version: "3"
+
+services:
+  # minimal example
+  php:
+    image: php
+  python:
+    image: python
+```
+
+config.yml:
+```yaml
+modules:
+  docker:
+    commands:
+      artisan:
+        bin: artisan
+        service: php
+      manage.py:
+        bin: ["python", "manage.py"]
+        service: python
+      #full_command_example:
+      #  bin: COMMAND_BINARY
+      #  service: COMPOSER_SERVICE
+      #  force_exec: true | false
+      #  force_run: true | false
+      #  # Only when force_run=true
+      #  no_deps: true | false
+      #  # Only when force_run=true
+      #  labels:
+      #    label1: value1
+      #    label2: value2
+      #  workdir: /some/path
+      #  user: USERNAME
+      #  environment:
+      #    env1: value1
+      #    env2: value2
+```
+
+Taskfile:
+```bash
+task:install() { "…" }
+task:update() { "…" }
+
+task:artisan_example() {
+    docker:command:artisan "…"
+}
+
+task:django_example() {
+    docker:command:manage.py --pipe-out dumpdata | gzip > dump.json.gz 
+}
+```
 

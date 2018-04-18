@@ -15,6 +15,9 @@ def modules_script_source(state):
 
 
 def config_script_source(config, prefix='CONFIG'):
+    import re
+
+    RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
     CONFIG_SUB = '%s_%s'
     CONFIG_KEYS = '%s_KEYS'
 
@@ -23,7 +26,8 @@ def config_script_source(config, prefix='CONFIG'):
 
         if isinstance(config_node, dict):
             for key in config_node:
-                script.append(_gen_config(config_node[key], CONFIG_SUB % (prefix, key)))
+                escaped_key = RE_KEY_ESCAPE.sub('_', key)
+                script.append(_gen_config(config_node[key], CONFIG_SUB % (prefix, escaped_key)))
             script.append('%s=(%s)' % (CONFIG_KEYS % prefix, ' '.join([shlex.quote(k) for k in config_node])))
         elif isinstance(config_node, list):
             script.append('%s=(%s)' % (prefix, ' '.join([shlex.quote(k) for k in config_node])))

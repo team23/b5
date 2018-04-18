@@ -2,6 +2,7 @@ import shlex
 import os
 import warnings
 
+from ..exceptions import B5ExecutionError
 from . import BaseModule
 
 
@@ -20,6 +21,7 @@ class DockerModule(BaseModule):
         'data_path': None,
         'project_name': None,
         'docker_machine': None,
+        'commands': {},
     }
 
     def prepare_config(self):
@@ -37,6 +39,8 @@ class DockerModule(BaseModule):
                 self.config['project_name'] = self.state.config['project']['key']
             else:
                 self.config['project_name'] = os.path.basename(self.state.project_path)
+        if not isinstance(self.config['commands'], dict):
+            raise B5ExecutionError('docker commands has to be a dictionary')
 
         ##### CONFIGURATION MANAGEMENT #####
 
@@ -342,5 +346,73 @@ class DockerModule(BaseModule):
             base_path=shlex.quote(self.config['base_path']),
             name=self.name,
         )))
+
+        for command, command_options in self.config['commands'].items():
+            if command_options is None:
+                command_options = {'bin': command, 'service': command}
+            elif isinstance(command_options, str):
+                command_options = {'bin': command, 'service': command_options}
+            if not 'bin' in command_options or not 'service' in command_options:
+                raise B5ExecutionError('You have to specify at least "bin" and "service"')
+
+            script.append(self._script_function_source('command:{command}'.format(command=command), '''
+                local has_valid_options=1
+                local extra_options=()
+                while [ $has_valid_options -gt 0 ]
+                do
+                    case "${{1:-}}" in
+                        --pipe-in)
+                            extra_options+=("--pipe-in")
+                            shift
+                            ;;
+                        --pipe-out)
+                            extra_options+=("--pipe-out")
+                            shift
+                            ;;
+                        *)
+                          has_valid_options=0
+                          ;;
+                    esac
+                done
+            
+                {name}:container_run \\
+                    {force_exec} \\
+                    {force_run} {no_deps} {labels} \\
+                    "${{d_options[@]}}" \\
+                    {workdir} {user} {environment} \\
+                    {service} \\
+                    {bin} "$@"
+            '''.format(
+                name=self.name,
+                force_exec='--force-exec' if command_options.get('force_exec') else '',
+                force_run='--force-run' if command_options.get('force_run') else '',
+                no_deps='--no-deps' if command_options.get('no_deps') else '',
+                labels=' '.join([
+                    '--label {label}'.format(
+                        label=shlex.quote('{key}={value}'.format(
+                            key=key,
+                            value=value,
+                        ))
+                    )
+                    for key, value
+                    in command_options['labels'].items()
+                ]) if command_options.get('labels') else '',
+                workdir='--workdir {workdir}'.format(workdir=command_options.get('workdir')) if command_options.get('workdir') else '',
+                user='--user {user}'.format(user=command_options.get('user')) if command_options.get('user') else '',
+                environment=' '.join([
+                    '--env {environment}'.format(
+                        environment=shlex.quote('{key}={value}'.format(
+                            key=key,
+                            value=value,
+                        ))
+                    )
+                    for key, value
+                    in command_options['environment'].items()
+                ]) if command_options.get('environment') else '',
+                service=shlex.quote(command_options.get('service')),
+                bin=' '.join(shlex.quote(bit) for bit in command_options.get('bin'))
+                    if isinstance(command_options.get('bin'), (list, tuple))
+                    else shlex.quote(command_options.get('bin')),
+            )))
 
         return '\n'.join(script)

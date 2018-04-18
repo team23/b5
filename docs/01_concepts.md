@@ -10,13 +10,13 @@ before: bash scripting) for task fulfilment. So a `css` task may for example cal
 lifting. b5 itself is _not_ intended to provide business ready methods for all project jobs. Instead it
 is by design intended to allowing users to use any external tools that fit for these jobs perfectly. Each
 task can use a different tool (gulp, fabric, grunt, …) for fulfilment. This also ensures we can easily
-replace the tools we use while still call the same commands on every project. `b5 css` may call grunt
+replace the tools we use while still calling the same commands on every project. `b5 css` may call grunt
 for some projects and gulp for others, but each developer has only to know about `b5 css`.
 
 b5 will load the Taskfile by looking for your project root (the directory `.git` lives in) and then tries
 to find `build/Taskfile` from this entry point. It will then load the Taskfile (using bash `source`) and
-just call it with the parameters it was calles with itself. If no parameter was passed to b5 it will use
-the default task called "help" (which means is calls the bash function `task:help`). This task is provided
+just call it with the parameters it was called with itself. If no parameter was passed to b5 it will use
+the default task called "help" (which means it calls the bash function `task:help`). This task is provided
 by b5 itself and will list all available tasks.
 
 ## Background

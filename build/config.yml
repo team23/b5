@@ -4,5 +4,5 @@ project:
   url: https://git.team23.de/build/b5
 paths:  # None necessary
 modules:
-  virtualenv:
+  pipenv:
     base_path: ..

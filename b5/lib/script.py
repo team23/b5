@@ -29,6 +29,8 @@ def config_script_source(config, prefix='CONFIG'):
             script.append('%s=(%s)' % (prefix, ' '.join([shlex.quote(k) for k in config_node])))
         elif isinstance(config_node, (str, bytes)):
             script.append('%s=%s' % (prefix, shlex.quote(config_node)))
+        elif isinstance(config_node, (bool)):
+            script.append('%s=%s' % (prefix, '1' if config_node else '0'))
         elif isinstance(config_node, (int, float)):
             script.append('%s=%s' % (prefix, shlex.quote(str(config_node))))
         elif config_node is None:
@@ -58,6 +60,8 @@ def construct_script_source(state):
     script.append('CONFIG_PATHS=(%s)\n' % ' '.join([shlex.quote(c['path']) for c in state.configfiles]))
     if state.stored_name:
         script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
+        # Provide state for subshells and called programs (B5 prefix added)
+        script.append('export B5_STATE_FILE="${STATE_FILE}"')
 
     # BACKWARDS COMPATIBILITY AND LEGACY CODE
     script.append('BUILD_PATH=%s\n' % shlex.quote(state.run_path))  # backwards compatibility

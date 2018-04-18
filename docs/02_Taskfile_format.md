@@ -37,9 +37,14 @@ task:deploy() {
         echo "Please specify deployment target. ABORTING!"
         exit 1
     fi
-    fab "${1}" "deploy:${2}"
+    fab "${1}" "deploy:${2:-}"
 }
 ```
+
+**Note:** The Taskfile is always executed inside the "run-path", which defaults to `build/`. Make
+sure to switch path, when neccessary. I recommend using a subshell (see
+["( … )" subshell syntax](http://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)) when
+doing so.
 
 ## About Taskfile quality
 
@@ -49,6 +54,6 @@ We use the following bash setting to make sure all Taskfiles follow a common qua
   parameters may not be passed. Use `${1:-}` if necessary.
 * `set -o errexit`/`set -o errtrace`/`set -o pipefail`: Programs that fail execution (exit code != 0) will
   trigger b5 to abort the whole task and display an error. This means if you have commands that may fail
-  use `command || true` to prevent b5 from stopping the execution. Please also note that subshells may
+  use `command || true` to prevent b5 from stopping the execution. Please also note that subshells will
   need special treatment (subshell: `( command1; command2 )`) as these settings are not passed down. You
   may need to use `( command1 && command2 )` or similar.

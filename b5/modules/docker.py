@@ -1,5 +1,6 @@
 import shlex
 import os
+import warnings
 
 from . import BaseModule
 
@@ -14,6 +15,7 @@ class DockerModule(BaseModule):
         'docker_compose_bin': 'docker-compose',
         'docker_compose_configs': None,
         'docker_compose_config_override': None,
+        'docker_compose_config_overrides': None,
         'docker_machine_bin': 'docker-machine',
         'data_path': None,
         'project_name': None,
@@ -35,15 +37,35 @@ class DockerModule(BaseModule):
                 self.config['project_name'] = self.state.config['project']['key']
             else:
                 self.config['project_name'] = os.path.basename(self.state.project_path)
+
+        ##### CONFIGURATION MANAGEMENT #####
+
+        # make sure docker_compose_configs is a list
+        if self.config['docker_compose_configs'] is not None:
+            if not isinstance(self.config['docker_compose_configs'], list):
+                self.config['docker_compose_configs'] = [self.config['docker_compose_configs']]
+        # make sure docker_compose_config_overrides is a list if set
+        if self.config['docker_compose_config_overrides'] is not None:
+            if not isinstance(self.config['docker_compose_config_overrides'], list):
+                self.config['docker_compose_config_overrides'] = [self.config['docker_compose_config_overrides']]
+        # add docker_compose_config_override to docker_compose_config_overrides if set
+        # (+ warn user to use docker_compose_config_overrides)
         if self.config['docker_compose_config_override'] is not None:
-            override_config_file = 'docker-compose.%s.yml' % self.config['docker_compose_config_override']
-            if isinstance(self.config['docker_compose_configs'], list):
-                self.config['docker_compose_configs'].append(override_config_file)
+            warnings.warn('Use docker_compose_config_overrides instead of docker_compose_config_override (mind the plural form)')
+            if isinstance(self.config['docker_compose_config_overrides'], list):
+                self.config['docker_compose_config_overrides'].append(self.config['docker_compose_config_override'])
             else:
-                if os.path.exists(os.path.join(self.config['base_path'], 'docker-compose.override.yml')):
-                    self.config['docker_compose_configs'] = ['docker-compose.yml', override_config_file, 'docker-compose.override.yml']
-                else:
-                    self.config['docker_compose_configs'] = ['docker-compose.yml', override_config_file]
+                self.config['docker_compose_config_overrides'] = [self.config['docker_compose_config_override']]
+        # merge docker_compose_config_overrides and docker_compose_configs
+        if isinstance(self.config['docker_compose_config_overrides'], list):
+            docker_compose_configs_was_empty = False
+            if not isinstance(self.config['docker_compose_configs'], list):
+                docker_compose_configs_was_empty = True
+                self.config['docker_compose_configs'] = ['docker-compose.yml']
+            for override in self.config['docker_compose_config_overrides']:
+                self.config['docker_compose_configs'].append('docker-compose.%s.yml' % override)
+            if docker_compose_configs_was_empty and os.path.exists(os.path.join(self.config['base_path'], 'docker-compose.override.yml')):
+                self.config['docker_compose_configs'].append('docker-compose.override.yml')
 
     def get_script_env(self):
         import os
@@ -82,7 +104,7 @@ class DockerModule(BaseModule):
 
         script.append(self._script_function_source('install', '''
             {name}:docker-compose pull
-            {name}:docker-compose build
+            {name}:docker-compose build --pull
         '''.format(
             name=self.name,
         )))
@@ -302,7 +324,7 @@ class DockerModule(BaseModule):
             fi
             if [ $d_use_tty -gt 0 ]
             then
-                d_options+=("-t")
+                d_options+=("-it")
             fi
             
             (

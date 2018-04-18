@@ -10,9 +10,12 @@ you probably want to put inside build/, too.
 * **docker_compose_bin:** docker-compose binary to be used, defaults to "docker-compose".
 * **docker_compose_configs:** List of configuration files to be used. `docker-compose` defaults to `docker-compose.yml`,
   `docker-compose.override.yml` by default. 
-* **docker_compose_config_override:** Shortcut for adding an additional configuration file. Passing "something" will set
+* **docker_compose_config_overrides:** Shortcut for adding an additional configuration files. Passing "something" will set
   `docker_compose_configs` to `docker-compose.yml`, `docker-compose.something.yml`, `docker-compose.override.yml`. If
-  `docker_compose_configs` is set, the file `docker-compose.something.yml` will just be appended.   
+  `docker_compose_configs` is set, the file `docker-compose.something.yml` will just be appended.You may use this
+  as a list to pass multiple overrides.
+* **docker_compose_config_override:** DEPRECATED single override form of docker_compose_config_overrides, use
+  docker_compose_config_overrides instead.
 * **docker_machine_bin:** docker-machine binary to be used, defaults to "docker-machine".
 * **data_path:** Path to shared data folder. Might be set for further operations on this path. Defaults to None.
 * **project_name:** Project name used for docker-compose. Defaults to $config.project.key, will fallback to projects
@@ -58,7 +61,7 @@ DOCKER_HOST_UNIX_UID=1000  # user id
 DOCKER_HOST_UNIX_GID=1000  # user group id
 ```
 
-If $config.docker_machine is set `eval $(docker-machine env "{docker_machine}")` will we executed in addition.
+If config option "docker_machine" is set `eval $(docker-machine env "{docker_machine}")` will we executed in addition.
 
 ## Example usage
 

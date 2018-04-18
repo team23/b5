@@ -1,6 +1,60 @@
-# dev
+# DEV
 
-* TODO
+* work in progress ;-)
+
+# v0.11.9
+
+* export B5_STATE_FILE for access to STATE_FILE in subshells and similar
+* pipenv not uses right environment even on pipenv:install/update
+* docker_compose_config_overrides added to allow multiple overrides
+  (will replace docker_compose_config_override, currently just a warning is shown)
+
+# v0.11.8
+
+* Use "docker-compose build --pull", so newer versions of images are always pulled upon build
+* Serialize boolean values as 0/1 for bash
+
+# v0.11.7
+
+* Fixed docker exec not keeping the stream open, so shell execution breaks
+
+# v0.11.6
+
+* b5 now uses Pipfile for dependency management, using pipenv
+* pipenv module added, including some documentation
+  - pipenv module includes pyenv support to install a particular python version, independent
+    of the system version
+* We now recommend using pipenv over virtualenv
+
+# v0.11.5
+
+* Added a note about additional dependencies to README.md
+* Added meta information to template rendering, so templates may include something like:  
+
+```php
+<?php
+
+/*
+ * Template generated file, DO NOT EDIT.
+ *
+ * Original source: {{ meta.template_file }}
+ * Generated: {{ meta.now }}
+ */
+
+actual_php_code();
+```
+
+# v0.11.4
+
+* docker:container_run now uses "docker exec" instead of "docker-compose exec" when the
+  container is already running. "docker-compose exec" is broken.
+* Updated docker documentation to use "halt" instead of "stop"
+
+# v0.11.3
+
+* Pull images ob docker:install
+* Write b5 error messages to stderr
+* More robust docker:container_run
 
 # v0.11.2
 

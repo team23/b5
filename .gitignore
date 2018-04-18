@@ -1,6 +1,7 @@
 /build/Taskfile.local
 /build/local.yml
 /ENV
+/.venv
 /b5.egg-info
 *.pyc
 *.pyo

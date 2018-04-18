@@ -11,14 +11,30 @@ jobs.
 #### Mac OS X
 
 ```bash
-brew tap team23/b5 git@git.team23.de:build/homebrew-b5.git
+brew tap team23/b5 https://git.team23.de/build/homebrew-b5.git
 brew install b5
 ```
 
 #### Manual installation
 
+When manually installing b5 I recommend using [pipsi](https://github.com/mitsuhiko/pipsi) to keep b5 and its
+dependencies separated from the system packages. You may install it using:
+
 ```bash
-cd installation/path/
+pipsi install --python python3 git+https://git.team23.de/build/b5.git@master\#egg\=b5
+```
+(Use "@vX.Y.Z" for installing a particular versions)
+
+You may of course instead just do a normal pip install:
+
+```bash
+pip3 install git+https://git.team23.de/build/b5.git@master\#egg\=b5
+```
+(Use "@vX.Y.Z" for installing a particular versions)
+
+OR
+
+```bash
 git clone git@git.team23.de:build/b5.git
 cd b5
 pip install -U -r requirements.txt
@@ -40,7 +56,7 @@ pip install -e .
 or if you have b5 installed already
 
 ```bash
-cd installation/path/
+cd work/path/
 git clone git@git.team23.de:build/b5.git
 cd b5
 b5 install  # ;-)
@@ -95,6 +111,11 @@ task:make_it_happen() {
 Now you can use `b5 make_it_happen` and your code inside the function will run. As this code is a simple
 bash script you may use your normal command line tools. Feel free to use gulp, grunt, fabric, … for more
 complex task excution - and call these using your Taskfile.
+
+**Note:** The Taskfile is always executed inside the "run-path", which defaults to `build/`. Make
+sure to switch path, when neccessary. I recommend using a subshell (see
+["( … )" subshell syntax](http://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)) when
+doing so.
 
 ## Basic usage
 

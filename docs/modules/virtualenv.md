@@ -1,6 +1,8 @@
 # Virtualenv
 
-Handling of your virtualenv's.
+Handling of your virtualenv's. Whenever possible use [pipenv](pipenv.md) instead. This is the more
+modern approach to python package manegement and the official recommendation of
+[python.org](https://packaging.python.org/tutorials/managing-dependencies/#managing-dependencies).
 
 ## Parameters
 

@@ -114,6 +114,8 @@ def main():
                         shell=False,
                         check=True,
                     )
+                except KeyboardInterrupt:
+                    sys.exit(0)
                 except subprocess.CalledProcessError:
                     termcolor.cprint('Task execution failed, see above', color='red')
                     sys.exit(1)

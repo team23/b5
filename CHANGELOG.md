@@ -2,6 +2,11 @@
 
 * work in progress ;-)
 
+# 0.12.0
+
+* b5-init readded, this allows you to create new projects using predefined skeletons (aka "templates")
+* "basic" template is provided by https://git.team23.de/build/b5-skel-basic
+
 # 0.11.10
 
 * Added docker:command:… shortcut for running commands inside docker (see `commands` configuration

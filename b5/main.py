@@ -23,6 +23,11 @@ def main():
             formatter_class=argparse.ArgumentDefaultsHelpFormatter
         )
         parser.add_argument(
+            '-q', '--quiet',
+            action='store_true',
+            dest='quiet',
+        )
+        parser.add_argument(
             '-p', '--project-path', nargs='?',
             help='Project path if not part of parent paths, normally b5 tries to get the project path by itself',
             dest='project_path',
@@ -56,6 +61,7 @@ def main():
         )
         parser.add_argument('command')
         parser.add_argument('command_args', nargs=argparse.REMAINDER)
+        parser.set_defaults(quiet=False)
         sys_args = sys.argv[1:]
         if not sys_args:
             sys_args = ['help']
@@ -85,14 +91,19 @@ def main():
             state.configfiles = find_configs(state, args.configfiles)
             state.config = load_config(state)
 
+        def _print(*args, **kwargs):
+            if state.args['quiet']:
+                return
+            termcolor.cprint(*args, **kwargs)
+
         # Run header
-        print('b5 %s' % VERSION)
+        _print('b5 %s' % VERSION)
         if state.project_path is not None:
-            print('Found project path (%s)' % state.project_path)
+            _print('Found project path (%s)' % state.project_path)
             if state.taskfiles:
-                print('Found Taskfile (%s)' % ', '.join([t['taskfile'] for t in state.taskfiles]))
-        print('Executing task %s' % args.command)
-        print('')  # empty line
+                _print('Found Taskfile (%s)' % ', '.join([t['taskfile'] for t in state.taskfiles]))
+        _print('Executing task %s' % args.command)
+        _print('')  # empty line
 
         with state.stored() as _stored_state:
             # Construct and execute bash script (and Taskfile)
@@ -119,6 +130,7 @@ def main():
                 except subprocess.CalledProcessError:
                     termcolor.cprint('Task execution failed, see above', color='red')
                     sys.exit(1)
+                _print('Task exited ok', color='green')
                 #print(result)
     except B5ExecutionError as e:
         termcolor.cprint(str(e), 'red')

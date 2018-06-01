@@ -74,7 +74,7 @@ b5:help() {
 
 b5:run() {
     "$@"
-    echo -e "\n${B5_FONT_GREEN}Task exited ok${B5_FONT_RESTORE}"
+    # echo -e "\n${B5_FONT_GREEN}Task exited ok${B5_FONT_RESTORE}"
 }
 
 # Config

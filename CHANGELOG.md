@@ -1,8 +1,12 @@
 # DEV
 
 * work in progress ;-)
+
+# 0.11.10
+
 * Added docker:command:… shortcut for running commands inside docker (see `commands` configuration
   option)
+* Handle keyboard interups in a better way, not showing failed task
 
 # v0.11.9
 

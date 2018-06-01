@@ -126,6 +126,7 @@ def main():
                         check=True,
                     )
                 except KeyboardInterrupt:
+                    termcolor.cprint('Task was stopped by keyboard interupt', color='yellow')
                     sys.exit(0)
                 except subprocess.CalledProcessError:
                     termcolor.cprint('Task execution failed, see above', color='red')

@@ -88,12 +88,14 @@ sudo pip install virtualenv
 
 ### Starting your project
 
-**NOT READY YET:** This task is currently missing from the python implementation.
-
 ```bash
 b5-init example
 cd example
+# start working on the new project
 ```
+
+**Note:** You may use `b5-init -s $SKELETON example` to initialize the project using an skeleton. Be default
+b5 used the "basic" skeleton. See [project initialization](docs/06_project_init.md) for more details.
 
 ### Defining your tasks (build/Taskfile)
 

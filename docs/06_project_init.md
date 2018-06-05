@@ -100,7 +100,7 @@ if only providing a name b5 will try to clone "https://git.team23.de/build/b5-sk
 
 After cloning the git repository b5 will then remove the .git/ path from it and use `git init` to create a new
 repository. You may provide additional initialization by providing an init/ path inside the repository. b5 will
-use this path as its run_path and then execute the "init"-task of the Taskfile inside init/ (so init/Taskfile
+use this path as its run_path and then execute the "project:init"-task of the Taskfile inside init/ (so init/Taskfile
 will be used - you may provide init/config.yml as well). After this init task is run b5 will completely remove
 init/ from the newly created project.
 

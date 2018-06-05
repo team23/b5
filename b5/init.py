@@ -69,7 +69,7 @@ def main():
                       '--config', 'config.yml',
                       '--config', 'config.init.yml',
                       '--config', 'config.local.yml',
-                      'init'])
+                      'project:init'])
             shutil.rmtree(init_path)
         _run_cmd(['git', 'add', '-A'])
         termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')

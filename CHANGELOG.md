@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 0.12.1
+
+* b5-init now calls "b5 project:init" instead of "b5 init" for project initialization (reduces headaches)
+
 # 0.12.0
 
 * b5-init readded, this allows you to create new projects using predefined skeletons (aka "templates")

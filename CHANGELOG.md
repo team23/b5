@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+
+# 0.12.2
+
 * Throw error when docker_compose_config_overrides and docker_compose_config_override is mixed together, this will
   minimize usage errors due to updated projects but not updated local configs
 * git-init now allows you to specify the branch to use for new projects

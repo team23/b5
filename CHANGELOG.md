@@ -1,6 +1,8 @@
 # DEV
 
 * work in progress ;-)
+* git-init now allows you to specify the branch to use for new projects
+* git-init will clone using the SSH URL by default
 
 # 0.12.1
 

@@ -36,17 +36,20 @@ def main():
             dest='skeleton', default='basic'
         )
         parser.add_argument(
+            '-b', '--branch', nargs='?',
+            dest='branch',
+        )
+        parser.add_argument(
             dest='path'
         )
         args = parser.parse_args()
 
-        # https://git.team23.de/build/b5-skel-basic
-
         skeleton = args.skeleton
+        branch = args.branch
         path = args.path
 
         if NON_URL_SKELETON.match(skeleton):
-            skeleton_url = 'https://git.team23.de/build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
+            skeleton_url = 'git@git.team23.de:build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
         else:
             skeleton_url = skeleton
 
@@ -57,9 +60,11 @@ def main():
             raise B5ExecutionError('Cannot init an existing directory if not empty')
 
         _run_cmd(['git', 'clone', skeleton_url, full_path], 'Could not clone skeleton repository, see above')
+        os.chdir(full_path)
+        if not branch is None:
+            _run_cmd(['git', 'checkout', branch], 'Could not checkout required branch, see above')
 
         shutil.rmtree(os.path.join(full_path, '.git'))
-        os.chdir(full_path)
         _run_cmd(['git', 'init', '.'])
         init_path = os.path.join(full_path, 'init')
         if os.path.exists(init_path) and os.path.exists(os.path.join(init_path, 'Taskfile')):
@@ -71,7 +76,7 @@ def main():
                       '--config', 'config.local.yml',
                       'project:init'])
             shutil.rmtree(init_path)
-        _run_cmd(['git', 'add', '-A'])
+        # _run_cmd(['git', 'add', '-A'])
         termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')
         termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton_url), 'green')
         termcolor.cprint('  project path: {full_path}'.format(full_path=full_path), 'green')

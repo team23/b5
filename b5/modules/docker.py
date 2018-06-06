@@ -57,7 +57,9 @@ class DockerModule(BaseModule):
         if self.config['docker_compose_config_override'] is not None:
             warnings.warn('Use docker_compose_config_overrides instead of docker_compose_config_override (mind the plural form)')
             if isinstance(self.config['docker_compose_config_overrides'], list):
-                self.config['docker_compose_config_overrides'].append(self.config['docker_compose_config_override'])
+                # self.config['docker_compose_config_overrides'].append(self.config['docker_compose_config_override'])
+                raise B5ExecutionError('You cannot mix docker_compose_config_override and docker_compose_config_overrides, '
+                                       'normally you have to now update your config.local.yml')
             else:
                 self.config['docker_compose_config_overrides'] = [self.config['docker_compose_config_override']]
         # merge docker_compose_config_overrides and docker_compose_configs

@@ -74,6 +74,12 @@ class TemplateBaseModule(BaseModule):
 
         renderer = TemplateRenderer([B5_TEMPLATES_PATH])
         renderer.add_extension(ModuleRenderExtension.factory(self))
+        print(renderer.render(
+            self.TEMPLATE_NAME,
+            {
+                'module': self,
+            }
+        ))
         return renderer.render(
             self.TEMPLATE_NAME,
             {

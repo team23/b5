@@ -1,1 +1,8 @@
-{% modulecallback test %}
+{% modulecallback "test" %}
+
+{% modulefunction "test2" %}
+    echo "Hello world"
+    true
+{% endmodulefunction %}
+
+{% modulecallback "test3", "execute_test" %}

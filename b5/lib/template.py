@@ -37,9 +37,9 @@ class ModuleRenderExtension(Extension):
     tags = ('modulefunction', 'modulecallback',)
 
     @classmethod
-    def factory(cls, module):
+    def factory(cls, _module):
         class _ModuleRenderExtension(cls):
-            module = module
+            module = _module
         return _ModuleRenderExtension
 
     def parse(self, parser):
@@ -76,9 +76,9 @@ class ModuleRenderExtension(Extension):
 
     def _call_modulefunction(self, name, caller):
         body = caller()
-        return '''{module}:{name}() {
+        return '''{module}:{name}() {{
 {body}
-}'''.format(
+}}'''.format(
             module=self.module.name,
             name=name,
             body=body,
@@ -112,17 +112,17 @@ class ModuleRenderExtension(Extension):
         lineno = next(parser.stream).lineno
         args = [parser.parse_expression()]
         if parser.stream.skip_if('comma'):
-            args.append(nodes.Const(None))
-        else:
             args.append(parser.parse_expression())
-        return nodes.CallBlock(self.call_method('_call_modulecallback', args)).set_lineno(lineno)
+        else:
+            args.append(nodes.Const(None))
+        return nodes.CallBlock(self.call_method('_call_modulecallback', args), [], [], []).set_lineno(lineno)
 
     def _call_modulecallback(self, name, method, caller):
-        return '''{module}:{name}() {
+        return '''{module}:{name}() {{
     b5-execute --state-file {state_file} --module {module} --method {method} --args "$@"
-}'''.format(
+}}'''.format(
             module=self.module.name,
             state_file=self.module.state.stored_name,
             name=name,
-            method=method if method else name,
+            method=method if method else 'execute_%s' % name,
         )

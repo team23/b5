@@ -6,6 +6,7 @@ import termcolor
 import jinja2
 
 from . import BaseModule
+from ..lib.template import TemplateRenderer, TemplateNotFound, TemplateRuntimeError
 
 
 class TemplateModule(BaseModule):
@@ -30,13 +31,10 @@ class TemplateModule(BaseModule):
             output_file = os.path.realpath(os.path.join(state.run_path, args.output_file))
         overwrite = args.overwrite
 
-        env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader([state.run_path]),
-            autoescape=jinja2.select_autoescape(),
-        )
+        renderer = TemplateRenderer([state.run_path])
         try:
-            template = env.get_template(args.template_file)
-        except jinja2.TemplateNotFound:
+            template = renderer.load(args.template_file)
+        except TemplateNotFound:
             termcolor.cprint('Template file could not be found (%s)' % args.template_file, color='red')
             sys.exit(1)
 
@@ -82,7 +80,7 @@ class TemplateModule(BaseModule):
                     'output_file': output_file if output_file else '-',
                 },
             )
-        except jinja2.UndefinedError as e:
+        except TemplateRuntimeError as e:
             termcolor.cprint('Template could not be rendered (%s), error message' % args.template_file, color='red')
             termcolor.cprint(e.message, color='yellow')
             sys.exit(1)

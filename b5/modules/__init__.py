@@ -1,3 +1,5 @@
+from b5 import B5_TEMPLATES_PATH
+from ..lib.template import ModuleRenderExtension
 from ..lib.config import merge_config
 import re
 
@@ -62,3 +64,19 @@ class BaseModule(object):
 
     def get_script(self):
         return ''
+
+
+class TemplateBaseModule(BaseModule):
+    TEMPLATE_NAME = None
+
+    def get_script(self):
+        from ..lib.template import TemplateRenderer, TemplateRuntimeError, TemplateNotFound
+
+        renderer = TemplateRenderer([B5_TEMPLATES_PATH])
+        renderer.add_extension(ModuleRenderExtension.factory(self))
+        return renderer.render(
+            self.TEMPLATE_NAME,
+            {
+                'module': self,
+            }
+        )

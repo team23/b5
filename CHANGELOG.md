@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 0.13.0
+
+* Python 3.7 compatibility (PyYAML 3.13b1 - still not stable, but working)
+
 # 0.12.2
 
 * Throw error when docker_compose_config_overrides and docker_compose_config_override is mixed together, this will

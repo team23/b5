@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='b5',
-    version='0.12.2',
+    version='0.13.0',
     description='b5 - simple and sane task runner',
     author='David Danier',
     author_email='danier@team23.de',

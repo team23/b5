@@ -169,12 +169,14 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('is_running', '''
             (
                 cd {base_path} || return 1
-                local pslist=$( {name}:docker-compose ps -q "$@" )
-                if [ -z "$pslist" ]
-                then
-                    return 1
-                else
-                    return 0
+                local CONTAINER=$(docker:docker-compose ps -q "$@")
+                local RUNNING=$(docker inspect -f {{.State.Running}} ${CONTAINER})
+
+                if ${RUNNING}
+                    then
+                        return 1
+                    else
+                        return 0
                 fi
             )
         '''.format(

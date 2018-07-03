@@ -1,23 +1,16 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
-pyyaml = ">=3.12"
+pyyaml = "==3.13b1"
 termcolor = ">=1.1.0"
 "jinja2" = ">=2.10"
 markupsafe = ">=1.0"
 
-
 [dev-packages]
-
 "e1839a8" = {path = ".", editable = true}
 
-
 [requires]
-
-python_version = "3.6"
+python_version = "3.7"

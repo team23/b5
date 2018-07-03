@@ -18,7 +18,7 @@ setup(
         ],
     },
     install_requires=[
-        'pyyaml >=3.12',
+        'pyyaml ==3.13b1',
         'termcolor >=1.1.0',
         'Jinja2 >=2.10',
         'MarkupSafe >=1.0',
@@ -46,7 +46,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        #'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.7',
+        #'Programming Language :: Python :: 3.8',
         'Topic :: Software Development',
         'Topic :: Software Development :: Build Tools',
         'Topic :: System :: Systems Administration',

@@ -34,7 +34,7 @@ class TemplateRenderer(object):
 
 class ModuleRenderExtension(Extension):
     module = None
-    tags = ('modulefunction', 'modulecallback',)
+    tags = ('modulecallback',)
 
     @classmethod
     def factory(cls, _module):
@@ -45,45 +45,10 @@ class ModuleRenderExtension(Extension):
     def parse(self, parser):
         tag = parser.stream.current.value
 
-        if tag == 'modulefunction':
-            return self._parse_modulefunction(parser)
-        elif tag == 'modulecallback':
+        if tag == 'modulecallback':
             return self._parse_modulecallback(parser)
         else:
-            raise RuntimeError('Should not happen')
-
-    def _parse_modulefunction(self, parser):
-        '''
-        Example:
-        {% modulefunction 'install' %}
-            some_command some_params
-        {% endmodulefunction %}
-
-        will return
-
-        MODULENAME:install() {
-            some_command some_params
-        }
-
-        :param parser:
-        :return:
-        '''
-        lineno = next(parser.stream).lineno
-        args = [parser.parse_expression()]
-        body = parser.parse_statements(['name:endmodulefunction'], drop_needle=True)
-        return nodes.CallBlock(self.call_method('_call_modulefunction', args),
-                               [], [], body).set_lineno(lineno)
-
-    def _call_modulefunction(self, name, caller):
-        body = caller()
-        return '''{module}:{name}() {{
-{body}
-}}'''.format(
-            module=self.module.name,
-            name=name,
-            body=body,
-
-        )
+            raise RuntimeError('Should not happen')  # just to be sure
 
     def _parse_modulecallback(self, parser):
         '''
@@ -92,37 +57,18 @@ class ModuleRenderExtension(Extension):
 
         will return
 
-        MODULENAME:install() {
-            b5-execute --state-file … --module MODULENAME --method install --args "$@"
-        }
-
-        AND
-
-        {% modulecallback 'install' 'callback' %}
-
-        will return
-
-        MODULENAME:install() {
-            b5-execute --state-file … --module MODULENAME --method callback --args "$@"
-        }
+        b5-execute --state-file … --module MODULENAME --method execute_install --args "$@"
 
         :param parser:
         :return:
         '''
         lineno = next(parser.stream).lineno
         args = [parser.parse_expression()]
-        if parser.stream.skip_if('comma'):
-            args.append(parser.parse_expression())
-        else:
-            args.append(nodes.Const(None))
         return nodes.CallBlock(self.call_method('_call_modulecallback', args), [], [], []).set_lineno(lineno)
 
-    def _call_modulecallback(self, name, method, caller):
-        return '''{module}:{name}() {{
-    b5-execute --state-file {state_file} --module {module} --method {method} --args "$@"
-}}'''.format(
+    def _call_modulecallback(self, method, caller):
+        return 'b5-execute --state-file "{state_file}" --module "{module}" --method "execute_{method}" --args "$@"'.format(
             module=self.module.name,
             state_file=self.module.state.stored_name,
-            name=name,
-            method=method if method else 'execute_%s' % name,
+            method=method,
         )

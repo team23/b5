@@ -18,7 +18,7 @@ setup(
         ],
     },
     install_requires=[
-        'pyyaml ==3.13b1',
+        'pyyaml >=3.13',
         'termcolor >=1.1.0',
         'Jinja2 >=2.10',
         'MarkupSafe >=1.0',

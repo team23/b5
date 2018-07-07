@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='b5',
-    version='0.13.0',
+    version='0.13.1',
     description='b5 - simple and sane task runner',
     author='David Danier',
     author_email='danier@team23.de',
@@ -18,7 +18,7 @@ setup(
         ],
     },
     install_requires=[
-        'pyyaml ==3.13b1',
+        'pyyaml >=3.13',
         'termcolor >=1.1.0',
         'Jinja2 >=2.10',
         'MarkupSafe >=1.0',

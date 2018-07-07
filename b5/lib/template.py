@@ -1,5 +1,5 @@
 import jinja2
-
+import shlex
 
 # some local imports for more easy usage
 from jinja2 import nodes
@@ -7,6 +7,10 @@ from jinja2.ext import Extension
 
 TemplateNotFound = jinja2.TemplateNotFound
 TemplateRuntimeError = jinja2.TemplateRuntimeError
+
+
+def shell_escape(value):
+    return shlex.quote(value)
 
 
 class TemplateRenderer(object):
@@ -18,6 +22,7 @@ class TemplateRenderer(object):
             autoescape=jinja2.select_autoescape(),
             extensions=extensions,
         )
+        self.env.filters['shell_escape'] = shell_escape
 
     def load(self, template_file):
         return self.env.get_template(template_file)
@@ -36,11 +41,11 @@ class ModuleRenderExtension(Extension):
     module = None
     tags = ('modulecallback',)
 
-    @classmethod
-    def factory(cls, _module):
-        class _ModuleRenderExtension(cls):
-            module = _module
-        return _ModuleRenderExtension
+    #@classmethod
+    #def factory(cls, _module):
+    #    class _ModuleRenderExtension(cls):
+    #        module = _module
+    #    return _ModuleRenderExtension
 
     def parse(self, parser):
         tag = parser.stream.current.value
@@ -68,7 +73,7 @@ class ModuleRenderExtension(Extension):
 
     def _call_modulecallback(self, method, caller):
         return 'b5-execute --state-file "{state_file}" --module "{module}" --method "execute_{method}" --args "$@"'.format(
-            module=self.module.name,
-            state_file=self.module.state.stored_name,
+            module=self.environment.b5_module.name,
+            state_file=self.environment.b5_module.state.stored_name,
             method=method,
         )

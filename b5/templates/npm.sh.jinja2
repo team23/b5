@@ -1,0 +1,31 @@
+{{ CONFIG_VARS }}
+{#
+Example:
+NPM_base_path=/path/to/project/build
+NPM_npm_bin=npm
+NPM_KEYS=(base_path npm_bin)
+
+NPM == {{ CONFIG_PREFIX }}
+#}
+
+{{ module.name }}:install() {
+    {{ module.name }}:npm install
+}
+
+{{ module.name }}:update() {
+    {{ module.name }}:npm update
+}
+
+{{ module.name }}:run() {
+    (
+        export PATH="${{ CONFIG_PREFIX }}_base_path/node_modules/.bin:$PATH"
+        "$@"
+    )
+}
+
+{{ module.name }}:npm() {
+    (
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
+        {{ module.name }}:run "${{ CONFIG_PREFIX }}_npm_bin" "$@"
+    )
+}

@@ -73,16 +73,23 @@ class TemplateBaseModule(BaseModule):
         from ..lib.template import TemplateRenderer, TemplateRuntimeError, TemplateNotFound
 
         renderer = TemplateRenderer([B5_TEMPLATES_PATH])
-        renderer.add_extension(ModuleRenderExtension.factory(self))
+        #renderer.add_extension(ModuleRenderExtension.factory(self))
+        renderer.add_extension(ModuleRenderExtension)
+        renderer.env.b5_module = self
+
         print(renderer.render(
             self.TEMPLATE_NAME,
             {
+                'CONFIG_VARS': self._script_config_vars(),
+                'CONFIG_PREFIX': CONFIG_PREFIX_RE.sub('_', self.name.upper()),
                 'module': self,
             }
         ))
         return renderer.render(
             self.TEMPLATE_NAME,
             {
+                'CONFIG_VARS': self._script_config_vars(),
+                'CONFIG_PREFIX': CONFIG_PREFIX_RE.sub('_', self.name.upper()),
                 'module': self,
             }
         )

@@ -1,13 +1,13 @@
-import shlex
 import os
 
-from . import BaseModule
+from . import TemplateBaseModule
 
 
-class ComposerModule(BaseModule):
+class ComposerModule(TemplateBaseModule):
     '''Composer module
     '''
 
+    TEMPLATE_NAME = 'composer.sh.jinja2'
     DEFAULT_CONFIG = {
         'base_path': '.',
         'composer_bin': 'composer',
@@ -23,45 +23,3 @@ class ComposerModule(BaseModule):
             self.config['base_path'],
             self.config['vendor_path'],
         ))
-
-    def get_script(self):
-        script = [super(ComposerModule, self).get_script()]
-
-        script.append(self._script_config_vars())
-
-        script.append(self._script_function_source('install', '''
-            {name}:composer install
-        '''.format(
-            name=self.name,
-        )))
-
-        # "composer install" will update the dependencies, "composer update" will
-        # upgrade the installed version. So we use "composer install" here, too.
-        script.append(self._script_function_source('update', '''
-            {name}:composer install
-        '''.format(
-            name=self.name,
-        )))
-
-        script.append(self._script_function_source('run', '''
-            (
-                export PATH="{vendor_path}/bin/:$PATH"
-                "$@"
-            )
-        '''.format(
-            vendor_path=shlex.quote(self.config['vendor_path']),
-            base_path=shlex.quote(self.config['base_path']),
-        )))
-
-        script.append(self._script_function_source('composer', '''
-            (
-                cd {base_path} && \\
-                {name}:run {composer_bin} "$@"
-            )
-        '''.format(
-            base_path=shlex.quote(self.config['base_path']),
-            name=self.name,
-            composer_bin=shlex.quote(self.config['composer_bin']),
-        )))
-
-        return '\n'.join(script)

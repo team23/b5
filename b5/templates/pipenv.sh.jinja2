@@ -1,0 +1,72 @@
+{{ CONFIG_VARS }}
+{#
+Example:
+PIPENV_base_path=/path/to/project/build
+PIPENV_pipenv_bin=pipenv
+PIPENV_pyenv_bin=pyenv
+PIPENV_use_pyenv=1
+PIPENV_install_dev=1
+PIPENV_store_venv_in_project=1
+PIPENV_pipfile=Pipfile
+PIPENV_KEYS=(base_path pipenv_bin pyenv_bin use_pyenv install_dev store_venv_in_project pipfile)
+
+PIPENV == {{ CONFIG_PREFIX }}
+#}
+
+{% macro pipenv_init() %}
+        eval "$( "${{ CONFIG_PREFIX }}_pyenv_bin" init - )"
+        export PIPENV_VENV_IN_PROJECT="${{ CONFIG_PREFIX }}_store_venv_in_project"
+        export PIPENV_PIPFILE="${{ CONFIG_PREFIX }}_pipfile"
+{% endmacro %}
+
+{{ module.name }}:install() {
+    (
+        {{ pipenv_init() }}
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
+        "${{ CONFIG_PREFIX }}_pipenv_bin" install --dev
+    )
+}
+
+{{ module.name }}:update() {
+    {{ module.name }}:install
+}
+
+{{ module.name }}:run() {
+    (
+        {{ pipenv_init() }}
+        local initial_path="$( pwd )"
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
+        source "$( "${{ CONFIG_PREFIX }}_pipenv_bin" --venv )/bin/activate" && \
+        cd "$initial_path" && \
+        "$@"
+    )
+
+}
+
+
+{{ module.name }}:pipenv() {
+    (
+        {{ pipenv_init() }}
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
+        "${{ CONFIG_PREFIX }}_pipenv_bin" "$@"
+    )
+
+}
+
+
+{{ module.name }}:pyenv() {
+    (
+        {{ pipenv_init() }}
+        cd /Users/ddanier/work/b5/test_template/build && \
+        "${{ CONFIG_PREFIX }}_pyenv_bin" "$@"
+    )
+}
+
+
+{{ module.name }}:shell() {
+    (
+        {{ pipenv_init() }}
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
+        "${{ CONFIG_PREFIX }}_pipenv_bin" shell "$@"
+    )
+}

@@ -1,0 +1,32 @@
+{{ CONFIG_VARS }}
+{#
+Example:
+COMPOSER_base_path=/path/to/project/build
+COMPOSER_composer_bin=composer
+COMPOSER_vendor_path=/path/to/project/vendor
+COMPOSER_KEYS=(base_path composer_bin vendor_path)
+
+COMPOSER == {{ CONFIG_PREFIX }}
+#}
+
+{{ module.name }}:install() {
+    {{ module.name }}:composer install
+}
+
+{{ module.name }}:update() {
+    {{ module.name }}:composer install
+}
+
+{{ module.name }}:run() {
+    (
+        export PATH="${{ CONFIG_PREFIX }}_vendor_path:$PATH"
+        "$@"
+    )
+}
+
+{{ module.name }}:composer() {
+    (
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
+        {{ module.name }}:run "${{ CONFIG_PREFIX }}_composer_bin" "$@"
+    )
+}

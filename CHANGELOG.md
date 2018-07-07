@@ -1,6 +1,7 @@
 # DEV
 
 * work in progress ;-)
+* Fixed docker:container_run not handling --user correctly
 
 # 0.13.0
 

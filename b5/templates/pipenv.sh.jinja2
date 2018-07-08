@@ -40,7 +40,6 @@ PIPENV == {{ CONFIG_PREFIX }}
         cd "$initial_path" && \
         "$@"
     )
-
 }
 
 
@@ -50,14 +49,12 @@ PIPENV == {{ CONFIG_PREFIX }}
         cd "${{ CONFIG_PREFIX }}_base_path" && \
         "${{ CONFIG_PREFIX }}_pipenv_bin" "$@"
     )
-
 }
-
 
 {{ module.name }}:pyenv() {
     (
         {{ pipenv_init() }}
-        cd /Users/ddanier/work/b5/test_template/build && \
+        cd "${{ CONFIG_PREFIX }}_base_path" && \
         "${{ CONFIG_PREFIX }}_pyenv_bin" "$@"
     )
 }

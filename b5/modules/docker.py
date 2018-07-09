@@ -166,10 +166,22 @@ class DockerModule(BaseModule):
             docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
         )))
 
+        script.append(self._script_function_source('container_id', '''
+            (
+                cd {base_path} || return 1
+
+                {name}:docker-compose ps -q "$@" | awk 'NR == 1'
+            )
+        '''.format(
+            base_path=shlex.quote(self.config['base_path']),
+            name=self.name,
+        )))
+
         script.append(self._script_function_source('is_running', '''
             (
                 cd {base_path} || return 1
-                local CONTAINER=$({name}:docker-compose ps -q "$@")
+                local CONTAINER=$({name}:container_id dev)
+                # echo "ContaineR " $({name}:container_id dev)
                 local RUNNING=$(docker inspect -f {{{{.State.Running}}}} $CONTAINER)
 
                 if $RUNNING

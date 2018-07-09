@@ -180,8 +180,7 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('is_running', '''
             (
                 cd {base_path} || return 1
-                local CONTAINER=$({name}:container_id dev)
-                # echo "ContaineR " $({name}:container_id dev)
+                local CONTAINER=$({name}:container_id $@)
                 local RUNNING=$(docker inspect -f {{{{.State.Running}}}} $CONTAINER)
 
                 if $RUNNING
@@ -316,8 +315,8 @@ class DockerModule(BaseModule):
 
             # Decide which strategy to use
             local command_strategy='run'
-            {name}:is_running "$container"
-            if [ $? -eq 1 ]
+
+            if ! {name}:is_running "$container"
             then
                 command_strategy='exec'
             fi

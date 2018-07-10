@@ -185,9 +185,9 @@ class DockerModule(BaseModule):
 
                 if $RUNNING
                     then
-                        return 1
-                    else
                         return 0
+                    else
+                        return 1
                 fi
             )
         '''.format(
@@ -316,7 +316,7 @@ class DockerModule(BaseModule):
             # Decide which strategy to use
             local command_strategy='run'
 
-            if ! {name}:is_running "$container"
+            if {name}:is_running "$container"
             then
                 command_strategy='exec'
             fi

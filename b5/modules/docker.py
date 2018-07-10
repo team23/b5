@@ -352,7 +352,7 @@ class DockerModule(BaseModule):
 
                 if [ $command_strategy == 'exec' ]
                 then
-                    local container_id=$( {name}:docker-compose ps -q "$container" | head -n 1 )
+                    local container_id=$( {name}:container_id "$container" | head -n 1 )
                     {name}:docker exec "${{d_options[@]}}" "${{d_exec_options[@]}}" "$container_id" "$@"
                 else
                     {name}:docker-compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"

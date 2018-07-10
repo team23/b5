@@ -181,6 +181,12 @@ class DockerModule(BaseModule):
             (
                 cd {base_path} || return 1
                 local CONTAINER=$({name}:container_id $@)
+
+                if [ -z $CONTAINER ]
+                then
+                    return 1
+                fi
+
                 local RUNNING=$(docker inspect -f {{{{.State.Running}}}} $CONTAINER)
 
                 if $RUNNING

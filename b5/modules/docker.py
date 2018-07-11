@@ -168,8 +168,7 @@ class DockerModule(BaseModule):
 
         script.append(self._script_function_source('container_id', '''
             (
-                cd {base_path} || return 1
-
+                cd {base_path} && \\
                 {name}:docker-compose ps -q "$@" | awk 'NR == 1'
             )
         '''.format(
@@ -180,20 +179,18 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('is_running', '''
             (
                 cd {base_path} || return 1
-                local CONTAINER=$({name}:container_id $@)
+                local CONTAINER=$( {name}:container_id "$@" )
 
                 if [ -z $CONTAINER ]
                 then
                     return 1
                 fi
 
-                local RUNNING=$(docker inspect -f {{{{.State.Running}}}} $CONTAINER)
-
-                if $RUNNING
-                    then
-                        return 0
-                    else
-                        return 1
+                if $( docker inspect -f {{{{.State.Running}}}} "$CONTAINER" )
+                then
+                    return 0
+                else
+                    return 1
                 fi
             )
         '''.format(

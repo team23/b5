@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyyaml = "==3.13b1"
+pyyaml = ">=3.13"
 termcolor = ">=1.1.0"
 "jinja2" = ">=2.10"
 markupsafe = ">=1.0"

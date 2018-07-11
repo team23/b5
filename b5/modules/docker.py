@@ -260,6 +260,7 @@ class DockerModule(BaseModule):
                         d_options+=("-u")
                         d_options+=("$2")
                         shift
+                        shift
                         ;;
                     -e|--env)
                         if [ -z "${{2:-}}" ]

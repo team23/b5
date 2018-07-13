@@ -166,15 +166,31 @@ class DockerModule(BaseModule):
             docker_machine_bin=shlex.quote(self.config['docker_machine_bin']),
         )))
 
+        script.append(self._script_function_source('container_id', '''
+            (
+                cd {base_path} && \\
+                {name}:docker-compose ps -q "$@" | awk 'NR == 1'
+            )
+        '''.format(
+            base_path=shlex.quote(self.config['base_path']),
+            name=self.name,
+        )))
+
         script.append(self._script_function_source('is_running', '''
             (
                 cd {base_path} || return 1
-                local pslist=$( {name}:docker-compose ps -q "$@" )
-                if [ -z "$pslist" ]
+                local CONTAINER=$( {name}:container_id "$@" )
+
+                if [ -z $CONTAINER ]
                 then
                     return 1
-                else
+                fi
+
+                if $( docker inspect -f {{{{.State.Running}}}} "$CONTAINER" )
+                then
                     return 0
+                else
+                    return 1
                 fi
             )
         '''.format(
@@ -197,11 +213,11 @@ class DockerModule(BaseModule):
             local d_exec_options=()
             local d_run_options=("--rm")
             local d_use_tty=1
-            
+
             local has_valid_options=1
             local force_run=0
             local force_exec=0
-            
+
             # Parse command line options
             while [ $has_valid_options -gt 0 ]
             do
@@ -291,7 +307,7 @@ class DockerModule(BaseModule):
                       ;;
                 esac
             done
-            
+
             # Parse container name
             local container="${{1:-}}"
             shift
@@ -300,9 +316,10 @@ class DockerModule(BaseModule):
                 b5:error "You need to pass the container name"
                 return 1
             fi
-            
+
             # Decide which strategy to use
             local command_strategy='run'
+
             if {name}:is_running "$container"
             then
                 command_strategy='exec'
@@ -323,7 +340,7 @@ class DockerModule(BaseModule):
             then
                 b5:abort "Trying to force run and exec, not possible"
             fi
-            
+
             # Finalize options
             if [ $use_tty -lt 1 ]
             then
@@ -333,13 +350,13 @@ class DockerModule(BaseModule):
             then
                 d_options+=("-it")
             fi
-            
+
             (
                 cd {base_path} || return 1
-                
+
                 if [ $command_strategy == 'exec' ]
                 then
-                    local container_id=$( {name}:docker-compose ps -q "$container" | head -n 1 )
+                    local container_id=$( {name}:container_id "$container" | head -n 1 )
                     {name}:docker exec "${{d_options[@]}}" "${{d_exec_options[@]}}" "$container_id" "$@"
                 else
                     {name}:docker-compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"
@@ -377,7 +394,7 @@ class DockerModule(BaseModule):
                           ;;
                     esac
                 done
-            
+
                 {name}:container_run \\
                     {force_exec} \\
                     {force_run} {no_deps} {labels} \\

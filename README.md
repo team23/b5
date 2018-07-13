@@ -72,6 +72,7 @@ need them:
 * pyenv and pipenv
 * sassc
 * docker
+* docker-sync
 * composer
 * node/npm and yarn
 * rsync
@@ -84,6 +85,7 @@ brew postinstall python
 brew postinstall python2
 brew cask install docker
 sudo pip install virtualenv
+sudo gem install docker-sync
 ```
 
 ### Starting your project

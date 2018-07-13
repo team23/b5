@@ -2,11 +2,14 @@
 
 * work in progress ;-)
 
+# 0.13.2
+
+* Fixed docker:is_running not returning the right state
+
 # 0.13.1
 
 * Fixed docker:container_run not handling --user correctly
 * Updated PyYAML to at least 3.13 (Python 3.7 compatibility - without beta package)
-* Fixed docker:is_running not returning the right state
 
 # 0.13.0
 

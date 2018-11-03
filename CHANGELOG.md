@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+
+# 0.13.3
+
 * Provide ENV inside template rendering (`{{ env.SOMETHING }}`)
 
 # 0.13.2

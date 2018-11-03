@@ -17,7 +17,8 @@ None so far.
 ## Template context
 
 b5 will provide the configuration as `config` as template context. Also the full
-`state` of the current b5 run will be available. Template context will look like:
+`state` of the current b5 run will be available, in addition the full ENV will be
+available as `env`. Template context might look like:
 
 ```json
 {"config": {"modules": {"template": null},
@@ -47,7 +48,8 @@ b5 will provide the configuration as `config` as template context. Also the full
                           "taskfile": "Taskfile"}]},
  "meta": {"now": "CURRENT ISO TIME",
           "template_file": "/path/to/template/file.jinja2",
-          "output_file": "/path/to/output/file.ext"}}
+          "output_file": "/path/to/output/file.ext"},
+ "env": {"...": "..."}}         
 ```
 
 Normally using the config should be enough for template rendering.

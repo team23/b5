@@ -72,6 +72,7 @@ class TemplateModule(BaseModule):
 
         try:
             rendered = template.render(
+                env=dict(os.environ),  # convert type to plain dict
                 state=state,
                 config=state.config,
                 module=self,

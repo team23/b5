@@ -82,7 +82,7 @@ Use the following commands to install everything on Mac:
 ```bash
 brew install python python@2 curl node pipenv pyenv rsync sassc wget yarn composer
 brew postinstall python
-brew postinstall python2
+brew postinstall python@2
 brew cask install docker
 sudo pip install virtualenv
 sudo gem install docker-sync

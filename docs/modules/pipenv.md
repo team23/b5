@@ -15,7 +15,7 @@ the virtualenv module, as is uses pipenv, the
 * **store_venv_in_project:** Allows you to control whether the virtualenv will be put in `{base_path}/.venv` (true)
   or `$HOME/.local/share/virtualenvs/` (false). Defaults to true.
 * **pipfile:** Path to Pipfile, will be searched for inside `base_path`. Defaults to "Pipfile"
-  (Meaning build/requirements.txt).
+  (Meaning build/Pipfile).
 
 ## Functions provided
 

@@ -95,6 +95,7 @@ The following tasks may exist, but are not as standardised as the tasks above:
 
 ### Database handling
 
+* db:init - Initialize an empty DB from scratch
 * db:download - Download DB from server, might strip some tables for easy usage.
 * db:export - Export the local database.
 * db:import - Import a database dump.

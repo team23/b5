@@ -1,4 +1,4 @@
-# Virtualenv
+# Pipenv
 
 Handling of your virtualenv's using pipenv and pyenv. This is a better approach than using
 the virtualenv module, as is uses pipenv, the
@@ -22,10 +22,10 @@ the virtualenv module, as is uses pipenv, the
 * **install:** Initializes the virtualenv using `pipenv_bin`. Will use `pyenv_bin` to download the
   requested python version first, if `use_pyenv` is set to true (default). 
 * **update:** Same as install.
-* **run:** Can be used to run commands inside the virtualenv, for example if command line tools were installed.
-* **pipenv:** Will call `pipenv` with the modules environment, similar to using `virtualenv:run pipenv …`.
-* **pyenv:** Will call `pyenv` with the modules environment, similar to using `virtualenv:run pyenv …`.
-* **shell:** Will call `pipenv shell` with the modules environment, similar to using `virtualenv:run pipenv shell …`.
+* **run:** Can be used to run commands inside the virtualenv installed by pipenv, for example if command line tools were installed.
+* **pipenv:** Will call `pipenv` with the modules environment, similar to using `pipenv:run pipenv …`.
+* **pyenv:** Will call `pyenv` with the modules environment, similar to using `pipenv:run pyenv …`.
+* **shell:** Will call `pipenv shell` with the modules environment, similar to using `pipenv:run pipenv shell …`.
 
 ## Example usage
 

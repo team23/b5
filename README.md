@@ -41,7 +41,7 @@ pip install -U -r requirements.txt
 pip install .
 ```
 
-### Dev installation
+#### Dev installation
 
 ```bash
 cd work/path/
@@ -62,7 +62,7 @@ cd b5
 b5 install  # ;-)
 ```
 
-#### Additional dependencies
+### Additional dependencies
 
 You may need to install the following packages in addition, as our projects might/will
 need them:

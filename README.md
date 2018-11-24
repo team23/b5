@@ -35,7 +35,8 @@ interfere with the local Taskfile of your colleges.
 Install b5 using `pipsi install b5` or `pip install b5` (For Mac OS X you may use `brew install b5` after
 adding our tap). See [detailed installation instructions](docs/00_install.md).
 
-**Note for my TEAM23 colleagues:** Please make sure to install the [additional dependencies](docs/00_install.md).
+**Note for my TEAM23 colleagues:** Please make sure to install the
+[additional dependencies](docs/00_install.md#additional-dependencies).
 
 ### Starting your project
 

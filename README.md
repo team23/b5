@@ -17,7 +17,7 @@ uses bash scripting as the Taskfile format it is easy to understand and enhance.
 
 b5 in addition provides some modules to ease the usage of some common tools used in web development (like
 [npm](docs/modules/npm.md), [composer](docs/modules/composer.md), [pipenv](docs/modules/pipenv.md),
-[docker](docs/modules/docker.md), …). In addition it tries to alredy define some
+[docker](docs/modules/docker.md), …). In addition it tries to already define some
 [common task names](docs/03_common_tasks.md) to introduce a good convention for your task naming schema. This
 will allow new developers to get on working on the projects faster - not needing to care to much about the
 project setup itself.

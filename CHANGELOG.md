@@ -1,6 +1,7 @@
 # DEV
 
 * work in progress ;-)
+* A lot of new and restructured documentation
 
 # 0.13.3
 

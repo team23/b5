@@ -49,7 +49,7 @@ def main():
         path = args.path
 
         if NON_URL_SKELETON.match(skeleton):
-            skeleton_url = 'git@git.team23.de:build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
+            skeleton_url = 'https://git.team23.de/build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
         else:
             skeleton_url = skeleton
 

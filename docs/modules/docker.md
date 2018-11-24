@@ -18,7 +18,7 @@ you probably want to put inside build/, too.
   docker_compose_config_overrides instead.
 * **docker_machine_bin:** docker-machine binary to be used, defaults to "docker-machine".
 * **data_path:** Path to shared data folder. Might be set for further operations on this path. Defaults to None.
-* **project_name:** Project name used for docker-compose. Defaults to $config.project.key, will fallback to projects
+* **project_name:** Project name used for docker-compose. Defaults to `$config.project.key`, will fallback to projects
   path basename.
 * **docker_machine:** Docker machine to be used for all docker commands. The module will set the environment
   accordingly. Defaults to None, so local docker will be used.
@@ -110,7 +110,7 @@ docker-compose.yml:
 version: "3"
 
 services:
-  # minimal example
+  # minimal example, not working really
   php:
     image: php
   python:

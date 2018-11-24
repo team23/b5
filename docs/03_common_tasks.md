@@ -1,8 +1,7 @@
-# Tasks we use
+# Tasks we use as TEAM23
 
 The following tasks are required to work as described below for every project and should be available if
 necessary.
-
 
 ## Project setup
 

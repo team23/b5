@@ -7,11 +7,11 @@ For defining tasks you will need to add functions following the `task:name`-sche
 
 ## Basic details
 
-* All tasks are simple bash functions prefixed with "task:"
+* All tasks are simple bash functions prefixed with `task:`
 * Every task may use as many arguments as neccessary ($1, $2, …)
-* Please care about your arguments and use them correctly (for exmaple $1 -> "${1}" or even "${1:-}")
+* Please care about your arguments and use them correctly (for example $1 -> "${1}" or even "${1:-}")
 * If you call multiple shell commands please make sure your function fails after one of these
-  commands failed (command1 && command2 && …)
+  commands failed, as least inside subshells (`(command1 && command2 && …)`)
 
 ## Example
 
@@ -24,8 +24,10 @@ task:css() {
 }
 
 task:install() {
-    npm install && \
-    virtualenv ../ENV && (
+    npm install
+    virtualenv ../ENV
+    (
+        # using subshell here as source may change the outer bash context 
         source ../ENV/bin/activate
         pip install -U -r requirements.txt
     )
@@ -57,3 +59,12 @@ We use the following bash setting to make sure all Taskfiles follow a common qua
   use `command || true` to prevent b5 from stopping the execution. Please also note that subshells will
   need special treatment (subshell: `( command1; command2 )`) as these settings are not passed down. You
   may need to use `( command1 && command2 )` or similar.
+
+## Taskfile locations
+
+By default b5 will look for your Taskfile at these locations in this order:
+* ~/.b5/Taskfile (for personal global tasks)
+* build/Taskfile (`{run-path}/Taskfile`)
+* build/Taskfile.local (`{run-path}/Taskfile.local`)
+
+All Taskfile's found will be loaded before task execution.

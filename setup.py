@@ -1,14 +1,22 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+from os import path
+
+# read the contents of your README file
+package_path = path.abspath(path.dirname(__file__))
+with open(path.join(package_path, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='b5',
     version='0.13.3',
     description='b5 - simple and sane task runner',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='David Danier',
     author_email='danier@team23.de',
-    url='http://www.team23.de/b5',
+    url='https://github.com/team23/b5',
     packages=find_packages(exclude=['tests.*', 'tests']),
     package_data = {
         'b5': [

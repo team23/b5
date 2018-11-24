@@ -93,10 +93,17 @@ Basic project template, only providing an minimal set of files.
 
 See: https://git.team23.de/build/b5-skel-basic
 
+### django
+
+Basic django project template. The skeleton will ask you about which versions (Django, Python) and database
+you want to use. Please make sure the parameters you use are valid.
+
+See: https://git.team23.de/build/b5-skel-django
+
 ## Providing your own skeleton
 
 A b5 skeleton is just a normal git repository. You may use any valid git URL for initializing your new project,
-if only providing a name b5 will try to clone "git@git.team23.de:build/b5-skel-$NAME.git" by default.
+if only providing a name b5 will try to clone "https://git.team23.de/build/b5-skel-$NAME.git" by default.
 
 After cloning the git repository b5 will then remove the .git/ path from it and use `git init` to create a new
 repository. You may provide additional initialization by providing an init/ path inside the repository. b5 will

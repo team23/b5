@@ -107,5 +107,8 @@ application:
     password: docker
 ```
 
+**Note:** We recommend using `application` as the base key for all application-specific (database connection,
+application paths, …) configuration. 
+
 **Note:** The application configuration might be used to generate the configuration files neccessary for the
 project. See [the template module](modules/template.md).

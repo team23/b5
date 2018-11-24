@@ -1,9 +1,9 @@
 # Core concepts
 
-We use a file calles `Taskfile` for defining all our tasks. The Taskfile will include all the tasks you
+We use a file called `Taskfile` for defining all our tasks. The Taskfile will include all the tasks you
 may later call and is the central entry point for task calling. The Taskfile itself is based on bash
-scriptiong, so has a lean and easy to read syntax. The basis idea is simple:  
-A function defined in the Taskfile using the schema `task:name` may be called by b5 using `b5 name`.
+scripting, so has a lean and easy to read syntax. The basic idea is simple:  
+A function defined in the Taskfile using the schema `task:{name}` may be called by b5 using `b5 {name}`.
 
 So the Taskfile will include all tasks for your project. It is common to use external tools (hey, as said
 before: bash scripting) for task fulfilment. So a `css` task may for example call gulp for doing the heavy

@@ -3,5 +3,6 @@
 /ENV
 /.venv
 /b5.egg-info
+/dist
 *.pyc
 *.pyo

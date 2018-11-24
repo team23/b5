@@ -2,7 +2,7 @@
 
 b5 is the central task runner for all projects of our agency (TEAM23 - www.team23.de). It tries so be as simple
 as possible while empowering you to write your own tasks, extend existing ones and use b5 for all of the everyday
-project jobs.
+project jobs. 
 
 ## Basic usage and concept
 

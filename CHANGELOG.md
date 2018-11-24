@@ -1,6 +1,11 @@
 # DEV
 
 * work in progress ;-)
+
+# 1.0.0
+
+* First real release for PyPI
+* 1.0! ;-)
 * A lot of new and restructured documentation
 
 # 0.13.3

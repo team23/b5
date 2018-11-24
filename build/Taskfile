@@ -28,3 +28,11 @@ task:shell() {
         ${SHELL:-/bin/zsh} "$@"
     )
 }
+
+task:pypi:release() {
+    (
+        cd .. && \
+        python3 setup.py sdist && \
+        twine upload dist/*
+    )
+}

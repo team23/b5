@@ -10,7 +10,7 @@ with open(path.join(package_path, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='b5',
-    version='0.13.3',
+    version='1.0.1',
     description='b5 - simple and sane task runner',
     long_description=long_description,
     long_description_content_type='text/markdown',

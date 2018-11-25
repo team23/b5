@@ -2,11 +2,24 @@
 
 from setuptools import setup, find_packages
 from os import path
+import re
+
+
+_ABSOLUTE_DOC_LINK = re.compile('\[(?P<text>[^\]]+)\]\((?P<link>docs/[^\)]+)\)')
+def _absolute_docs_link_replacement(text):
+    def _replacement(m):
+        return '[{text}](https://github.com/team23/b5/blob/master/{link})'.format(
+            text=m.group('text'),
+            link=m.group('link')
+        )
+    return _ABSOLUTE_DOC_LINK.sub(_replacement, text)
+
 
 # read the contents of your README file
 package_path = path.abspath(path.dirname(__file__))
 with open(path.join(package_path, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+    long_description = _absolute_docs_link_replacement(f.read())
+
 
 setup(
     name='b5',

@@ -1,6 +1,6 @@
 # Configuration
 
-# Config files
+## Config files
 
 Configuration is done using YAML and should be parsed by any tools we use for building the project. This
 means gulp, fabric and event the Taskfile itself need to provide the configuration for the tasks we built.
@@ -112,3 +112,8 @@ application paths, …) configuration.
 
 **Note:** The application configuration might be used to generate the configuration files neccessary for the
 project. See [the template module](modules/template.md).
+
+## Accessing the config in your own code (gulp, fabric, …)
+
+Please make sure to read [the best practice for loading the config](04_config_loading.md) in your own code.
+You should **NOT** merge the multiple config files yourself.

@@ -19,6 +19,28 @@ In general when needing to you should use the following patter:
 
 ## Example code
 
+**Note:** The following examples try to be as minimal as possible and thus
+do not include any error handling.
+
+### Javascript
+
+```javascript
+let
+    fs = require("fs"),
+    yaml = require("js-yaml");
+
+
+function load_config() {
+    if (!!process.env.B5_STATE_FILE) {
+        return yaml.load(process.env.B5_STATE_FILE).config
+    } else if (fs.existsSync('config.yml')) {
+        return yaml.load('config.yml')
+    } else {
+        return {};
+    }
+}
+```
+
 ### Python
 
 ```python

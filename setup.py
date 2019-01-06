@@ -43,6 +43,7 @@ setup(
         'termcolor >=1.1.0',
         'Jinja2 >=2.10',
         'MarkupSafe >=1.0',
+        'packaging >=16.0',
     ],
     entry_points={
         'console_scripts': [

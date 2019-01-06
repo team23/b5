@@ -34,6 +34,7 @@ variables. In general all options are broken down to variables like this (prefix
 Example config.xml:
 
 ```yaml
+version: "1.0"
 project:
   name: Some project
   key: example
@@ -46,6 +47,7 @@ paths:
 gets transformed into
 
 ```bash
+CONFIG_version="1.0"
 CONFIG_project_name="Some project"
 CONFIG_project_key="example"
 CONFIG_project_url="https://www.domain.com"
@@ -62,6 +64,10 @@ CONFIG_paths_KEYS=("web" "docker_data")
 ```yaml
 # This is the central configuration for all tools we use/execute. It is available inside
 # the Taskfile, too. See $CONFIG_project_name for example.
+
+# b5 version number
+# (b5 ensures to not run projects with higher version numbers) 
+version: "1.0"
 
 # Generic project settings
 project:

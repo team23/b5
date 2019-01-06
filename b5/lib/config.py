@@ -1,6 +1,7 @@
 import yaml
 import os
 
+from .version import ensure_config_version
 from ..exceptions import B5ExecutionError
 
 
@@ -35,8 +36,15 @@ def merge_config(cur_config, new_config):
         elif value is None:
             result_config[key] = value
         else:
-            raise RuntimeError('Unknown type for config export %s' % type(value))
+            raise B5ExecutionError('Unknown type for config export %s' % type(value))
     return result_config
+
+
+
+def validate_config(config):
+    if 'version' in config:
+        ensure_config_version(config['version'])
+    return config
 
 
 def load_config(state):
@@ -49,5 +57,5 @@ def load_config(state):
             file_config = {}
         config = merge_config(config, file_config)
 
+    validate_config(config)
     return config
-

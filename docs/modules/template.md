@@ -46,7 +46,8 @@ available as `env`. Template context might look like:
            "stored_name": "/path/to/stored/state",
            "taskfiles": [{"path": "/path/to/project/build/Taskfile",
                           "taskfile": "Taskfile"}]},
- "meta": {"now": "CURRENT ISO TIME",
+ "meta": {"version": "CURRENT b5 VERSION STRING",
+          "now": "CURRENT ISO TIME",
           "template_file": "/path/to/template/file.jinja2",
           "output_file": "/path/to/output/file.ext"},
  "env": {"...": "..."}}         

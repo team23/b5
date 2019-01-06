@@ -5,6 +5,7 @@ import sys
 import termcolor
 import jinja2
 
+from .. import VERSION
 from . import BaseModule
 
 
@@ -78,6 +79,7 @@ class TemplateModule(BaseModule):
                 module=self,
                 # Add some meta information about template rendering
                 meta={
+                    'version': VERSION,
                     'now': datetime.datetime.now().isoformat(),
                     'template_file': template_file,
                     'output_file': output_file if output_file else '-',

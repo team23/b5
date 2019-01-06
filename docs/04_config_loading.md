@@ -32,9 +32,9 @@ let
 
 function load_config() {
     if (!!process.env.B5_STATE_FILE) {
-        return yaml.load(process.env.B5_STATE_FILE).config
+        return yaml.load(fs.readFileSync(process.env.B5_STATE_FILE, 'utf8')).config
     } else if (fs.existsSync('config.yml')) {
-        return yaml.load('config.yml')
+        return yaml.load(fs.readFileSync('config.yml', 'utf8'))
     } else {
         return {};
     }

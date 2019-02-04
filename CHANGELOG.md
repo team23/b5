@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+
+# 1.0.2
+
 * Support for specifying the necessary b5 version in config.yml
 * More work on documentation
 

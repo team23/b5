@@ -398,6 +398,7 @@ class DockerModule(BaseModule):
                 {name}:container_run \\
                     {force_exec} \\
                     {force_run} {no_deps} {labels} \\
+                    {disable_tty} \\
                     "${{d_options[@]}}" \\
                     {workdir} {user} {environment} \\
                     {service} \\
@@ -407,6 +408,7 @@ class DockerModule(BaseModule):
                 force_exec='--force-exec' if command_options.get('force_exec') else '',
                 force_run='--force-run' if command_options.get('force_run') else '',
                 no_deps='--no-deps' if command_options.get('no_deps') else '',
+                disable_tty='-T' if command_options.get('disable_tty') else '',
                 labels=' '.join([
                     '--label {label}'.format(
                         label=shlex.quote('{key}={value}'.format(

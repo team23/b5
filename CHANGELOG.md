@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.1.1
+
+* Fixed docker:sync being empty when no sync options are set (bash syntax error) 
+
 # 1.1.0
 
 * Make sure b5 env export does not fail on non-string lists (skipping these lists now)
@@ -9,7 +13,7 @@
 * Fix `docker:command:…` not handling `--pipe-in` and `--pipe-out`
 * Allow to use `-T` to disable pseudo-tty on `docker:command:…`
 * Added alias for `-T`: `--disable-tty` (better readability of scripts)
-* docker module ggot sync option to automatically sync local paths to volumes - may increase performance a lot!
+* docker module got sync option to automatically sync local paths to volumes - may increase performance a lot!
   (see docs for details)
 
 # 1.0.2

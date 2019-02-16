@@ -486,7 +486,7 @@ class DockerModule(BaseModule):
                 name=self.name,
                 sync=sync,
             )) for sync
-            in self.config['sync']]),
+            in self.config['sync']]) or 'true',
         )))
 
         return '\n'.join(script)

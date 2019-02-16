@@ -1,5 +1,6 @@
 import shlex
 import os
+import pwd
 import warnings
 
 from ..exceptions import B5ExecutionError
@@ -79,7 +80,7 @@ class DockerModule(BaseModule):
         params = {
             'project_name': shlex.quote(self.config['project_name']),
             'docker_host_system': shlex.quote(os.uname().sysname.lower()),
-            'docker_host_username': shlex.quote(os.getlogin()),
+            'docker_host_username': shlex.quote(os.getenv('LOGNAME') or pwd.getpwuid(os.getuid())[0]),
             'docker_host_unix_uid': '',
             'docker_host_unix_gid': '',
             'docker_machine_env': '',

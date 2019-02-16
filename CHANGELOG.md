@@ -6,6 +6,8 @@
 * Fix `docker:command:…` not handling `--pipe-in` and `--pipe-out`
 * Allow to use `-T` to disable pseudo-tty on `docker:command:…`
 * Added alias for `-T`: `--disable-tty` (better readability of scripts)
+* docker module ggot sync option to automatically sync local paths to volumes - may increase performance a lot!
+  (see docs for details)
 
 # 1.0.2
 

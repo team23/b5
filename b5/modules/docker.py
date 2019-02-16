@@ -23,6 +23,7 @@ class DockerModule(BaseModule):
         'project_name': None,
         'docker_machine': None,
         'commands': {},
+        'sync': {},
     }
 
     def prepare_config(self):
@@ -42,6 +43,8 @@ class DockerModule(BaseModule):
                 self.config['project_name'] = os.path.basename(self.state.project_path)
         if not isinstance(self.config['commands'], dict):
             raise B5ExecutionError('docker commands has to be a dictionary')
+        if not isinstance(self.config['sync'], dict):
+            raise B5ExecutionError('docker sync has to be a dictionary')
 
         ##### CONFIGURATION MANAGEMENT #####
 
@@ -118,6 +121,7 @@ class DockerModule(BaseModule):
 
         script.append(self._script_function_source('update', '''
             {name}:install
+            {name}:sync
         '''.format(
             name=self.name,
         )))
@@ -439,5 +443,50 @@ class DockerModule(BaseModule):
                     if isinstance(command_options.get('bin'), (list, tuple))
                     else shlex.quote(command_options.get('bin')),
             )))
+
+        for sync, sync_options in self.config['sync'].items():
+            if not isinstance(sync_options, dict):
+                raise B5ExecutionError('sync options have to contain some options (at lease "from" and "to")')
+            if not 'from' in sync_options or not 'to' in sync_options:
+                raise B5ExecutionError('You have to specify at least "from" and "to"')
+
+            script.append(self._script_function_source('sync:{sync}'.format(sync=sync), '''
+                # create volume if it does not exist
+                local VOLUME_EXISTS="$( docker volume ls | awk '{{print $2}}' | grep -Fxc {volume_to} || true )"
+                if [ "$VOLUME_EXISTS" -eq 0 ]
+                then
+                    docker volume create {volume_to}
+                fi
+
+                # run rsync to sync data
+                echo -n "Syncing files to {volume_to}.."
+                {name}:docker run --rm \\
+                    -v {path_from}:/mnt/from \\
+                    -v {volume_to}:/mnt/to \\
+                    {docker_image} \\
+                    rsync -qrltE --chmod=+r {rsync_options} /mnt/from/ /mnt/to/
+                echo ".done"
+            '''.format(
+                name=self.name,
+                path_from=shlex.quote(os.path.join(self.config['base_path'], sync_options['from'])),
+                volume_to=shlex.quote(sync_options['to'] if '_' in sync_options['to'] else
+                                      '_'.join([self.config['project_name'], sync_options['to']])),
+                docker_image=shlex.quote(sync_options['image']) \
+                    if ('image' in sync_options and sync_options['image']) \
+                    else 'instrumentisto/rsync-ssh:latest',
+                rsync_options='--delete --delete-after' \
+                    if ('delete' in sync_options and sync_options['delete']) \
+                    else '',
+            )))
+
+        script.append(self._script_function_source('sync', '''
+            {syncs}
+        '''.format(
+            syncs='\n'.join([shlex.quote('{name}:sync:{sync}'.format(
+                name=self.name,
+                sync=sync,
+            )) for sync
+            in self.config['sync']]),
+        )))
 
         return '\n'.join(script)

@@ -27,11 +27,14 @@ you probably want to put inside build/, too.
   `--pipe-in` to handle pipes (see `container_run`). You may use `-T` or `--disable-tty` to disable pseudo-tty
   allocation at all. All these parameters must be passed first, as other parameters will be passed to the executed
   command inside docker.
+* **sync**: List of paths to sync to docker volumes. See example below. Syncing some paths into volumes may
+  increase the performance significantly. Internally
+  [`instrumentisto/rsync-ssh`](https://hub.docker.com/r/instrumentisto/rsync-ssh) will be used to call rsync.
 
 ## Functions provided
 
 * **install:** Calls `docker-compose build` to setup the docker images.
-* **update:** Same as `install`.
+* **update:** Updates your docker images as `install`. In addition all sync paths will be populated.
 * **run:** Can be used to run commands with the appropriate docker environment set.
 * **docker:** Will call `docker` with env etc. set, similar to using `docker:run docker …`
 * **docker-compose:** Will call `docker-compose` with env etc. set, similar to using `docker:run docker-compose …`
@@ -55,6 +58,9 @@ you probably want to put inside build/, too.
 * **is_running:** Will return 0 or 1 whether one container or any container is running. Usage: `docker:is_running`
     for checking if any container is running, `docker:is_running $SERVICE` when checking for an particular
     service. May be used like: `if $( docker:is_running ) ; then … ; fi`.
+* **docker:command:…:** Will call the command you specified in the options by name. See example below.
+* **sync:** Will sync your selected paths to docker volumes.
+* **sync:…:** Will only sync one of the configured paths.
 
 ## Additional environment provided when using docker:run
 
@@ -159,6 +165,50 @@ task:artisan_example() {
 
 task:django_example() {
     docker:command:manage.py --pipe-out dumpdata | gzip > dump.json.gz 
+}
+```
+
+### Example 3 - synchronize paths
+
+docker-compose.yml:
+```yaml
+version: "3"
+
+services:
+  # minimal example, not working really
+  php:
+    image: php
+    volumes:
+      - php_vendor:/app/web/vendor
+
+volumes:
+  php_vendor:
+```
+
+config.yml:
+```yaml
+modules:
+  docker:
+    sync:
+      vendor:
+        from: ../web/vendor
+        to: php_vendor
+      #full_sync_example:
+      #  from: LOCAL_PATH
+      #  to: VOLUME_NAME
+      #  delete: true | false
+      #  image: DOCKER_IMAGE_NAME  # uses 'instrumentisto/rsync-ssh:latest' by default
+```
+
+Taskfile:
+```bash
+task:install() { "…"; docker:install; "…" }
+# "b5 update" will run "docker:sync", too
+task:update() { "…"; docker:update; "…" }
+
+task:sync() {
+    # You may use "b5 sync" or "b5 sync vendor"
+    docker:sync "$@"
 }
 ```
 

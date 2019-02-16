@@ -2,7 +2,10 @@
 
 * work in progress ;-)
 * Make sure b5 env export does not fail on non-string lists (skipping these lists now)
-* Fix os.getlogin() not working on Ubuntu
+* Fix `os.getlogin()` not working on Ubuntu
+* Fix `docker:command:…` not handling `--pipe-in` and `--pipe-out`
+* Allow to use `-T` to disable pseudo-tty on `docker:command:…`
+* Added alias for `-T`: `--disable-tty` (better readability of scripts)
 
 # 1.0.2
 

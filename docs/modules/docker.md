@@ -24,7 +24,9 @@ you probably want to put inside build/, too.
   accordingly. Defaults to None, so local docker will be used.
 * **commands:** Create shortcut commands for running tasks inside the container. Uses `container_run` (see below) for
   command execution. See example below. Commands are provided as `docker:command:…`. You may use `--pipe-out` or
-  `--pipe-in` to handle pipes (see `container_run`).
+  `--pipe-in` to handle pipes (see `container_run`). You may use `-T` or `--disable-tty` to disable pseudo-tty
+  allocation at all. All these parameters must be passed first, as other parameters will be passed to the executed
+  command inside docker.
 
 ## Functions provided
 
@@ -45,7 +47,7 @@ you probably want to put inside build/, too.
     shell pipes use `--pipe-in` (meaning `something | docker:container_run …`) or `--pipe-out`
     (meaning `docker:container_run … | something`) for easy configuration of TTY usage.  
     You may use `docker:container_run -T …` to disable pseudo-tty allocation manually, but better use
-    `--pipe-in` or `--pipe-out`.
+    `--pipe-in` or `--pipe-out` (instead of `-T` you may use `--disable-tty` for better readability).
     
     The following options will also be available: `-w`/`--workdir`, `-u`/`--user`, `-e`/`--env`. For `--force-run`
     the following options are available in addition:  `--no-deps`, `-l`/`--label`. See `docker`/`docker-compose`

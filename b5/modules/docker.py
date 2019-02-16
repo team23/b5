@@ -243,7 +243,7 @@ class DockerModule(BaseModule):
                         shift
                         ;;
                     # Generic options
-                    -T)
+                    --disable-tty|-T)
                         use_tty=0
                         d_use_tty=0
                         shift
@@ -390,6 +390,10 @@ class DockerModule(BaseModule):
                             extra_options+=("--pipe-out")
                             shift
                             ;;
+                        --disable-tty|-T)
+                            extra_options+=("-T")
+                            shift
+                            ;;
                         *)
                           has_valid_options=0
                           ;;
@@ -399,7 +403,7 @@ class DockerModule(BaseModule):
                 {name}:container_run \\
                     {force_exec} \\
                     {force_run} {no_deps} {labels} \\
-                    "${{d_options[@]}}" \\
+                    "${{extra_options[@]}}" \\
                     {workdir} {user} {environment} \\
                     {service} \\
                     {bin} "$@"

@@ -30,7 +30,13 @@ def config_script_source(config, prefix='CONFIG'):
                 script.append(_gen_config(config_node[key], CONFIG_SUB % (prefix, escaped_key)))
             script.append('%s=(%s)' % (CONFIG_KEYS % prefix, ' '.join([shlex.quote(k) for k in config_node])))
         elif isinstance(config_node, list):
-            script.append('%s=(%s)' % (prefix, ' '.join([shlex.quote(k) for k in config_node])))
+            script.append('%s=(%s)' % (prefix, ' '.join([
+                shlex.quote(k)
+                for k
+                in config_node
+                # Make sure we can escape this bit - if not just skip it
+                if isinstance(k, (str, bytes))
+            ])))
         elif isinstance(config_node, (str, bytes)):
             script.append('%s=%s' % (prefix, shlex.quote(config_node)))
         elif isinstance(config_node, (bool)):

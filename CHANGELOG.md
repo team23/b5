@@ -1,6 +1,7 @@
 # DEV
 
 * work in progress ;-)
+* Make sure b5 env export does not fail on non-string lists (skipping these lists now)
 
 # 1.0.2
 

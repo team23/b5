@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+
+# 1.1.0
+
 * Make sure b5 env export does not fail on non-string lists (skipping these lists now)
 * Fix `os.getlogin()` not working on Ubuntu
 * Fix `docker:command:…` not handling `--pipe-in` and `--pipe-out`

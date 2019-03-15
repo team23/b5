@@ -1,8 +1,6 @@
-![b5 ready](assets/badges/b5_ready.svg)
+![b5 ready](assets/badges/b5_ready.png)
 
 # b5 Task Runner
-
-![b5 Logo](assets/logo_small.png)
 
 b5 is the central task runner for all projects of our agency (TEAM23 - www.team23.de). It tries so be as simple
 as possible while empowering you to write your own tasks, extend existing ones and use b5 for all of the everyday
@@ -101,3 +99,14 @@ project setup.
 
 See [project initialization](docs/06_project_init.md) for more information about how to `b5-init` a project.
 
+## b5 logo
+
+You may use the b5 logo when referring to b5:  
+![b5 Logo](assets/logo_small.png)  
+(see [assets/](assets/) for other formats)
+
+Also feel free to add a b5 badge to your project after you made it "b5 ready":  
+![b5 ready](assets/badges/b5_ready.png)  
+(see [assets/badges/](assets/badges/) for other formats)
+
+ 

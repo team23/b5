@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.1.2
+
+* Updates dependencies, so we use safe version of PyYAML 
+
 # 1.1.1
 
 * Fixed docker:sync being empty when no sync options are set (bash syntax error) 

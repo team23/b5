@@ -51,10 +51,10 @@ import yaml
 def load_config():
     if 'B5_STATE_FILE' in os.environ:
         with open(os.environ['B5_STATE_FILE'], 'r') as fh:
-            return yaml.load(fh)['config']
+            return yaml.safe_load(fh)['config']
     elif os.path.exists('config.yml'):
         with open('config.yml', 'r') as fh:
-            return yaml.load(fh)
+            return yaml.safe_load(fh)
     else:
         return {}
 ```

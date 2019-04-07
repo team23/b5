@@ -39,10 +39,10 @@ setup(
         ],
     },
     install_requires=[
-        'pyyaml >=3.13',
-        'termcolor >=1.1.0',
-        'Jinja2 >=2.10',
-        'MarkupSafe >=1.0',
+        'pyyaml ~=5.1',
+        'termcolor ~=1.1.0',
+        'Jinja2 ~=2.10',
+        'MarkupSafe ~=1.1',
         'packaging >=16.0',
     ],
     entry_points={

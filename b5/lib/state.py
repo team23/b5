@@ -53,4 +53,4 @@ class State(object):
 
     @classmethod
     def load(cls, fh):
-        return cls(**yaml.load(fh))
+        return cls(**yaml.safe_load(fh))

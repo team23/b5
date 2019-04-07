@@ -4,10 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyyaml = ">=3.13"
-termcolor = ">=1.1.0"
-"jinja2" = ">=2.10"
-markupsafe = ">=1.0"
+pyyaml = "~=5.1"
+termcolor = "~=1.1.0"
+"jinja2" = "~=2.10"
+markupsafe = "~=1.1"
 packaging = ">=16.0"
 
 [dev-packages]

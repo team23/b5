@@ -52,7 +52,7 @@ def load_config(state):
     config = {}
     for configfile in configfiles:
         fh = open(configfile['path'], 'r')
-        file_config = yaml.load(fh)
+        file_config = yaml.safe_load(fh)
         if not isinstance(file_config, dict):
             file_config = {}
         config = merge_config(config, file_config)

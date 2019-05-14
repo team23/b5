@@ -107,6 +107,19 @@ class DockerModule(BaseModule):
             {docker_machine_env}
         '''.format(**params)
 
+    def _docker_volume_path_str(self, volume_path_name):
+        # this should be a path
+        if '.' in volume_path_name or '/' in volume_path_name:
+            return os.path.join(self.config['base_path'], volume_path_name), 'path'
+        # otherwise we handle it as a volume name
+        else:
+            # we do not need to add the project name
+            if '_' in volume_path_name:
+                return volume_path_name, 'volume'
+            # construct docker compose volume name (project name + volume name)
+            else:
+                return '_'.join([self.config['project_name'], volume_path_name]), 'volume'
+
     def get_script(self):
         script = [super(DockerModule, self).get_script()]
 
@@ -450,33 +463,71 @@ class DockerModule(BaseModule):
             if not 'from' in sync_options or not 'to' in sync_options:
                 raise B5ExecutionError('You have to specify at least "from" and "to"')
 
+            volume_path_from, volume_path_from_type = self._docker_volume_path_str(sync_options['from'])
+            volume_path_to, volume_path_to_type = self._docker_volume_path_str(sync_options['to'])
+
+            rsync_options = ['-grltp', '--omit-link-times']
+            if 'delete' in sync_options and sync_options['delete']:
+                rsync_options.append('--delete')
+                rsync_options.append('--delete-after')
+            if 'chmod' in sync_options and sync_options['chmod']:
+                rsync_options.append('--chmod={chmod}'.format(chmod=sync_options['chmod']))
+            if 'include' in sync_options and sync_options['include']:
+                sync_options_includes = sync_options['include']
+                if not isinstance(sync_options_includes, (list, tuple)):
+                    sync_options_includes = [sync_options_includes]
+                for sync_options_include in sync_options_includes:
+                    rsync_options.append('--include={include}'.format(include=shlex.quote(sync_options_include)))
+            if 'exclude' in sync_options and sync_options['exclude']:
+                sync_options_excludes = sync_options['exclude']
+                if not isinstance(sync_options_excludes, (list, tuple)):
+                    sync_options_excludes = [sync_options_excludes]
+                for sync_options_exclude in sync_options_excludes:
+                    rsync_options.append('--exclude={exclude}'.format(exclude=shlex.quote(sync_options_exclude)))
+
             script.append(self._script_function_source('sync:{sync}'.format(sync=sync), '''
-                # create volume if it does not exist
-                local VOLUME_EXISTS="$( docker volume ls | awk '{{print $2}}' | grep -Fxc {volume_to} || true )"
-                if [ "$VOLUME_EXISTS" -eq 0 ]
+                local SYNC_SUBPATH=""
+                if [ ! -z "${{1:-}}" ]
                 then
-                    docker volume create {volume_to}
+                    SYNC_SUBPATH="$1"
+                fi
+            
+                # create volumes if it does not exist
+                if [ {volume_path_from_type} == "volume" ]
+                then
+                    local VOLUME_FROM_EXISTS="$( docker volume ls | awk '{{print $2}}' | grep -Fxc {volume_path_from} || true )"
+                    if [ "$VOLUME_FROM_EXISTS" -eq 0 ]
+                    then
+                        docker volume create {volume_path_from} > /dev/null
+                    fi
+                fi
+                if [ {volume_path_to_type} == "volume" ]
+                then
+                    local VOLUME_TO_EXISTS="$( docker volume ls | awk '{{print $2}}' | grep -Fxc {volume_path_to} || true )"
+                    if [ "$VOLUME_TO_EXISTS" -eq 0 ]
+                    then
+                        docker volume create {volume_path_to} > /dev/null
+                    fi
                 fi
 
                 # run rsync to sync data
-                echo -n "Syncing files to {volume_to}.."
+                echo -n "Syncing files from {volume_path_from} to {volume_path_to}.."
                 {name}:docker run --rm \\
-                    -v {path_from}:/mnt/from \\
-                    -v {volume_to}:/mnt/to \\
+                    -v {volume_path_from}:/mnt/from \\
+                    -v {volume_path_to}:/mnt/to \\
                     {docker_image} \\
-                    rsync -qrltE --chmod=+r {rsync_options} /mnt/from/ /mnt/to/
+                    rsync  {rsync_options} "/mnt/from/$SYNC_SUBPATH" "/mnt/to/$SYNC_SUBPATH"
                 echo ".done"
             '''.format(
                 name=self.name,
-                path_from=shlex.quote(os.path.join(self.config['base_path'], sync_options['from'])),
-                volume_to=shlex.quote(sync_options['to'] if '_' in sync_options['to'] else
-                                      '_'.join([self.config['project_name'], sync_options['to']])),
+                volume_path_from=shlex.quote(volume_path_from),
+                volume_path_from_type=shlex.quote(volume_path_from_type),
+                volume_path_to=shlex.quote(volume_path_to),
+                volume_path_to_type=shlex.quote(volume_path_to_type),
                 docker_image=shlex.quote(sync_options['image']) \
                     if ('image' in sync_options and sync_options['image']) \
                     else 'instrumentisto/rsync-ssh:latest',
-                rsync_options='--delete --delete-after' \
-                    if ('delete' in sync_options and sync_options['delete']) \
-                    else '',
+                rsync_options=' '.join(rsync_options),
             )))
 
         script.append(self._script_function_source('sync', '''

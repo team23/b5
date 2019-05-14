@@ -179,10 +179,10 @@ services:
   php:
     image: php
     volumes:
-      - php_vendor:/app/web/vendor
+      - phpvendor:/app/web/vendor
 
 volumes:
-  php_vendor:
+  phpvendor:
 ```
 
 config.yml:
@@ -192,12 +192,24 @@ modules:
     sync:
       vendor:
         from: ../web/vendor
-        to: php_vendor
+        to: phpvendor
+        delete: true
       #full_sync_example:
-      #  from: LOCAL_PATH
-      #  to: VOLUME_NAME
-      #  delete: true | false
+      #  from: VOLUME_OR_PATH
+      #  to: VOLUME_OR_PATH
       #  image: DOCKER_IMAGE_NAME  # uses 'instrumentisto/rsync-ssh:latest' by default
+      #  delete: true | false
+      #  chmod: 777
+      #  exclude: path/to/something/
+      #  OR
+      #  exclude:
+      #    - path/to/something/
+      #    - path/to/something-else/
+      #  include: path/to/something/
+      #  OR
+      #  include:
+      #    - path/to/something/
+      #    - path/to/something-else/
 ```
 
 Taskfile:
@@ -207,8 +219,14 @@ task:install() { "…"; docker:install; "…" }
 task:update() { "…"; docker:update; "…" }
 
 task:sync() {
-    # You may use "b5 sync" or "b5 sync vendor"
-    docker:sync "$@"
+    # You may use "b5 sync"
+    docker:sync
+}
+
+task:sync:phpvendor() {
+    # You may use "b5 sync:phpvendor"
+    # You also could use "b5 sync:phpvendor bin" to just sync the bin folder
+    docker:sync:phpvendor "$@"
 }
 ```
 

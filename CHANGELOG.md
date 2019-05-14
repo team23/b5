@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+
+# 1.1.3
+
 * Docker sync feature should be much more stable now
 * Docker sync options added: chmod, exclude, include
 * Docker sync now allows to use volume or path on both sides  

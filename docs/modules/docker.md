@@ -28,7 +28,8 @@ you probably want to put inside build/, too.
   allocation at all. All these parameters must be passed first, as other parameters will be passed to the executed
   command inside docker.
 * **sync**: List of paths to sync to docker volumes. See example below. Syncing some paths into volumes may
-  increase the performance significantly. Internally
+  increase the performance significantly. Note that these paths will only be updated when calling `docker:update`
+  or `docker:sync`. Internally
   [`instrumentisto/rsync-ssh`](https://hub.docker.com/r/instrumentisto/rsync-ssh) will be used to call rsync.
 
 ## Functions provided
@@ -60,7 +61,7 @@ you probably want to put inside build/, too.
     service. May be used like: `if $( docker:is_running ) ; then … ; fi`.
 * **docker:command:…:** Will call the command you specified in the options by name. See example below.
 * **sync:** Will sync your selected paths to docker volumes.
-* **sync:…:** Will only sync one of the configured paths.
+* **sync:…:** Will only sync one of the configured paths. You may pass an directory name to only sync a subfolder.
 
 ## Additional environment provided when using docker:run
 

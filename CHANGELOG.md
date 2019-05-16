@@ -1,6 +1,8 @@
 # DEV
 
 * work in progress ;-)
+* Docker sync config allows to specify `auto: false` to not automatically sync on `docker:updae` and `docker:sync`,
+  you may still use `docker:sync:$NAME` for manual synchronization 
 
 # 1.1.3
 

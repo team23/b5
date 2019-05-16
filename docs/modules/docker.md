@@ -35,7 +35,8 @@ you probably want to put inside build/, too.
 ## Functions provided
 
 * **install:** Calls `docker-compose build` to setup the docker images.
-* **update:** Updates your docker images as `install`. In addition all sync paths will be populated.
+* **update:** Updates your docker images as `install`. In addition all sync paths will be populated (if set to
+    `auto=True`).
 * **run:** Can be used to run commands with the appropriate docker environment set.
 * **docker:** Will call `docker` with env etc. set, similar to using `docker:run docker …`
 * **docker-compose:** Will call `docker-compose` with env etc. set, similar to using `docker:run docker-compose …`
@@ -60,7 +61,7 @@ you probably want to put inside build/, too.
     for checking if any container is running, `docker:is_running $SERVICE` when checking for an particular
     service. May be used like: `if $( docker:is_running ) ; then … ; fi`.
 * **docker:command:…:** Will call the command you specified in the options by name. See example below.
-* **sync:** Will sync your selected paths to docker volumes.
+* **sync:** Will sync your selected paths to docker volumes where `auto=true`.
 * **sync:…:** Will only sync one of the configured paths. You may pass an directory name to only sync a subfolder.
 
 ## Additional environment provided when using docker:run
@@ -198,7 +199,8 @@ modules:
       #full_sync_example:
       #  from: VOLUME_OR_PATH
       #  to: VOLUME_OR_PATH
-      #  image: DOCKER_IMAGE_NAME  # uses 'instrumentisto/rsync-ssh:latest' by default
+      #  auto: true  # automatically sync this path when docker:update or docker:sync is run (default=true)
+      #  image: DOCKER_IMAGE_NAME  # uses 'instrumentisto/rsync-ssh:latest' by default, must include rsync
       #  delete: true | false
       #  chmod: 777
       #  exclude: path/to/something/

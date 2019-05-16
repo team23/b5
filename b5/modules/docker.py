@@ -459,7 +459,7 @@ class DockerModule(BaseModule):
 
         for sync, sync_options in self.config['sync'].items():
             if not isinstance(sync_options, dict):
-                raise B5ExecutionError('sync options have to contain some options (at lease "from" and "to")')
+                raise B5ExecutionError('sync options have to contain some options (at least "from" and "to")')
             if not 'from' in sync_options or not 'to' in sync_options:
                 raise B5ExecutionError('You have to specify at least "from" and "to"')
 
@@ -533,11 +533,15 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('sync', '''
             {syncs}
         '''.format(
-            syncs='\n'.join([shlex.quote('{name}:sync:{sync}'.format(
-                name=self.name,
-                sync=sync,
-            )) for sync
-            in self.config['sync']]) or 'true',
+            syncs='\n'.join(
+                [shlex.quote('{name}:sync:{sync}'.format(
+                    name=self.name,
+                    sync=sync,
+                ))
+                for sync, sync_options
+                in self.config['sync'].items()
+                if sync_options.get('auto', True)
+            ]) or 'true',
         )))
 
         return '\n'.join(script)

@@ -168,6 +168,10 @@ Use composer to install PHP dependencies. See [documentation](modules/composer.m
 
 Allow simple usage of docker. See [documentation](modules/docker.md).
 
+### pipenv
+
+Handling of your virtualenv's using pipenv. See [documentation](modules/pipenv.md).
+
 ### virtualenv
 
 Handling of your virtualenv's. See [documentation](modules/virtualenv.md).

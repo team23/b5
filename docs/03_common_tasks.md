@@ -73,7 +73,7 @@ Takes at least one parameter: Server to deploy to (example: `b5 deploy staging`)
 
 Will deploy all the changes from the local repository to the server. 
 
-### deploy_install
+### deploy:install
 
 Like `deploy` but will only setup the project on the server. It will not try to run tasks for
 updating the project as these will fail (example: running database migrations without having configured
@@ -98,7 +98,7 @@ The following tasks may exist, but are not as standardised as the tasks above:
 * db:download - Download DB from server, might strip some tables for easy usage.
 * db:export - Export the local database.
 * db:import - Import a database dump.
-* db:prepare_dev - Prepare the database for development (changing configuration, truncate tables, …)
+* db:prepare:dev - Prepare the database for development (changing configuration, truncate tables, …)
 
 Database dumps are normally stored inside `$CONFIG_paths_db`, which in general is set to `_db/` inside the
 project root.

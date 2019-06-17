@@ -1,14 +1,14 @@
 # Taskfile format
 
 The `Taskfile` is in general a normal bash script which will be loaded by b5 using the bash `source` command.
-As of this you may use anything you are used to when writing bash scripts.
+Because of this you may use anything you are already using when writing your bash scripts.
 
 For defining tasks you will need to add functions following the `task:name`-schema. See below.
 
 ## Basic details
 
 * All tasks are simple bash functions prefixed with `task:`
-* Every task may use as many arguments as neccessary ($1, $2, …)
+* Every task may use as many arguments as necessary ($1, $2, …)
 * Please care about your arguments and use them correctly (for example $1 -> "${1}" or even "${1:-}")
 * If you call multiple shell commands please make sure your function fails after one of these
   commands failed, as least inside subshells (`(command1 && command2 && …)`)
@@ -27,7 +27,7 @@ task:install() {
     npm install
     virtualenv ../ENV
     (
-        # using subshell here as source may change the outer bash context 
+        # using subshell here as source may change the outer bash context
         source ../ENV/bin/activate
         pip install -U -r requirements.txt
     )
@@ -44,7 +44,7 @@ task:deploy() {
 ```
 
 **Note:** The Taskfile is always executed inside the "run-path", which defaults to `build/`. Make
-sure to switch path, when neccessary. I recommend using a subshell (see
+sure to switch path, when necessary. I recommend using a subshell (see
 ["( … )" subshell syntax](http://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)) when
 doing so.
 

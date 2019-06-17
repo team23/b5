@@ -22,7 +22,7 @@ of the project for your colleges. This might include changing the database schem
 configuration options, …
 
 `b5 update` will use the necessary tools to make sure the project is up to date. This means for
-example running database migrations. 
+example running database migrations.
 
 ### clean
 
@@ -71,7 +71,7 @@ instead. This behavior is true for other frameworks providing its own developmen
 
 Takes at least one parameter: Server to deploy to (example: `b5 deploy staging`)
 
-Will deploy all the changes from the local repository to the server. 
+Will deploy all the changes from the local repository to the server.
 
 ### deploy:install
 
@@ -86,7 +86,7 @@ The following tasks must be available in **every** project:
 * install
 * update
 
-If no installation is necessary the tasks should just do nothing, but still must be available.
+If no installation is necessary the tasks should simply do nothing, but still will be available.
 
 ## Further tasks
 

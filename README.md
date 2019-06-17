@@ -2,9 +2,9 @@
 
 # b5 Task Runner
 
-b5 is the central task runner for all projects of our agency (TEAM23 - www.team23.de). It tries so be as simple
+b5 is the central task runner for all projects of our agency (TEAM23 - www.team23.de). It tries to be as simple
 as possible while empowering you to write your own tasks, extend existing ones and use b5 for all of the everyday
-project jobs. 
+project jobs.
 
 ## Basic usage and concept
 
@@ -19,14 +19,14 @@ uses bash scripting as the Taskfile format it is easy to understand and enhance.
 
 b5 in addition provides some modules to ease the usage of some common tools used in web development (like
 [npm](docs/modules/npm.md), [composer](docs/modules/composer.md), [pipenv](docs/modules/pipenv.md),
-[docker](docs/modules/docker.md), …). In addition it tries to already define some
+[docker](docs/modules/docker.md), …). In addition it defines some
 [common task names](docs/03_common_tasks.md) to introduce a good convention for your task naming schema. This
-will allow new developers to get on working on the projects faster - not needing to care to much about the
+will allow new developers to get on board faster - not need to care too much about the
 project setup itself.
 
 You may pass parameters to your tasks like `b5 some_task some_parameter` and use normal bash parameter handling
 to use these parameters (`$1`, or better `${1}`). Please note that b5 will abort when accessing a non existent
-parameter, use bash default values when necessary (`${1:-default}`). 
+parameter, use bash default values when necessary (`${1:-default}`).
 
 **Hint:** You may add a file called Taskfile.local (`build/Taskfile.local`) for all your personal tasks. Make
 sure to never add this file to git. Please be sure to add this file to your .gitignore. Otherwise you might
@@ -49,7 +49,7 @@ cd example-project
 ```
 
 **Note:** You may use `b5-init -s $SKELETON example` to initialize the project using an skeleton. By default
-b5 used the "basic" skeleton. See [project initialization](docs/06_project_init.md) for more details.
+b5 will use the "basic" skeleton. See [project initialization](docs/06_project_init.md) for more details.
 
 ### Defining your tasks (build/Taskfile)
 
@@ -108,5 +108,3 @@ You may use the b5 logo when referring to b5:
 Also feel free to add a b5 badge to your project after you made it "b5 ready":  
 ![b5 ready](assets/badges/b5_ready.png)  
 (see [assets/badges/](assets/badges/) for other formats)
-
- 

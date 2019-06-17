@@ -100,6 +100,12 @@ you want to use. Please make sure the parameters you use are valid.
 
 See: https://git.team23.de/build/b5-skel-django
 
+## magento 2
+
+Basic Magento 2 project template.
+
+See: https://git.team23.de/build/b5-skel-magento2
+
 ## Providing your own skeleton
 
 A b5 skeleton is just a normal git repository. You may use any valid git URL for initializing your new project,
@@ -112,4 +118,4 @@ will be used - you may provide init/config.yml as well). After this init task is
 init/ from the newly created project.
 
 See https://git.team23.de/build/b5-skel-basic/blob/master/init/ and
-https://git.team23.de/build/b5-skel-basic/blob/master/init/Taskfile for a really minimal example of this mechanism. 
+https://git.team23.de/build/b5-skel-basic/blob/master/init/Taskfile for a really minimal example of this mechanism.

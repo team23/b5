@@ -3,7 +3,7 @@
 ## Config files
 
 Configuration is done using YAML and should be parsed by any tools we use for building the project. This
-means gulp, fabric and event the Taskfile itself need to provide the configuration for the tasks we built.
+means gulp, fabric and even the Taskfile itself need to provide the configuration for the tasks we've built.
 
 Configuration basically is done using two configuration files:
 
@@ -28,7 +28,7 @@ usage of local configuration use the [template module](modules/template.md). See
 
 ## Taskfile configuration access
 
-Within the Taskfile b5 will take care of configuration loading and provide all options using normal bash
+Within the Taskfile, b5 will take care of configuration loading and provide all options using normal bash
 variables. In general all options are broken down to variables like this (prefixed with "CONFIG_").
 
 Example config.xml:
@@ -57,7 +57,7 @@ CONFIG_paths_docker_data="../_docker_data"
 CONFIG_paths_KEYS=("web" "docker_data")
 ```
 
-**Note:** The `…_KEYS` are added for iterating over the configuration values - when neccessary.
+**Note:** The `…_KEYS` are added for iterating over the configuration values - when necessary.
 
 ## config.yml example with comments
 
@@ -66,7 +66,7 @@ CONFIG_paths_KEYS=("web" "docker_data")
 # the Taskfile, too. See $CONFIG_project_name for example.
 
 # b5 version number
-# (b5 ensures to not run projects with higher version numbers) 
+# (b5 ensures to not run projects with higher version numbers)
 version: "1.0"
 
 # Generic project settings
@@ -74,21 +74,21 @@ project:
   # Name of the project
   # (MANDATORY)
   name: Some project
-  
+
   # Machine readable key for the project (used as docker container name prefix)
   # (MANDATORY)
   key: project
-  
+
   # Public domain of project
   # (MANDATORY)
   url: http://www.domain.com/
-  
+
 # Path configuration for common paths
 paths:
   # Path to web/ (document root or framework root)
   # (MANDATORY)
   web: ../web
-  
+
   # Path for database dumps, should be added to .gitignore
   db: ../_db
 ```
@@ -98,10 +98,10 @@ paths:
 ```yaml
 # The local configuration might change values from the global configuration file:
 project:
-  # Might be neccessary when having two compies of the project running. The key is used
+  # Might be necessary when having two copies of the project running. The key is used
   # as the docker-compose project name, so we need to avoid name clashes.
   key: projectcopy
-  
+
 # All application-specific configuration should live under the key "application" and will
 # normally only be set inside the local configuration:
 application:
@@ -114,9 +114,9 @@ application:
 ```
 
 **Note:** We recommend using `application` as the base key for all application-specific (database connection,
-application paths, …) configuration. 
+application paths, …) configuration.
 
-**Note:** The application configuration might be used to generate the configuration files neccessary for the
+**Note:** The application configuration might be used to generate the configuration files necessary for the
 project. See [the template module](modules/template.md).
 
 ## Accessing the config in your own code (gulp, fabric, …)

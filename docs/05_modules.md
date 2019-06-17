@@ -4,7 +4,7 @@
 
 b5 provides some common modules to allow for easy usage of generic tasks, helper functions and more. All
 modules are defined inside the config.yml. Each module may be used multiple times using different parameters,
-so you may for example use one virtualenv for your build/ and one for your web/ path. 
+so you may for example use one virtualenv for your build/ and one for your web/ path.
 
 ### Loading modules
 
@@ -23,7 +23,7 @@ modules:
 Example module: "example"
 
 ```bash
-# The functions provided by the modules will be prefixed by it's name 
+# The functions provided by the modules will be prefixed by it's name
 examplemodule:function() {
     echo "Did something"
 }
@@ -43,8 +43,8 @@ MODULEWITHPARAMS_param2="value2"
 ```
 
 Please note, that the provided environment will represent the internal values of the module. This
-means that in most cases some preprocessing/cleanup of values might have happened. For paths
-this for example may mean the paths are converted to absolute paths. This means:
+means that in most cases some preprocessing/cleanup of values might have happened. For paths like
+this in the example, it means that paths are converted to absolute paths. Example:
 
 ```yaml
 modules:

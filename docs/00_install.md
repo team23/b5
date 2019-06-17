@@ -50,11 +50,11 @@ b5 install  # ;-)
 
 # Additional dependencies
 
-**Note:** These dependencies are purely optional and are usually needed at out agency for our own
+**Note:** These dependencies are purely optional and are usually only needed at TEAM23 for our own
 project setup. If you don't work at TEAM23 you probably don't need them or at least not all.
 
-You may need to install the following packages in addition, as our projects might/will
-need them:
+You may need to install the following packages in addition, as some of the projects might/will
+require them:
 
 * python2 and python3
 * virtualenv

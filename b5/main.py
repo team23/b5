@@ -73,11 +73,11 @@ def main():
 
         # State vars
         state = State(
-            project_path = args.project_path,
-            run_path = None,
-            taskfiles = [],
-            config = {},
-            args = vars(args)
+            project_path=args.project_path,
+            run_path=None,
+            taskfiles=[],
+            config={},
+            args=vars(args)
         )
 
         # Find project dir

@@ -12,6 +12,7 @@ packaging = ">=16.0"
 
 [dev-packages]
 "e1839a8" = {path = ".", editable = true}
+pylint = "*"
 
 [requires]
 python_version = "3.7"

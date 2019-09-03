@@ -1,6 +1,7 @@
-import yaml
-import tempfile
 import os
+import tempfile
+
+import yaml
 
 
 class StoredState:

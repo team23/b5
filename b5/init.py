@@ -56,7 +56,7 @@ def main():
         full_path = os.path.realpath(os.path.join(os.getcwd(), path))
         os.makedirs(full_path, exist_ok=True)
 
-        if len(os.listdir(full_path)) > 0:
+        if os.listdir(full_path):
             raise B5ExecutionError('Cannot init an existing directory if not empty')
 
         _run_cmd(['git', 'clone', skeleton_url, full_path], 'Could not clone skeleton repository, see above')

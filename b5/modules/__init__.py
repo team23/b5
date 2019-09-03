@@ -15,7 +15,7 @@ MODULES = {
 }
 
 
-class BaseModule(object):
+class BaseModule:
     DEFAULT_CONFIG = {}
 
     def __init__(self, name, config, state, **kwargs):

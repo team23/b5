@@ -1,6 +1,6 @@
+import os
 import shlex
 import tempfile
-import os
 
 from .module import load_module
 
@@ -85,7 +85,7 @@ def construct_script_source(state):
     # run_path and parse Taskfile's
     script.append('cd %s\n' % shlex.quote(state.run_path))
     for taskfile in state.taskfiles:
-        #script.append('source %s\n' % shlex.quote(taskfile['path']))
+        # script.append('source %s\n' % shlex.quote(taskfile['path']))
         script.append(open(taskfile['path'], 'r').read())
 
     return '\n'.join(script)

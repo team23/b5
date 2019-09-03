@@ -117,7 +117,7 @@ def main():
                 if state.run_path:
                     os.chdir(state.run_path)
                 try:
-                    result = subprocess.run(
+                    subprocess.run(
                         [
                             args.shell,
                             source.name,

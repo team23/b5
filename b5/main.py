@@ -5,14 +5,14 @@ import sys
 
 import termcolor
 
+from . import VERSION
 from .exceptions import B5ExecutionError
+from .lib.config import find_configs
 from .lib.config import load_config
 from .lib.detect import detect_project_path, DETECT
-from .lib.taskfile import find_taskfiles
-from .lib.config import find_configs
 from .lib.script import StoredScriptSource, construct_script_source, construct_script_run
 from .lib.state import State
-from . import VERSION
+from .lib.taskfile import find_taskfiles
 
 
 def main():
@@ -132,7 +132,7 @@ def main():
                     termcolor.cprint('Task execution failed, see above', color='red')
                     sys.exit(1)
                 _print('Task exited ok', color='green')
-                #print(result)
+                # print(result)
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)

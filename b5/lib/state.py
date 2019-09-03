@@ -7,7 +7,7 @@ import yaml
 class StoredState:
     def __init__(self, state):
         self.state = state
-        if not self.state.stored_name is None:
+        if self.state.stored_name is not None:
             raise RuntimeError('You may only store the state once')
 
         self.file_handle = tempfile.NamedTemporaryFile(suffix='b5-state', mode='w', encoding='utf-8', delete=False)
@@ -45,7 +45,7 @@ class State:
             if not hasattr(self, key):
                 setattr(self, key, None)
         for key in kwargs:
-            if not key in self.KEYS:
+            if key not in self.KEYS:
                 raise RuntimeError('Key %s is not a valid state attribute' % key)
             setattr(self, key, kwargs[key])
 

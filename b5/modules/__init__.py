@@ -1,6 +1,6 @@
-from ..lib.config import merge_config
 import re
 
+from ..lib.config import merge_config
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
 MODULES = {

@@ -49,6 +49,6 @@ def main():
 
         os.chdir(state.run_path)
         method(state, args.args)
-    except B5ExecutionError as e:
-        termcolor.cprint(str(e), 'red')
+    except B5ExecutionError as error:
+        termcolor.cprint(str(error), 'red')
         sys.exit(1)

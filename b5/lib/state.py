@@ -9,16 +9,16 @@ class StoredState(object):
         if not self.state.stored_name is None:
             raise RuntimeError('You may only store the state once')
 
-        self.fh = tempfile.NamedTemporaryFile(suffix='b5-state', mode='w', encoding='utf-8', delete=False)
+        self.file_handle = tempfile.NamedTemporaryFile(suffix='b5-state', mode='w', encoding='utf-8', delete=False)
         self.state.stored_name = self.name
         yaml.dump({
             key: getattr(self.state, key)
             for key in state.KEYS
-        }, self.fh, default_flow_style=False)
-        self.fh.close()
+        }, self.file_handle, default_flow_style=False)
+        self.file_handle.close()
 
     def close(self):
-        os.unlink(self.fh.name)
+        os.unlink(self.file_handle.name)
         self.state.stored_name = None
 
     def __enter__(self):
@@ -29,7 +29,7 @@ class StoredState(object):
 
     @property
     def name(self):
-        return self.fh.name
+        return self.file_handle.name
 
 
 class State(object):
@@ -52,5 +52,5 @@ class State(object):
         return StoredState(self)
 
     @classmethod
-    def load(cls, fh):
-        return cls(**yaml.safe_load(fh))
+    def load(cls, file_handle):
+        return cls(**yaml.safe_load(file_handle))

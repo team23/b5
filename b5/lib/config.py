@@ -1,5 +1,5 @@
-import yaml
 import os
+import yaml
 
 from .version import ensure_config_version
 from ..exceptions import B5ExecutionError

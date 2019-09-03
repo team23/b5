@@ -1,10 +1,10 @@
-from ..modules import MODULES
-from ..exceptions import B5ExecutionError
 from .importutils import import_string
+from ..exceptions import B5ExecutionError
+from ..modules import MODULES
 
 
 def load_module(state, module_key):
-    if not 'modules' in state.config or not module_key in state.config['modules']:
+    if 'modules' not in state.config or module_key not in state.config['modules']:
         raise RuntimeError('Module %s is not defined in config' % module_key)
     module_config = state.config['modules'][module_key]
 
@@ -17,7 +17,7 @@ def load_module(state, module_key):
     module_import_path = module_class_key
     if module_class_key in MODULES:
         module_import_path = MODULES[module_class_key]
-    if not '.' in module_import_path:
+    if '.' not in module_import_path:
         raise B5ExecutionError('Module seems not to be valid (key=%s/import=%s), please check config' %
                                (module_key, module_import_path)
                                )

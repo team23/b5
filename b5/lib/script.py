@@ -108,7 +108,7 @@ fi
     )
 
 
-class StoredScriptSource(object):
+class StoredScriptSource:
     def __init__(self, state, source):
         self.state = state
         self.source = source

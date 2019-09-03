@@ -17,18 +17,18 @@ def modules_script_source(state):
 def config_script_source(config, prefix='CONFIG'):
     import re
 
-    RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
-    CONFIG_SUB = '%s_%s'
-    CONFIG_KEYS = '%s_KEYS'
+    re_key_escape = re.compile('[^a-zA-Z0-9]+')
+    config_sub = '%s_%s'
+    config_keys = '%s_KEYS'
 
     def _gen_config(config_node, prefix):
         script = []
 
         if isinstance(config_node, dict):
             for key in config_node:
-                escaped_key = RE_KEY_ESCAPE.sub('_', key)
-                script.append(_gen_config(config_node[key], CONFIG_SUB % (prefix, escaped_key)))
-            script.append('%s=(%s)' % (CONFIG_KEYS % prefix, ' '.join([shlex.quote(k) for k in config_node])))
+                escaped_key = re_key_escape.sub('_', key)
+                script.append(_gen_config(config_node[key], config_sub % (prefix, escaped_key)))
+            script.append('%s=(%s)' % (config_keys % prefix, ' '.join([shlex.quote(k) for k in config_node])))
         elif isinstance(config_node, list):
             script.append('%s=(%s)' % (prefix, ' '.join([
                 shlex.quote(k)
@@ -112,12 +112,12 @@ class StoredScriptSource(object):
     def __init__(self, state, source):
         self.state = state
         self.source = source
-        self.fh = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
-        self.fh.write(self.source.encode('utf-8'))
-        self.fh.close()
+        self.file_handle = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
+        self.file_handle.write(self.source.encode('utf-8'))
+        self.file_handle.close()
 
     def close(self):
-        os.unlink(self.fh.name)
+        os.unlink(self.file_handle.name)
 
     def __enter__(self):
         return self
@@ -127,4 +127,4 @@ class StoredScriptSource(object):
 
     @property
     def name(self):
-        return self.fh.name
+        return self.file_handle.name

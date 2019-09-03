@@ -94,9 +94,9 @@ class TemplateModule(BaseModule):
             try:
                 with open(output_file, 'w') as fh:
                     fh.write(rendered)
-            except IOError as e:
+            except IOError as error:
                 termcolor.cprint('Template output could not be saved (%s)' % args.output_file, color='red')
-                termcolor.cprint(e.message, color='yellow')
+                termcolor.cprint(str(error), color='yellow')
                 sys.exit(1)
         else:
             print(rendered)

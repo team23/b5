@@ -48,11 +48,11 @@ def validate_config(config):
 
 
 def load_config(state):
-    configfiles = state.configfiles
+    config_files = state.configfiles
     config = {}
-    for configfile in configfiles:
-        fh = open(configfile['path'], 'r')
-        file_config = yaml.safe_load(fh)
+    for configfile in config_files:
+        file_handle = open(configfile['path'], 'r')
+        file_config = yaml.safe_load(file_handle)
         if not isinstance(file_config, dict):
             file_config = {}
         config = merge_config(config, file_config)

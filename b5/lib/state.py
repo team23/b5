@@ -3,7 +3,7 @@ import tempfile
 import os
 
 
-class StoredState(object):
+class StoredState:
     def __init__(self, state):
         self.state = state
         if not self.state.stored_name is None:
@@ -32,7 +32,7 @@ class StoredState(object):
         return self.file_handle.name
 
 
-class State(object):
+class State:
     KEYS = ('project_path', 'run_path', 'taskfiles', 'configfiles', 'config', 'args', 'stored_name')
 
     taskfiles = []

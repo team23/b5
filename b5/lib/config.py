@@ -1,4 +1,5 @@
 import os
+
 import yaml
 
 from .version import ensure_config_version
@@ -15,7 +16,7 @@ def find_configs(state, configs):
                 'config': config,
                 'path': config_path,
             })
-    #if not found_configs:
+    # if not found_configs:
     #    raise B5ExecutionError('No config found, tried %s inside %s' % (', '.join(configs), run_path))
     return found_configs
 
@@ -38,7 +39,6 @@ def merge_config(cur_config, new_config):
         else:
             raise B5ExecutionError('Unknown type for config export %s' % type(value))
     return result_config
-
 
 
 def validate_config(config):

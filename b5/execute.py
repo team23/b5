@@ -1,11 +1,12 @@
 import argparse
 import os
-import termcolor
 import sys
 
-from .lib.state import State
-from .lib.module import load_module
+import termcolor
+
 from .exceptions import B5ExecutionError
+from .lib.module import load_module
+from .lib.state import State
 
 
 def main():

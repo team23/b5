@@ -80,6 +80,6 @@ def main():
         termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')
         termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton_url), 'green')
         termcolor.cprint('  project path: {full_path}'.format(full_path=full_path), 'green')
-    except B5ExecutionError as e:
-        termcolor.cprint(str(e), 'red')
+    except B5ExecutionError as error:
+        termcolor.cprint(str(error), 'red')
         sys.exit(1)

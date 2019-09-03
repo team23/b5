@@ -38,9 +38,9 @@ def main():
             raise B5ExecutionError('b5-execute is not intended to be called directly!')
 
         state = State.load(open(args.state_file, 'rb'))
-        if not 'modules' in state.config:
+        if 'modules' not in state.config:
             raise B5ExecutionError('No modules defined')
-        if not args.module in state.config['modules']:
+        if args.module not in state.config['modules']:
             raise B5ExecutionError('Module not available')
 
         module = load_module(state, args.module)

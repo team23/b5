@@ -18,7 +18,9 @@ def load_module(state, module_key):
     if module_class_key in MODULES:
         module_import_path = MODULES[module_class_key]
     if not '.' in module_import_path:
-        raise B5ExecutionError('Module seems not to be valid (key=%s/import=%s), please check config' % (module_key, module_import_path))
+        raise B5ExecutionError('Module seems not to be valid (key=%s/import=%s), please check config' %
+                               (module_key, module_import_path)
+                               )
 
     try:
         module_class = import_string(module_import_path)

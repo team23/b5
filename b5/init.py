@@ -1,13 +1,13 @@
 import argparse
 import os
+import re
 import shutil
-import termcolor
 import subprocess
 import sys
-import re
+
+import termcolor
 
 from .exceptions import B5ExecutionError
-
 
 NON_URL_SKELETON = re.compile('^[A-Za-z0-9_-]+$')
 

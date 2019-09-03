@@ -133,6 +133,6 @@ def main():
                     sys.exit(1)
                 _print('Task exited ok', color='green')
                 #print(result)
-    except B5ExecutionError as e:
-        termcolor.cprint(str(e), 'red')
+    except B5ExecutionError as error:
+        termcolor.cprint(str(error), 'red')
         sys.exit(1)

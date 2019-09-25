@@ -119,3 +119,7 @@ init/ from the newly created project.
 
 See https://git.team23.de/build/b5-skel-basic/blob/master/init/ and
 https://git.team23.de/build/b5-skel-basic/blob/master/init/Taskfile for a really minimal example of this mechanism.
+
+**Important:** The skeleton init should provide a project directory in a state like developers would have after
+cloning the project the first time. This means it's totally ok to run `b5 install` and `b5 update` afterwards.
+

@@ -24,6 +24,7 @@ class DockerModule(BaseModule):
         'docker_machine': None,
         'commands': {},
         'sync': {},
+        'ensure_exists': {},
     }
 
     def prepare_config(self):
@@ -45,6 +46,8 @@ class DockerModule(BaseModule):
             raise B5ExecutionError('docker commands has to be a dictionary')
         if not isinstance(self.config['sync'], dict):
             raise B5ExecutionError('docker sync has to be a dictionary')
+        if not isinstance(self.config['ensure_exists'], dict):
+            raise B5ExecutionError('ensure_exists has to be a dictionary')
 
         ##### CONFIGURATION MANAGEMENT #####
 
@@ -163,6 +166,7 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('docker-compose', '''
             (
                 cd {base_path} && \\
+                if (declare -f -F {name}:create_external_networks > /dev/null); then {name}:create_external_networks; fi && \\
                 {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
             )
         '''.format(
@@ -456,6 +460,43 @@ class DockerModule(BaseModule):
                     if isinstance(command_options.get('bin'), (list, tuple))
                     else shlex.quote(command_options.get('bin')),
             )))
+
+        for ensure_exists, ensure_exists_options in self.config['ensure_exists'].items():
+            if ensure_exists == "external_networks":
+                network_script = ""
+                if not isinstance(ensure_exists_options, list):
+                    raise B5ExecutionError('ensure_exists options have to be a list')
+                for network in ensure_exists_options:
+                    network_script = network_script + """
+                        {name}:run {docker_bin} network inspect {network} &>/dev/null || (
+                            {name}:run {docker_bin} network create {network} && echo \"Created external network {network}.\"
+                        );
+                    """.format(
+                       name=self.name,
+                       docker_bin=shlex.quote(self.config['docker_bin']),
+                       network=network
+                   )
+
+                if network_script == "":
+                    # no networks to create => dummy function
+                    script.append(self._script_function_source('create_external_networks', '''
+                            (
+                                cd {base_path}
+                            )
+                        '''.format(
+                            base_path=shlex.quote(self.config['base_path']),
+                    )))
+                else:
+                    # append script to add external networks
+                    script.append(self._script_function_source('create_external_networks', '''
+                            (
+                                cd {base_path} && \\
+                                {network_script}
+                            )
+                        '''.format(
+                            base_path=shlex.quote(self.config['base_path']),
+                            network_script=network_script
+                    )))
 
         for sync, sync_options in self.config['sync'].items():
             if not isinstance(sync_options, dict):

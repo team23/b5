@@ -112,8 +112,6 @@ def main():
                 construct_script_run(state),
             ])
             with StoredScriptSource(state, script_source) as source:
-                # print(source.source)
-                # return
                 if state.run_path:
                     os.chdir(state.run_path)
                 try:
@@ -132,7 +130,6 @@ def main():
                     termcolor.cprint('Task execution failed, see above', color='red')
                     sys.exit(1)
                 _print('Task exited ok', color='green')
-                # print(result)
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)

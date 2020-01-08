@@ -17,7 +17,7 @@ def find_configs(state, configs):
                 'path': config_path,
             })
     # if not found_configs:
-    #    raise B5ExecutionError('No config found, tried %s inside %s' % (', '.join(configs), run_path))
+    #     raise B5ExecutionError('No config found, tried %s inside %s' % (', '.join(configs), run_path))
     return found_configs
 
 
@@ -48,9 +48,9 @@ def validate_config(config):
 
 
 def load_config(state):
-    config_files = state.configfiles
+    configfiles = state.configfiles
     config = {}
-    for configfile in config_files:
+    for configfile in configfiles:
         file_handle = open(configfile['path'], 'r')
         file_config = yaml.safe_load(file_handle)
         if not isinstance(file_config, dict):

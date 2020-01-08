@@ -1,8 +1,14 @@
 import os
+import re
 import shlex
 import tempfile
 
 from .module import load_module
+
+
+RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
+CONFIG_SUB = '%s_%s'
+CONFIG_KEYS = '%s_KEYS'
 
 
 def modules_script_source(state):
@@ -15,20 +21,14 @@ def modules_script_source(state):
 
 
 def config_script_source(config, prefix='CONFIG'):
-    import re
-
-    re_key_escape = re.compile('[^a-zA-Z0-9]+')
-    config_sub = '%s_%s'
-    config_keys = '%s_KEYS'
-
     def _gen_config(config_node, prefix):
         script = []
 
         if isinstance(config_node, dict):
             for key in config_node:
-                escaped_key = re_key_escape.sub('_', key)
-                script.append(_gen_config(config_node[key], config_sub % (prefix, escaped_key)))
-            script.append('%s=(%s)' % (config_keys % prefix, ' '.join([shlex.quote(k) for k in config_node])))
+                escaped_key = RE_KEY_ESCAPE.sub('_', key)
+                script.append(_gen_config(config_node[key], CONFIG_SUB % (prefix, escaped_key)))
+            script.append('%s=(%s)' % (CONFIG_KEYS % prefix, ' '.join([shlex.quote(k) for k in config_node])))
         elif isinstance(config_node, list):
             script.append('%s=(%s)' % (prefix, ' '.join([
                 shlex.quote(k)
@@ -85,7 +85,6 @@ def construct_script_source(state):
     # run_path and parse Taskfile's
     script.append('cd %s\n' % shlex.quote(state.run_path))
     for taskfile in state.taskfiles:
-        # script.append('source %s\n' % shlex.quote(taskfile['path']))
         script.append(open(taskfile['path'], 'r').read())
 
     return '\n'.join(script)

@@ -40,6 +40,6 @@ task:pypi:release() {
 task:lint() {
     (
         cd .. && \
-        pipenv:run  pylint --rcfile=pylintrc b5/
+        pipenv:run  pylint --rcfile=pylintrc --exit-zero b5/
     )
 }

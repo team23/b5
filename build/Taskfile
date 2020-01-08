@@ -36,3 +36,10 @@ task:pypi:release() {
         twine upload dist/*
     )
 }
+
+task:lint() {
+    (
+        cd .. && \
+        pipenv:run  pylint --rcfile=pylintrc --exit-zero b5/
+    )
+}

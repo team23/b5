@@ -1,8 +1,14 @@
+import os
+import re
 import shlex
 import tempfile
-import os
 
 from .module import load_module
+
+
+RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
+CONFIG_SUB = '%s_%s'
+CONFIG_KEYS = '%s_KEYS'
 
 
 def modules_script_source(state):
@@ -15,12 +21,6 @@ def modules_script_source(state):
 
 
 def config_script_source(config, prefix='CONFIG'):
-    import re
-
-    RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
-    CONFIG_SUB = '%s_%s'
-    CONFIG_KEYS = '%s_KEYS'
-
     def _gen_config(config_node, prefix):
         script = []
 
@@ -85,7 +85,6 @@ def construct_script_source(state):
     # run_path and parse Taskfile's
     script.append('cd %s\n' % shlex.quote(state.run_path))
     for taskfile in state.taskfiles:
-        #script.append('source %s\n' % shlex.quote(taskfile['path']))
         script.append(open(taskfile['path'], 'r').read())
 
     return '\n'.join(script)
@@ -108,16 +107,16 @@ fi
     )
 
 
-class StoredScriptSource(object):
+class StoredScriptSource:
     def __init__(self, state, source):
         self.state = state
         self.source = source
-        self.fh = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
-        self.fh.write(self.source.encode('utf-8'))
-        self.fh.close()
+        self.file_handle = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
+        self.file_handle.write(self.source.encode('utf-8'))
+        self.file_handle.close()
 
     def close(self):
-        os.unlink(self.fh.name)
+        os.unlink(self.file_handle.name)
 
     def __enter__(self):
         return self
@@ -127,4 +126,4 @@ class StoredScriptSource(object):
 
     @property
     def name(self):
-        return self.fh.name
+        return self.file_handle.name

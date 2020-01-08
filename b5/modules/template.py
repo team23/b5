@@ -85,18 +85,18 @@ class TemplateModule(BaseModule):
                     'output_file': output_file if output_file else '-',
                 },
             )
-        except jinja2.UndefinedError as e:
+        except jinja2.UndefinedError as error:
             termcolor.cprint('Template could not be rendered (%s), error message' % args.template_file, color='red')
-            termcolor.cprint(e.message, color='yellow')
+            termcolor.cprint(error.message, color='yellow')
             sys.exit(1)
 
         if output_file:
             try:
-                with open(output_file, 'w') as fh:
-                    fh.write(rendered)
-            except IOError as e:
+                with open(output_file, 'w') as file_handle:
+                    file_handle.write(rendered)
+            except IOError as error:
                 termcolor.cprint('Template output could not be saved (%s)' % args.output_file, color='red')
-                termcolor.cprint(e.message, color='yellow')
+                termcolor.cprint(str(error), color='yellow')
                 sys.exit(1)
         else:
             print(rendered)

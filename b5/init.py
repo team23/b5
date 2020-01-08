@@ -1,13 +1,13 @@
 import argparse
 import os
+import re
 import shutil
-import termcolor
 import subprocess
 import sys
-import re
+
+import termcolor
 
 from .exceptions import B5ExecutionError
-
 
 NON_URL_SKELETON = re.compile('^[A-Za-z0-9_-]+$')
 
@@ -56,7 +56,7 @@ def main():
         full_path = os.path.realpath(os.path.join(os.getcwd(), path))
         os.makedirs(full_path, exist_ok=True)
 
-        if len(os.listdir(full_path)) > 0:
+        if os.listdir(full_path):
             raise B5ExecutionError('Cannot init an existing directory if not empty')
 
         _run_cmd(['git', 'clone', skeleton_url, full_path], 'Could not clone skeleton repository, see above')
@@ -80,6 +80,6 @@ def main():
         termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')
         termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton_url), 'green')
         termcolor.cprint('  project path: {full_path}'.format(full_path=full_path), 'green')
-    except B5ExecutionError as e:
-        termcolor.cprint(str(e), 'red')
+    except B5ExecutionError as error:
+        termcolor.cprint(str(error), 'red')
         sys.exit(1)

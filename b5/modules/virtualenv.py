@@ -66,7 +66,6 @@ class VirtualenvModule(BaseModule):
                 "$@"
             )
         '''.format(
-            base_path=shlex.quote(self.config['base_path']),
             activate_path=shlex.quote(os.path.join(
                 self.config['env_path'],
                 'bin',

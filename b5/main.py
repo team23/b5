@@ -5,14 +5,14 @@ import sys
 
 import termcolor
 
+from . import VERSION
 from .exceptions import B5ExecutionError
+from .lib.config import find_configs
 from .lib.config import load_config
 from .lib.detect import detect_project_path, DETECT
-from .lib.taskfile import find_taskfiles
-from .lib.config import find_configs
 from .lib.script import StoredScriptSource, construct_script_source, construct_script_run
 from .lib.state import State
-from . import VERSION
+from .lib.taskfile import find_taskfiles
 
 
 def main():
@@ -73,11 +73,11 @@ def main():
 
         # State vars
         state = State(
-            project_path = args.project_path,
-            run_path = None,
-            taskfiles = [],
-            config = {},
-            args = vars(args)
+            project_path=args.project_path,
+            run_path=None,
+            taskfiles=[],
+            config={},
+            args=vars(args)
         )
 
         # Find project dir
@@ -112,12 +112,10 @@ def main():
                 construct_script_run(state),
             ])
             with StoredScriptSource(state, script_source) as source:
-                # print(source.source)
-                # return
                 if state.run_path:
                     os.chdir(state.run_path)
                 try:
-                    result = subprocess.run(
+                    subprocess.run(
                         [
                             args.shell,
                             source.name,
@@ -132,7 +130,6 @@ def main():
                     termcolor.cprint('Task execution failed, see above', color='red')
                     sys.exit(1)
                 _print('Task exited ok', color='green')
-                #print(result)
-    except B5ExecutionError as e:
-        termcolor.cprint(str(e), 'red')
+    except B5ExecutionError as error:
+        termcolor.cprint(str(error), 'red')
         sys.exit(1)

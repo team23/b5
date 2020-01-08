@@ -1,11 +1,12 @@
 import argparse
 import os
-import termcolor
 import sys
 
-from .lib.state import State
-from .lib.module import load_module
+import termcolor
+
 from .exceptions import B5ExecutionError
+from .lib.module import load_module
+from .lib.state import State
 
 
 def main():
@@ -37,9 +38,9 @@ def main():
             raise B5ExecutionError('b5-execute is not intended to be called directly!')
 
         state = State.load(open(args.state_file, 'rb'))
-        if not 'modules' in state.config:
+        if 'modules' not in state.config:
             raise B5ExecutionError('No modules defined')
-        if not args.module in state.config['modules']:
+        if args.module not in state.config['modules']:
             raise B5ExecutionError('Module not available')
 
         module = load_module(state, args.module)
@@ -49,6 +50,6 @@ def main():
 
         os.chdir(state.run_path)
         method(state, args.args)
-    except B5ExecutionError as e:
-        termcolor.cprint(str(e), 'red')
+    except B5ExecutionError as error:
+        termcolor.cprint(str(error), 'red')
         sys.exit(1)

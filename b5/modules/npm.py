@@ -31,7 +31,7 @@ class NpmModule(BaseModule):
         )))
 
         script.append(self._script_function_source('update', '''
-            {name}:npm update
+            {name}:npm install
         '''.format(
             name=self.name,
         )))

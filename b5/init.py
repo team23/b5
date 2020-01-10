@@ -4,6 +4,7 @@ import re
 import shutil
 import subprocess
 import sys
+import urllib.request
 
 import termcolor
 
@@ -50,6 +51,11 @@ def main():
 
         if NON_URL_SKELETON.match(skeleton):
             skeleton_url = 'https://git.team23.de/build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
+
+            '''if it's not a public repository, clone using ssh in order to allow ssh key file auth'''
+            if not is_public_repository(skeleton_url):
+                skeleton_url = 'git@git.team23.de:build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
+
         else:
             skeleton_url = skeleton
 
@@ -83,3 +89,16 @@ def main():
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)
+
+def is_public_repository(url):
+    req = urllib.request.urlopen(url)
+    req_url = req.geturl()
+
+    if url == req_url or os.path.splitext(url)[0] == req_url :
+        try:
+            if req.getcode() == 200 :
+                return True
+        except Exception:
+            return False
+
+    return False

@@ -1,4 +1,3 @@
-import argparse
 import os
 import re
 import shutil
@@ -7,6 +6,7 @@ import sys
 
 import termcolor
 
+from .lib.argumentparser import InitArgumentParser
 from .exceptions import B5ExecutionError
 
 NON_URL_SKELETON = re.compile('^[A-Za-z0-9_-]+$')
@@ -26,23 +26,9 @@ def _run_cmd(cmd, error='Command execution failed, see above'):
 
 def main():
     try:
-        parser = argparse.ArgumentParser(
-            prog='b5-init',
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            description='b5-init might be used to setup new projects',
-        )
-        parser.add_argument(
-            '-s', '--skeleton', nargs='?',
-            dest='skeleton', default='basic'
-        )
-        parser.add_argument(
-            '-b', '--branch', nargs='?',
-            dest='branch',
-        )
-        parser.add_argument(
-            dest='path'
-        )
-        args = parser.parse_args()
+        parser = InitArgumentParser('b5-init', 'b5-init might be used to setup new projects')
+        parser.add_arguments()
+        args = parser.parse()
 
         skeleton = args.skeleton
         branch = args.branch

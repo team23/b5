@@ -1,15 +1,15 @@
-import argparse
 import os
 import subprocess
 import sys
 
 import termcolor
 
+from .lib.argumentparser import MainArgumentParser
 from . import VERSION
 from .exceptions import B5ExecutionError
 from .lib.config import find_configs
 from .lib.config import load_config
-from .lib.detect import detect_project_path, DETECT
+from .lib.detect import detect_project_path
 from .lib.script import StoredScriptSource, construct_script_source, construct_script_run
 from .lib.state import State
 from .lib.taskfile import find_taskfiles
@@ -18,58 +18,11 @@ from .lib.taskfile import find_taskfiles
 def main():
     try:
         # Parse all arguments
-        parser = argparse.ArgumentParser(
-            prog='b5',
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter
-        )
-        parser.add_argument(
-            '-q', '--quiet',
-            action='store_true',
-            dest='quiet',
-        )
-        parser.add_argument(
-            '-p', '--project-path', nargs='?',
-            help='Project path if not part of parent paths, normally b5 tries to get the project path by itself',
-            dest='project_path',
-        )
-        parser.add_argument(
-            '-r', '--run-path', nargs='?',
-            help='Path inside the project b5 will execute in (cd into)',
-            dest='run_path', default='build',
-        )
-        parser.add_argument(
-            '-d', '--detect', nargs='?',
-            help='Project detection',
-            default='git', choices=DETECT,
-            dest='detect',
-        )
-        parser.add_argument(
-            '-c', '--config', nargs='?', action='append',
-            help='Path to config (inside run path)',
-            dest='configfiles',
-        )
-        parser.add_argument(
-            '-t', '--taskfile', nargs='?', action='append',
-            help='Path to Taskfile (inside run path)',
-            dest='taskfiles',
-        )
-        parser.add_argument(
-            '-s', '--shell', nargs='?',
-            help='Shell to run the generated script in (should be bash)',
-            dest='shell',
-            default='/bin/bash',
-        )
-        parser.add_argument('command')
-        parser.add_argument('command_args', nargs=argparse.REMAINDER)
-        parser.set_defaults(quiet=False)
-        sys_args = sys.argv[1:]
-        if not sys_args:
-            sys_args = ['help']
-        args = parser.parse_args(args=sys_args)
-        if args.taskfiles is None:
-            args.taskfiles = ['~/.b5/Taskfile', 'Taskfile', 'Taskfile.local']
-        if args.configfiles is None:
-            args.configfiles = ['~/.b5/config.yml', 'config.yml', 'config.local.yml', 'local.yml']
+        parser = MainArgumentParser('b5')
+        parser.add_arguments()
+        parser.set_default('taskfiles', ['~/.b5/Taskfile', 'Taskfile', 'Taskfile.local'])
+        parser.set_default('configfiles', ['~/.b5/config.yml', 'config.yml', 'config.local.yml', 'local.yml'])
+        args = parser.parse(sys.argv[1:], True)
 
         # State vars
         state = State(

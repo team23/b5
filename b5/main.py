@@ -7,8 +7,7 @@ import termcolor
 from .lib.argumentparser import MainArgumentParser
 from . import VERSION
 from .exceptions import B5ExecutionError
-from .lib.config import find_configs
-from .lib.config import load_config
+from .lib.config import find_configs, ConfigHandler
 from .lib.detect import detect_project_path
 from .lib.script import StoredScriptSource, construct_script_source, construct_script_run
 from .lib.state import State
@@ -42,7 +41,7 @@ def main():
                 raise B5ExecutionError('Run path does not exist (%s)' % state.run_path)
             state.taskfiles = find_taskfiles(state, args.taskfiles)
             state.configfiles = find_configs(state, args.configfiles)
-            state.config = load_config(state)
+            state.config = (ConfigHandler()).load(state.run_path, args.configfiles)
 
         def _print(*args, **kwargs):
             if state.args['quiet']:

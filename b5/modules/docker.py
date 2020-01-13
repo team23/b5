@@ -4,7 +4,7 @@ import pwd
 import warnings
 
 from ..exceptions import B5ExecutionError
-from . import BaseModule
+from . import BaseModule, CONFIG_PREFIX_RE
 
 
 class DockerModule(BaseModule):
@@ -24,7 +24,7 @@ class DockerModule(BaseModule):
         'docker_machine': None,
         'commands': {},
         'sync': {},
-        'ensure_exists': {},
+        'setup': {},
     }
 
     def prepare_config(self):
@@ -46,8 +46,12 @@ class DockerModule(BaseModule):
             raise B5ExecutionError('docker commands has to be a dictionary')
         if not isinstance(self.config['sync'], dict):
             raise B5ExecutionError('docker sync has to be a dictionary')
-        if not isinstance(self.config['ensure_exists'], dict):
-            raise B5ExecutionError('ensure_exists has to be a dictionary')
+        if not isinstance(self.config['setup'], dict):
+            raise B5ExecutionError('setup has to be a dictionary')
+        else:
+            if 'networks' in self.config['setup']:
+                if not isinstance(self.config['setup']['networks'], list):
+                    raise B5ExecutionError('setup.networks has to be a last')
 
         ##### CONFIGURATION MANAGEMENT #####
 
@@ -143,11 +147,13 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('run', '''
+            {name}:setup
             (
                 {docker_env}
                 "$@"
             )
         '''.format(
+            name=self.name,
             docker_env=self.get_script_env(),
             base_path=shlex.quote(self.config['base_path']),
         )))
@@ -166,7 +172,6 @@ class DockerModule(BaseModule):
         script.append(self._script_function_source('docker-compose', '''
             (
                 cd {base_path} && \\
-                if (declare -f -F {name}:create_external_networks > /dev/null); then {name}:create_external_networks; fi && \\
                 {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
             )
         '''.format(
@@ -461,42 +466,51 @@ class DockerModule(BaseModule):
                     else shlex.quote(command_options.get('bin')),
             )))
 
-        for ensure_exists, ensure_exists_options in self.config['ensure_exists'].items():
-            if ensure_exists == "external_networks":
-                network_script = ""
-                if not isinstance(ensure_exists_options, list):
-                    raise B5ExecutionError('ensure_exists options have to be a list')
-                for network in ensure_exists_options:
-                    network_script = network_script + """
-                        {name}:run {docker_bin} network inspect {network} &>/dev/null || (
-                            {name}:run {docker_bin} network create {network} && echo \"Created external network {network}.\"
+        if self.config['setup']:
+            # Setup networks
+            if 'networks' in self.config['setup'] and self.config['setup']['networks']:
+                # Create a function for each network
+                for setup_network_name in self.config['setup']['networks']:
+                    script.append(self._script_function_source('setup:network:{network}'.format(network=setup_network_name), '''
+                        {name}:docker network inspect {network} &>/dev/null || (
+                            {name}:docker network create {network} && echo \"Created network {network}.\"
                         );
-                    """.format(
-                       name=self.name,
-                       docker_bin=shlex.quote(self.config['docker_bin']),
-                       network=network
-                   )
-
-                if network_script == "":
-                    # no networks to create => dummy function
-                    script.append(self._script_function_source('create_external_networks', '''
-                            (
-                                cd {base_path}
-                            )
-                        '''.format(
-                            base_path=shlex.quote(self.config['base_path']),
-                    )))
-                else:
-                    # append script to add external networks
-                    script.append(self._script_function_source('create_external_networks', '''
-                            (
-                                cd {base_path} && \\
-                                {network_script}
-                            )
-                        '''.format(
-                            base_path=shlex.quote(self.config['base_path']),
-                            network_script=network_script
-                    )))
+                    '''.format(
+                            name=self.name,
+                            network=shlex.quote(setup_network_name),
+                        )))
+                # Create general network setup function
+                script.append(self._script_function_source('setup:network', '''
+                    {setup_all_networks}
+                '''.format(
+                    setup_all_networks='\n                    '.join([
+                        'setup:network:{network}'.format(network=setup_network_name)
+                        for setup_network_name
+                        in self.config['setup']['networks']
+                    ])
+                )))
+            # Create general setup function
+            setup_ran_var_name = '_{prefix}_SETUP_RAN'.format(
+                prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper())
+            )
+            script.append('{setup_ran_var}=0'.format(setup_ran_var=setup_ran_var_name))
+            script.append(self._script_function_source('setup', '''
+                if [ "${setup_ran_var}" -eq 1 ]
+                then
+                    return 0
+                fi
+                {setup_networks}
+                {setup_ran_var}=1
+            '''.format(
+                setup_networks='{name}:setup:network'.format(name=self.name) if
+                    'networks' in self.config['setup'] and self.config['setup']['networks'] else '',
+                setup_ran_var=setup_ran_var_name,
+            )))
+        else:
+            # Create EMPTY general setup function, if no config exists
+            script.append(self._script_function_source('setup', '''
+                true
+            '''))
 
         for sync, sync_options in self.config['sync'].items():
             if not isinstance(sync_options, dict):

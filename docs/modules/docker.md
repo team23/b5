@@ -27,9 +27,10 @@ you probably want to put inside build/, too.
   `--pipe-in` to handle pipes (see `container_run`). You may use `-T` or `--disable-tty` to disable pseudo-tty
   allocation at all. All these parameters must be passed first, as other parameters will be passed to the executed
   command inside docker.
-* **ensure_exists**: This currently only supports one subkey 'external_networks' which can be a list of
-  external_networks to create (if they do not yet exist) before running docker-compose. There is (currently) no logic
-  implemented to clean up these external networks after they have been created by b5.  
+* **setup**: Allows you to tell b5 to setup some docker specific things before running docker itself. This currently
+  only supports one subkey 'networks' which can be a list of networks to create (if they do not yet exist).
+  There is (currently) no logic implemented to clean up these networks after they have been created by b5.
+  Can be used to make sure networks marked as external exist before running docker.  
 * **sync**: List of paths to sync to docker volumes. See example below. Syncing some paths into volumes may
   increase the performance significantly. Note that these paths will only be updated when calling `docker:update`
   or `docker:sync`. Internally
@@ -237,13 +238,13 @@ task:sync:phpvendor() {
 ```
 
 
-### Example 4 - auto-create external networks
+### Example 4 - auto-create networks
 
 If external networks are defined in docker-compose.yml they are by default not auto-created by docker-compose and
 using docker-compose will fail with an error message about missing these networks.
 
 To auto-create these external networks when using docker-compose commands use the option
-ensure_exists['external_networks'] and provide a list of external networks to auto-create:
+setup.networks and provide a list of networks to auto-create:
 
 docker-compose.yml:
 ```yaml
@@ -267,9 +268,9 @@ config.yml:
 ```yaml
 modules:
   docker:
-    ensure_exists:
+    setup:
       # networks to auto-create
-      external_networks:
+      networks:
         - test_external_net
 ```
 

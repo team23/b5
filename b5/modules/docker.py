@@ -51,7 +51,7 @@ class DockerModule(BaseModule):
         else:
             if 'networks' in self.config['setup']:
                 if not isinstance(self.config['setup']['networks'], list):
-                    raise B5ExecutionError('setup.networks has to be a last')
+                    raise B5ExecutionError('setup.networks has to be a list')
 
         ##### CONFIGURATION MANAGEMENT #####
 

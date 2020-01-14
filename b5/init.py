@@ -50,7 +50,7 @@ def main():
         if os.listdir(full_path):
             raise B5ExecutionError('Cannot init an existing directory if not empty')
 
-        _run_cmd(['git', 'clone', skeleton.url, full_path], 'Could not clone skeleton repository, see above')
+        _run_cmd(['git', 'clone', skeleton.get_url(), full_path], 'Could not clone skeleton repository, see above')
         os.chdir(full_path)
         if not branch is None:
             _run_cmd(['git', 'checkout', branch], 'Could not checkout required branch, see above')
@@ -69,7 +69,7 @@ def main():
             shutil.rmtree(init_path)
         # _run_cmd(['git', 'add', '-A'])
         termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')
-        termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton.url), 'green')
+        termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton.get_url()), 'green')
         termcolor.cprint('  project path: {full_path}'.format(full_path=full_path), 'green')
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')

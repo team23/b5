@@ -1,16 +1,11 @@
 import argparse
 import os
-import re
 import shutil
 import subprocess
 import sys
-import urllib.request
-
 import termcolor
-
+from .lib.skeleton import Skeleton
 from .exceptions import B5ExecutionError
-
-NON_URL_SKELETON = re.compile('^[A-Za-z0-9_-]+$')
 
 
 def _run_cmd(cmd, error='Command execution failed, see above'):
@@ -45,19 +40,9 @@ def main():
         )
         args = parser.parse_args()
 
-        skeleton = args.skeleton
+        skeleton = Skeleton(args.skeleton)
         branch = args.branch
         path = args.path
-
-        if NON_URL_SKELETON.match(skeleton):
-            skeleton_url = 'https://git.team23.de/build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
-
-            '''if it's not a public repository, clone using ssh in order to allow ssh key file auth'''
-            if not is_public_repository(skeleton_url):
-                skeleton_url = 'git@git.team23.de:build/b5-skel-{skeleton}.git'.format(skeleton=skeleton)
-
-        else:
-            skeleton_url = skeleton
 
         full_path = os.path.realpath(os.path.join(os.getcwd(), path))
         os.makedirs(full_path, exist_ok=True)
@@ -65,7 +50,7 @@ def main():
         if os.listdir(full_path):
             raise B5ExecutionError('Cannot init an existing directory if not empty')
 
-        _run_cmd(['git', 'clone', skeleton_url, full_path], 'Could not clone skeleton repository, see above')
+        _run_cmd(['git', 'clone', skeleton.url, full_path], 'Could not clone skeleton repository, see above')
         os.chdir(full_path)
         if not branch is None:
             _run_cmd(['git', 'checkout', branch], 'Could not checkout required branch, see above')
@@ -84,21 +69,8 @@ def main():
             shutil.rmtree(init_path)
         # _run_cmd(['git', 'add', '-A'])
         termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')
-        termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton_url), 'green')
+        termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton.url), 'green')
         termcolor.cprint('  project path: {full_path}'.format(full_path=full_path), 'green')
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)
-
-def is_public_repository(url):
-    req = urllib.request.urlopen(url)
-    req_url = req.geturl()
-
-    if url == req_url or os.path.splitext(url)[0] == req_url :
-        try:
-            if req.getcode() == 200 :
-                return True
-        except Exception:
-            return False
-
-    return False

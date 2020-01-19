@@ -40,13 +40,13 @@ task:pypi:release() {
 task:lint() {
     (
         cd .. && \
-        pipenv:run  pylint --rcfile=pylintrc --exit-zero b5/
+        pipenv:run pylint --rcfile=pylintrc --exit-zero b5/
     )
 }
 
 task:test() {
     (
         cd .. && \
-        pipenv:run  pytest b5/tests -v
+        pipenv:run pytest b5/tests -v
     )
 }

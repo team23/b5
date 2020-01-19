@@ -65,6 +65,16 @@ Execute a development shell for the project. May differ based on the project.
 most commonly start a docker shell (like `docker-compose run --rm web /bin/bash --login`). We use `b5 django:shell`
 instead. This behavior is true for other frameworks providing its own development shell, too.   
 
+## Testing
+
+### test
+
+Will exeecute the test suite.
+
+### lint
+
+Will execute the linter and give you details if anything does not follow the coding guidelines.
+
 ## Deployment
 
 ### deploy

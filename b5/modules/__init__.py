@@ -1,6 +1,6 @@
-from ..lib.config import merge_config
 import re
 
+from ..lib.config import merge_config
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
 MODULES = {
@@ -15,7 +15,7 @@ MODULES = {
 }
 
 
-class BaseModule(object):
+class BaseModule:
     DEFAULT_CONFIG = {}
 
     def __init__(self, name, config, state, **kwargs):

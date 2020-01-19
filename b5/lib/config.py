@@ -1,5 +1,6 @@
-import yaml
 import os
+
+import yaml
 
 from .version import ensure_config_version
 from ..exceptions import B5ExecutionError
@@ -15,8 +16,8 @@ def find_configs(state, configs):
                 'config': config,
                 'path': config_path,
             })
-    #if not found_configs:
-    #    raise B5ExecutionError('No config found, tried %s inside %s' % (', '.join(configs), run_path))
+    # if not found_configs:
+    #     raise B5ExecutionError('No config found, tried %s inside %s' % (', '.join(configs), run_path))
     return found_configs
 
 
@@ -40,7 +41,6 @@ def merge_config(cur_config, new_config):
     return result_config
 
 
-
 def validate_config(config):
     if 'version' in config:
         ensure_config_version(config['version'])
@@ -51,8 +51,8 @@ def load_config(state):
     configfiles = state.configfiles
     config = {}
     for configfile in configfiles:
-        fh = open(configfile['path'], 'r')
-        file_config = yaml.safe_load(fh)
+        file_handle = open(configfile['path'], 'r')
+        file_config = yaml.safe_load(file_handle)
         if not isinstance(file_config, dict):
             file_config = {}
         config = merge_config(config, file_config)

@@ -50,7 +50,6 @@ class ComposerModule(BaseModule):
             )
         '''.format(
             vendor_path=shlex.quote(self.config['vendor_path']),
-            base_path=shlex.quote(self.config['base_path']),
         )))
 
         script.append(self._script_function_source('composer', '''

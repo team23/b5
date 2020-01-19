@@ -1,29 +1,19 @@
-import argparse
 import datetime
 import os
 import sys
 import termcolor
 import jinja2
 
+from ..lib.argumentparser import TemplateArgumentParser
 from .. import VERSION
 from . import BaseModule
 
 
 class TemplateModule(BaseModule):
     def execute_render(self, state, sys_args):
-        parser = argparse.ArgumentParser(
-            prog='{name}:render'.format(name=self.name),
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter
-        )
-        parser.add_argument(
-            '-o', '--overwrite', nargs='?',
-            help='Control if existing files should be overwritten',
-            dest='overwrite', default='ask',
-            choices=['yes', 'if-older', 'no', 'ask', 'ask-if-older']
-        )
-        parser.add_argument('template_file')
-        parser.add_argument('output_file', nargs='?')
-        args = parser.parse_args(args=sys_args)
+        parser = TemplateArgumentParser('{name}:render'.format(name=self.name))
+        parser.add_arguments()
+        args = parser.parse(sys_args)
 
         template_file = os.path.realpath(os.path.join(state.run_path, args.template_file))
         output_file = None
@@ -85,18 +75,18 @@ class TemplateModule(BaseModule):
                     'output_file': output_file if output_file else '-',
                 },
             )
-        except jinja2.UndefinedError as e:
+        except jinja2.UndefinedError as error:
             termcolor.cprint('Template could not be rendered (%s), error message' % args.template_file, color='red')
-            termcolor.cprint(e.message, color='yellow')
+            termcolor.cprint(error.message, color='yellow')
             sys.exit(1)
 
         if output_file:
             try:
-                with open(output_file, 'w') as fh:
-                    fh.write(rendered)
-            except IOError as e:
+                with open(output_file, 'w') as file_handle:
+                    file_handle.write(rendered)
+            except IOError as error:
                 termcolor.cprint('Template output could not be saved (%s)' % args.output_file, color='red')
-                termcolor.cprint(e.message, color='yellow')
+                termcolor.cprint(str(error), color='yellow')
                 sys.exit(1)
         else:
             print(rendered)

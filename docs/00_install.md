@@ -27,7 +27,7 @@ OR
 ```bash
 git clone git@git.team23.de:build/b5.git
 cd b5
-pip install .
+pip3 install .
 ```
 
 ## Development installation (using live version of b5 repository)

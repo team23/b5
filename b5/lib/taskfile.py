@@ -16,4 +16,3 @@ def find_taskfiles(state, taskfiles):
     if not found_taskfiles:
         raise B5ExecutionError('No Taskfiles found, tried %s inside %s' % (', '.join(taskfiles), run_path))
     return found_taskfiles
-

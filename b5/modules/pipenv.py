@@ -52,7 +52,6 @@ class PipenvModule(BaseModule):
             base_path=shlex.quote(self.config['base_path']),
             pipenv_bin=shlex.quote(self.config['pipenv_bin']),
             install_dev='--dev' if self.config['install_dev'] else '',
-            name=self.name,
         )))
 
         script.append(self._script_function_source('update', '''

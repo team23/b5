@@ -1,9 +1,9 @@
-import argparse
 import os
 import sys
 
 import termcolor
 
+from .lib.argumentparser import ExecuteArgumentParser
 from .exceptions import B5ExecutionError
 from .lib.module import load_module
 from .lib.state import State
@@ -11,28 +11,9 @@ from .lib.state import State
 
 def main():
     try:
-        parser = argparse.ArgumentParser(
-            prog='b5-execute',
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            description='b5-execute is not intended to be called directly!',
-        )
-        parser.add_argument(
-            '--state-file', nargs='?',
-            dest='state_file',
-        )
-        parser.add_argument(
-            '--module', nargs='?',
-            dest='module',
-        )
-        parser.add_argument(
-            '--method', nargs='?',
-            dest='method',
-        )
-        parser.add_argument(
-            '--args', nargs=argparse.REMAINDER,
-            dest='args'
-        )
-        args = parser.parse_args()
+        parser = ExecuteArgumentParser('b5-execute', 'b5-execute is not intended to be called directly!')
+        parser.add_arguments()
+        args = parser.parse()
 
         if not args.state_file or not args.module or not args.method:
             raise B5ExecutionError('b5-execute is not intended to be called directly!')

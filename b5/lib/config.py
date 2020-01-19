@@ -20,24 +20,22 @@ def find_configs(state, configs):
 
 
 class ConfigHandler:
-
     def load(self, run_path, file_paths):
         full_config = {}
         for file_path in file_paths:
             loaded_config = self.load_config_file(run_path, file_path)
-            full_config = ConfigHandler.merge_config(full_config, loaded_config)
+            if loaded_config:  # Empty YAML file will return None
+                full_config = ConfigHandler.merge_config(full_config, loaded_config)
         return self.validate_config(full_config)
 
     def load_config_file(self, run_path, file_path):
-        print(os.path.expanduser(file_path))
         config_path = os.path.join(run_path, os.path.expanduser(file_path))
-        print(config_path)
         if os.path.exists(config_path):
             file_handle = open(config_path, 'r')
             config = yaml.safe_load(file_handle)
             file_handle.close()
             return config
-        return {}
+        return None  # As empty files return None, we may do so here, too ;-)
 
     def validate_config(self, config):
         if 'version' in config:

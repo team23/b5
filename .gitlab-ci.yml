@@ -2,9 +2,9 @@ stages:
   - test
 
 pytest:
-  image: python:3.7
+  image: python:3.8
   stage: test
   script:
-    - pip install pipenv
-    - pipenv install --system --dev
+    - pip install poetry
+    - poetry install
     - pytest b5/tests -v

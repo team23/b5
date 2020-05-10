@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "b5"
-version = "1.1.7"
+version = "1.1.8"
 description = "b5 - simple and sane task runner"
 authors = ["David Danier <danier@team23.de>"]
 maintainers = ["David Danier <danier@team23.de>"]
@@ -48,3 +48,7 @@ pytest = ">=5.3.2"
 b5 = 'b5.main:main'
 b5-init = 'b5.init:main'
 b5-execute = 'b5.execute:main'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

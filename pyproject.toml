@@ -1,0 +1,18 @@
+[tool]
+[tool.poetry]
+name = "b5"
+version = "1.1.4"
+description = "b5 - simple and sane task runner"
+authors = ["David Danier <danier@team23.de>"]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+jinja2 = "==2.*,>=2.10.0"
+markupsafe = "==1.*,>=1.1.0"
+packaging = ">=16.0"
+pyyaml = "==5.*,>=5.1.0"
+termcolor = "==1.1.*,>=1.1.0"
+
+[tool.poetry.dev-dependencies]
+pylint = ">=2.3.1"
+pytest = ">=5.3.2"

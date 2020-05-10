@@ -1,52 +1,51 @@
 #!/usr/bin/env bash
 # b5 Taskfile, see https://git.team23.de/build/b5 for details
 
+pkg:poetry() {
+    (
+        cd .. &&
+        poetry "$@"
+    )
+
+}
+
 task:install() {
-    pipenv:install
+    pkg:poetry install
 }
 
 task:update() {
-    pipenv:update
+    pkg:poetry install
 }
 
 task:b5() {
     # Runs the dev version of b5 inside the virtualenv
     # Use Taskfile.local and local.yml for testing
-    pipenv:run b5 "$@"
+    pkg:poetry run b5 "$@"
 }
 
 task:b5-init() {
     # Runs the dev version of b5 inside the virtualenv
     # Use Taskfile.local and local.yml for testing
-    pipenv:run b5-init "$@"
+    pkg:poetry run b5-init "$@"
 }
 
 task:shell() {
     (
-        source "$( pipenv:pipenv --venv )/bin/activate"
+        source "$( pkg:poetry env info -p )/bin/activate"
         echo -e "${B5_FONT_GREEN}Starting ${SHELL:-/bin/zsh} in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
         ${SHELL:-/bin/zsh} "$@"
     )
 }
 
 task:pypi:release() {
-    (
-        cd .. && \
-        python3 setup.py sdist && \
-        twine upload dist/*
-    )
+    pkg:poetry build # && \
+    # twine upload dist/*
 }
 
 task:lint() {
-    (
-        cd .. && \
-        pipenv:run pylint --rcfile=pylintrc --exit-zero b5/
-    )
+    pkg:poetry run pylint --rcfile=pylintrc --exit-zero b5/
 }
 
 task:test() {
-    (
-        cd .. && \
-        pipenv:run pytest b5/tests -v
-    )
+    pkg:poetry run pytest b5/tests -v
 }

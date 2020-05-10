@@ -38,8 +38,8 @@ task:shell() {
 }
 
 task:pypi:release() {
-    pkg:poetry build # && \
-    # twine upload dist/*
+    pkg:poetry build && \
+    pkg:poetry publish
 }
 
 task:lint() {

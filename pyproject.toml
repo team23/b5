@@ -16,3 +16,8 @@ termcolor = "==1.1.*,>=1.1.0"
 [tool.poetry.dev-dependencies]
 pylint = ">=2.3.1"
 pytest = ">=5.3.2"
+
+[tool.poetry.scripts]
+b5 = 'b5.main:main'
+b5-init = 'b5.init:main'
+b5-execute = 'b5.execute:main'

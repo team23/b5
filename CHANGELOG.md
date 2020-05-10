@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.1.6
+
+* dephell did not convert console_scripts, readding this to pyproject.toml
+
 # 1.1.5
 
 * Use poetry for package management

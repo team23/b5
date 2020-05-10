@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "b5"
-version = "1.1.6"
+version = "1.1.7"
 description = "b5 - simple and sane task runner"
 authors = ["David Danier <danier@team23.de>"]
 maintainers = ["David Danier <danier@team23.de>"]

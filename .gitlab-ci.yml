@@ -7,4 +7,4 @@ pytest:
   script:
     - pip install poetry
     - poetry install
-    - pytest b5/tests -v
+    - poetry run pytest b5/tests -v

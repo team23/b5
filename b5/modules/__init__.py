@@ -1,5 +1,9 @@
 import re
+import shutil
 
+from packaging import version
+
+from b5.exceptions import B5ExecutionError
 from ..lib.config import merge_config
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
@@ -25,6 +29,60 @@ class BaseModule:
         self.kwargs = kwargs
         self.validate_config()
         self.prepare_config()
+        self.installed_version = self.get_version() # should be implemented by the module
+        self.validate()
+
+    def get_version(self):
+        '''
+        Get the modules version number as str.
+
+        Every module should implement this method itself. This is necessary, because there is no common result format
+        when calling the version of a shell bin.
+        Returns: bool
+        '''
+        pass
+
+    def validate(self):
+        '''
+        Validate the module before allowing it to run.
+
+        This way we can make sure the local installation is present and the version matches the requirements defined
+        in the config.yml
+        Returns: bool
+        '''
+        if not self.is_installed():
+            raise B5ExecutionError('Module {!r} does not seem to be installed'.format(self.name))
+
+        if not self.is_version_matched():
+            raise B5ExecutionError(
+                    'Module {!r} requires at least version {!r}, installed: {!r}'.format(
+                            self.name, self.config['version'], self.installed_version
+                    )
+            )
+
+    def is_installed(self):
+        '''
+        Check whether the local modules binary has been installed or not, by calling `which` on the module name.
+
+        Returns: bool
+        '''
+        return shutil.which(self.name) is not None
+
+    def is_version_matched(self):
+        '''
+        Check whether the local modules binary version matches the version of the config (if defined).
+
+        The version will be ignored if `version` has not been set in the modules config, or if the module itself
+        does not implement the get_version method.
+
+        Returns: bool if version is <= the version defined in config; True if no version is defined in config or module.
+        '''
+        min_version = self.config['version'] if 'version' in self.config else None
+
+        if min_version is None or self.installed_version is None:
+            return True
+
+        return version.parse(min_version) <= version.parse(self.installed_version)
 
     def validate_config(self):
         pass

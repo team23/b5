@@ -29,7 +29,6 @@ class BaseModule:
         self.kwargs = kwargs
         self.validate_config()
         self.prepare_config()
-        self.installed_version = self.get_version() # should be implemented by the module
         self.validate()
 
     def get_version(self):
@@ -56,7 +55,7 @@ class BaseModule:
         if not self.is_version_matched():
             raise B5ExecutionError(
                     'Module {!r} requires at least version {!r}, installed: {!r}'.format(
-                            self.name, self.config['version'], self.installed_version
+                            self.name, self.config['version'], self.__get_installed_version()
                     )
             )
 
@@ -79,10 +78,22 @@ class BaseModule:
         '''
         min_version = self.config['version'] if 'version' in self.config else None
 
-        if min_version is None or self.installed_version is None:
+        if min_version is None or self.__get_installed_version() is None:
             return True
 
-        return version.parse(min_version) <= version.parse(self.installed_version)
+        return version.parse(min_version) <= version.parse(self.__get_installed_version())
+
+    def __get_installed_version(self):
+        """
+        Get the currently installed version
+
+        Returns:
+            str: the str version of the current locally install module binary
+        """
+        if not hasattr(self, '_installed_version'):
+            self._installed_version = self.get_version()
+
+        return self._installed_version
 
     def validate_config(self):
         pass

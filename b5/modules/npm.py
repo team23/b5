@@ -1,5 +1,7 @@
+import re
 import shlex
 import os
+import subprocess
 
 from . import BaseModule
 
@@ -12,6 +14,9 @@ class NpmModule(BaseModule):
         'base_path': '.',
         'npm_bin': 'npm',
     }
+
+    def get_version(self):
+        return subprocess.check_output('npm --version', shell=True, encoding='UTF-8')
 
     def prepare_config(self):
         self.config['base_path'] = os.path.realpath(os.path.join(

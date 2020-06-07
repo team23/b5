@@ -21,7 +21,7 @@ class PipenvModule(BaseModule):
     }
 
     def get_version(self):
-        version_string = subprocess.check_output(' '.join(['pipenv', '--version']), shell=True, env={},encoding='UTF-8')
+        version_string = subprocess.check_output('pipenv --version', shell=True, env={}, encoding='UTF-8')
         r = re.search(r'(\d+\.)+\d+', version_string)
 
         return r.group(0) if r else None

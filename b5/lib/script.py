@@ -2,6 +2,7 @@ import os
 import re
 import shlex
 import tempfile
+from multiprocessing.pool import ThreadPool as Pool
 
 from .module import load_module
 
@@ -14,9 +15,14 @@ CONFIG_KEYS = '%s_KEYS'
 def modules_script_source(state):
     script = []
     if 'modules' in state.config:
-        for module_key in state.config['modules']:
-            module = load_module(state, module_key)
+        # run instantiation parallel in order to speed up instantiation with multiple b5 modules
+        pool = Pool()
+        workers = [pool.apply_async(load_module, (state, module_key)) for module_key in state.config['modules']]
+        for worker in workers:
+            module = worker.get()
             script.append(module.get_script())
+        pool.close()
+        pool.join()
     return '\n'.join(script)
 
 

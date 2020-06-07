@@ -10,6 +10,9 @@ from . import BaseModule
 
 
 class TemplateModule(BaseModule):
+    def is_installed(self):
+        return True  # always return True, because Python will do the work
+
     def execute_render(self, state, sys_args):
         parser = TemplateArgumentParser('{name}:render'.format(name=self.name))
         parser.add_arguments()

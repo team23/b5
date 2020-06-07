@@ -6,6 +6,10 @@ from . import BaseModule
 
 
 class LegacyModule(BaseModule):
+
+    def is_installed(self):
+        return True  # always return True, in order to skip install check
+
     def get_script(self):
         script = [super(LegacyModule, self).get_script()]
         script.append('LEGACY_MODULES_PATH=%s\n' % shlex.quote(os.path.join(B5_PATH, 'legacy', 'modules')))  # legacy

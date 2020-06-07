@@ -1,5 +1,7 @@
+import re
 import shlex
 import os
+import subprocess
 
 from . import BaseModule
 
@@ -15,6 +17,9 @@ class VirtualenvModule(BaseModule):
         'env_path': 'ENV',
         'requirements_file': 'requirements.txt',
     }
+
+    def get_version(self):
+        return subprocess.check_output('virtualenv --version', shell=True, encoding='UTF-8')
 
     def prepare_config(self):
         self.config['base_path'] = os.path.realpath(os.path.join(

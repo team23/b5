@@ -1,5 +1,7 @@
+import re
 import shlex
 import os
+import subprocess
 
 from . import BaseModule
 
@@ -13,6 +15,12 @@ class ComposerModule(BaseModule):
         'composer_bin': 'composer',
         'vendor_path': 'vendor',
     }
+
+    def get_version(self):
+        version_string = subprocess.check_output(' '.join(['composer', '--version']), shell=True, encoding='UTF-8')
+        r = re.search(r'(\d+\.)+\d+', version_string)
+
+        return r.group(0) if r else None
 
     def prepare_config(self):
         self.config['base_path'] = os.path.realpath(os.path.join(

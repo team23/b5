@@ -107,6 +107,13 @@ class DockerModule(BaseModule):
             {docker_machine_env}
         '''.format(**params)
 
+    def is_installed_script(self):
+        """
+        Add a check to evaluate whether the pipenv module bin is installed or not
+        Returns: str
+        """
+        return self.create_is_installed_script(module=self.name, module_bin=self.config['docker_bin'])
+
     def _docker_volume_path_str(self, volume_path_name):
         # this should be a path
         if '.' in volume_path_name or '/' in volume_path_name:

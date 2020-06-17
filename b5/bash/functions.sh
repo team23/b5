@@ -52,6 +52,15 @@ b5:function_exists() {
     fi
 }
 
+b5:bin_exists() {
+    if [[ -z "$(which ${1:-})" ]]; then
+      echo "${1:-}"
+        return 1
+    fi
+
+    return 0
+}
+
 b5:help() {
     local taskname="${1:-}"
     if [ ! -z "$taskname" ]

@@ -160,6 +160,10 @@ Reenables legacy module loading using `b5:module_load`. Do not use.
 
 Use npm to install JS dependencies. See [documentation](modules/npm.md).
 
+### comlipy
+
+Use comlipy to lint your commit messages by adding a git commit-msg hook. See [documentation](modules/comlipy.md).
+
 ### composer
 
 Use composer to install PHP dependencies. See [documentation](modules/composer.md).

@@ -5,8 +5,9 @@ from . import BaseModule
 
 
 class ComlipyModule(BaseModule):
-    '''Pipenv module
-    '''
+    """
+    Comlipy module
+    """
 
     DEFAULT_CONFIG = {
         'base_path': '.',

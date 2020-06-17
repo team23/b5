@@ -54,7 +54,6 @@ b5:function_exists() {
 
 b5:bin_exists() {
     if [[ -z "$(which ${1:-})" ]]; then
-      echo "${1:-}"
         return 1
     fi
 

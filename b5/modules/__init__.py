@@ -87,13 +87,15 @@ class BaseModule:
 
         Returns: str
         """
+        module = module if module else self.name
+
         return '''
-                    if ! b5:bin_exists "{pipenv_bin}1"; then 
-                        b5:error "'{module}' (bin: '{pipenv_bin}') seems not to be installed!"; 
+                    if ! b5:bin_exists "{module_bin}"; then 
+                        b5:error "'{module}' (bin: '{module_bin}') seems not to be installed!"; 
                     fi
                 '''.format(
                 module=module if module else self.name,
-                pipenv_bin=module_bin if module_bin else module,
+                module_bin=module_bin if module_bin else module,
         )
 
     def is_installed_script(self):

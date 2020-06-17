@@ -4,9 +4,9 @@ import sys
 import termcolor
 import jinja2
 
-from ..lib.argumentparser import TemplateArgumentParser
-from .. import VERSION
-from . import BaseModule
+from b5.lib.argumentparser import TemplateArgumentParser
+from b5 import VERSION
+from b5.modules import BaseModule
 
 
 class TemplateModule(BaseModule):

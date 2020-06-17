@@ -1,6 +1,6 @@
 import re
 
-from ..lib.config import merge_config
+from b5.lib.config import merge_config
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
 MODULES = {
@@ -33,7 +33,7 @@ class BaseModule:
         pass
 
     def _script_config_vars(self):
-        from ..lib.script import config_script_source
+        from b5.lib.script import config_script_source
 
         return config_script_source(self.config, prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper()))
 

@@ -12,6 +12,7 @@ MODULES = {
     'composer': 'b5.modules.composer.ComposerModule',
     'docker': 'b5.modules.docker.DockerModule',
     'template': 'b5.modules.template.TemplateModule',
+    'comlipy': 'b5.modules.comlipy.ComlipyModule',
 }
 
 

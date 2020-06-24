@@ -3,8 +3,8 @@ import os
 import pwd
 import warnings
 
-from ..exceptions import B5ExecutionError
-from . import BaseModule
+from b5.exceptions import B5ExecutionError
+from b5.modules import BaseModule
 
 
 class DockerModule(BaseModule):

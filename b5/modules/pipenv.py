@@ -1,7 +1,7 @@
 import shlex
 import os
 
-from . import BaseModule
+from b5.modules import BaseModule
 
 
 class PipenvModule(BaseModule):

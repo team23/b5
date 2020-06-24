@@ -484,7 +484,10 @@ class DockerModule(BaseModule):
                     {setup_all_networks}
                 '''.format(
                     setup_all_networks='\n                    '.join([
-                        'setup:network:{network}'.format(network=setup_network_name)
+                        '{name}:setup:network:{network}'.format(
+                            name=self.name,
+                            network=setup_network_name,
+                        )
                         for setup_network_name
                         in self.config['setup']['networks']
                     ])
@@ -494,17 +497,27 @@ class DockerModule(BaseModule):
                 prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper())
             )
             script.append('{setup_ran_var}=0'.format(setup_ran_var=setup_ran_var_name))
+            setup_running_var_name = '_{prefix}_SETUP_RUNNING'.format(
+                prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper())
+            )
+            script.append('{setup_running_var_name}=0'.format(setup_running_var_name=setup_running_var_name))
             script.append(self._script_function_source('setup', '''
-                if [ "${setup_ran_var}" -eq 1 ]
+                if [ "${setup_ran_var_name}" -eq 1 ]
                 then
                     return 0
                 fi
+                if [ "${setup_running_var_name}" -eq 1 ]
+                then
+                    return 0
+                fi
+                {setup_running_var_name}=1
                 {setup_networks}
-                {setup_ran_var}=1
+                {setup_ran_var_name}=1
             '''.format(
                 setup_networks='{name}:setup:network'.format(name=self.name) if
                     'networks' in self.config['setup'] and self.config['setup']['networks'] else '',
-                setup_ran_var=setup_ran_var_name,
+                setup_ran_var_name=setup_ran_var_name,
+                setup_running_var_name=setup_running_var_name,
             )))
         else:
             # Create EMPTY general setup function, if no config exists

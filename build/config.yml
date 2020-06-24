@@ -4,6 +4,3 @@ project:
   key: b5
   url: https://git.team23.de/build/b5
 paths:  # None necessary
-modules:
-  pipenv:
-    base_path: ..

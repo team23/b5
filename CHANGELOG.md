@@ -2,6 +2,18 @@
 
 * work in progress ;-)
 
+# 1.1.6
+
+* dephell did not convert console_scripts, readding this to pyproject.toml
+
+# 1.1.5
+
+* Use poetry for package management
+* Included first test + linting
+* Rewrite of argument parsing
+* Better support for detecting how to clone skel repositories
+* Support Python 3.8
+
 # 1.1.4
 
 * Docker sync config allows to specify `auto: false` to not automatically sync on `docker:update` and `docker:sync`,

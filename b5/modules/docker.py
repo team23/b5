@@ -4,7 +4,7 @@ import pwd
 import warnings
 
 from b5.exceptions import B5ExecutionError
-from b5.modules import BaseModule
+from b5.modules import BaseModule, CONFIG_PREFIX_RE
 
 
 class DockerModule(BaseModule):
@@ -24,6 +24,7 @@ class DockerModule(BaseModule):
         'docker_machine': None,
         'commands': {},
         'sync': {},
+        'setup': {},
     }
 
     def prepare_config(self):
@@ -45,6 +46,12 @@ class DockerModule(BaseModule):
             raise B5ExecutionError('docker commands has to be a dictionary')
         if not isinstance(self.config['sync'], dict):
             raise B5ExecutionError('docker sync has to be a dictionary')
+        if not isinstance(self.config['setup'], dict):
+            raise B5ExecutionError('setup has to be a dictionary')
+        else:
+            if 'networks' in self.config['setup']:
+                if not isinstance(self.config['setup']['networks'], list):
+                    raise B5ExecutionError('setup.networks has to be a list')
 
         ##### CONFIGURATION MANAGEMENT #####
 
@@ -140,11 +147,13 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('run', '''
+            {name}:setup
             (
                 {docker_env}
                 "$@"
             )
         '''.format(
+            name=self.name,
             docker_env=self.get_script_env(),
             base_path=shlex.quote(self.config['base_path']),
         )))
@@ -456,6 +465,65 @@ class DockerModule(BaseModule):
                     if isinstance(command_options.get('bin'), (list, tuple))
                     else shlex.quote(command_options.get('bin')),
             )))
+
+        if self.config['setup']:
+            # Setup networks
+            if 'networks' in self.config['setup'] and self.config['setup']['networks']:
+                # Create a function for each network
+                for setup_network_name in self.config['setup']['networks']:
+                    script.append(self._script_function_source('setup:network:{network}'.format(network=setup_network_name), '''
+                        {name}:docker network inspect {network} &>/dev/null || (
+                            {name}:docker network create {network} && echo \"Created network {network}.\"
+                        );
+                    '''.format(
+                            name=self.name,
+                            network=shlex.quote(setup_network_name),
+                        )))
+                # Create general network setup function
+                script.append(self._script_function_source('setup:network', '''
+                    {setup_all_networks}
+                '''.format(
+                    setup_all_networks='\n                    '.join([
+                        '{name}:setup:network:{network}'.format(
+                            name=self.name,
+                            network=setup_network_name,
+                        )
+                        for setup_network_name
+                        in self.config['setup']['networks']
+                    ])
+                )))
+            # Create general setup function
+            setup_ran_var_name = '_{prefix}_SETUP_RAN'.format(
+                prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper())
+            )
+            script.append('{setup_ran_var}=0'.format(setup_ran_var=setup_ran_var_name))
+            setup_running_var_name = '_{prefix}_SETUP_RUNNING'.format(
+                prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper())
+            )
+            script.append('{setup_running_var_name}=0'.format(setup_running_var_name=setup_running_var_name))
+            script.append(self._script_function_source('setup', '''
+                if [ "${setup_ran_var_name}" -eq 1 ]
+                then
+                    return 0
+                fi
+                if [ "${setup_running_var_name}" -eq 1 ]
+                then
+                    return 0
+                fi
+                {setup_running_var_name}=1
+                {setup_networks}
+                {setup_ran_var_name}=1
+            '''.format(
+                setup_networks='{name}:setup:network'.format(name=self.name) if
+                    'networks' in self.config['setup'] and self.config['setup']['networks'] else '',
+                setup_ran_var_name=setup_ran_var_name,
+                setup_running_var_name=setup_running_var_name,
+            )))
+        else:
+            # Create EMPTY general setup function, if no config exists
+            script.append(self._script_function_source('setup', '''
+                true
+            '''))
 
         for sync, sync_options in self.config['sync'].items():
             if not isinstance(sync_options, dict):

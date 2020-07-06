@@ -4,7 +4,7 @@ Handling of commit message strings.
 
 ## Parameters
 
-* **config_path:** Configuration file path realtive to `base_path`. Defaults to "", which means not used.
+* **config_path:** Configuration file path realtive to the b5 run_path. Defaults to "", which means not used.
 * **comlipy_bin:** comlipy binary to be used, defaults to "comlipy".
 * **comlipy_install_bin:** comlipy binary to be used for install, defaults to "comlipy-install".
 

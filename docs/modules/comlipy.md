@@ -4,7 +4,6 @@ Handling of commit message strings.
 
 ## Parameters
 
-* **base_path:** Base path for all further paths/files. Defaults to ".", which normally means build/.
 * **config_path:** Configuration file path realtive to `base_path`. Defaults to "", which means not used.
 * **comlipy_bin:** comlipy binary to be used, defaults to "comlipy".
 * **comlipy_install_bin:** comlipy binary to be used for install, defaults to "comlipy-install".
@@ -13,6 +12,8 @@ Handling of commit message strings.
 
 * **install:** Installs comlipy git commit-msg hook. Uses the comlipy-config file that has been 
 defined in b5 configuration
+* **update:** Updates comlipy git commit-msg hook. Uses the comlipy-config file that has been 
+defined in b5 configuration. Does basically the same like comlipy:install 
 * **run:** Can be used to run comlipy itself. Uses the comlipy-config file that has been 
 defined in b5 configuration
 
@@ -38,7 +39,7 @@ task:install() {
 
 task:update() {
     # ...
-    comlipy:install
+    comlipy:update
 }
 
 task:comlipy() {

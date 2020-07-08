@@ -50,9 +50,9 @@ class PipenvModule(BaseModule):
 
         script.append(self._script_function_source('install', '''
             (
-                # {environment}
-                # cd {base_path} && \\
-                # {pipenv_bin} install {install_dev}
+                {environment}
+                cd {base_path} && \\
+                {pipenv_bin} install {install_dev}
             )
         '''.format(
             environment=self._pipenv_environment(),

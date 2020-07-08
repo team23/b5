@@ -18,6 +18,13 @@ class ComlipyModule(BaseModule):
         if self.config['config_path']:
             self.config['config_path'] = os.path.realpath(os.path.join(self.state.run_path, self.config['config_path']))
 
+    def is_installed_script(self):
+        """
+        Add a check to evaluate whether the comlipy module bin is installed or not
+        Returns: str
+        """
+        return self.create_is_installed_script(module=self.name, module_bin=self.config['comlipy_bin'])
+
     def get_script(self):
         script = [super(ComlipyModule, self).get_script()]
 

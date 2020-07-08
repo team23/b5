@@ -1,7 +1,7 @@
 import shlex
 import os
 
-from . import BaseModule
+from b5.modules import BaseModule
 
 
 class ComposerModule(BaseModule):
@@ -23,6 +23,13 @@ class ComposerModule(BaseModule):
             self.config['base_path'],
             self.config['vendor_path'],
         ))
+
+    def is_installed_script(self):
+        """
+        Add a check to evaluate whether the pipenv module bin is installed or not
+        Returns: str
+        """
+        return self.create_is_installed_script(module=self.name, module_bin=self.config['composer_bin'])
 
     def get_script(self):
         script = [super(ComposerModule, self).get_script()]

@@ -1,7 +1,7 @@
 import shlex
 import os
 
-from . import BaseModule
+from b5.modules import BaseModule
 
 
 class PipenvModule(BaseModule):
@@ -35,6 +35,13 @@ class PipenvModule(BaseModule):
             store_venv_in_project='1' if self.config['store_venv_in_project'] else '',
             pipfile=shlex.quote(self.config['pipfile']),
         )
+
+    def is_installed_script(self):
+        """
+        Add a check to evaluate whether the pipenv module bin is installed or not
+        Returns: str
+        """
+        return self.create_is_installed_script(module=self.name, module_bin=self.config['pipenv_bin'])
 
     def get_script(self):
         script = [super(PipenvModule, self).get_script()]

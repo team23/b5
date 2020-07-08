@@ -4,15 +4,15 @@ import sys
 
 import termcolor
 
-from .lib.argumentparser import MainArgumentParser
-from . import VERSION
-from .exceptions import B5ExecutionError
-from .lib.config import find_configs
-from .lib.config import load_config
-from .lib.detect import detect_project_path
-from .lib.script import StoredScriptSource, construct_script_source, construct_script_run
-from .lib.state import State
-from .lib.taskfile import find_taskfiles
+from b5.lib.argumentparser import MainArgumentParser
+from b5 import VERSION
+from b5.exceptions import B5ExecutionError
+from b5.lib.config import find_configs
+from b5.lib.config import load_config
+from b5.lib.detect import detect_project_path
+from b5.lib.script import StoredScriptSource, construct_script_source, construct_script_run
+from b5.lib.state import State
+from b5.lib.taskfile import find_taskfiles
 
 
 def main():
@@ -86,3 +86,6 @@ def main():
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)
+
+if __name__ == '__main__':
+    main()

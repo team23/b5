@@ -1,8 +1,8 @@
 import os
 import shlex
 
-from .. import B5_PATH
-from . import BaseModule
+from b5 import B5_PATH
+from b5.modules import BaseModule
 
 
 class LegacyModule(BaseModule):

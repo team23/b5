@@ -53,11 +53,7 @@ b5:function_exists() {
 }
 
 b5:bin_exists() {
-    if [[ -z "$(which ${1:-})" ]]; then
-        return 1
-    fi
-
-    return 0
+    which "${1:-}" > /dev/null && return 0 || return 1
 }
 
 b5:help() {

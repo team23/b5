@@ -32,7 +32,7 @@ class VirtualenvModule(BaseModule):
 
     def is_installed_script(self):
         """
-        Add a check to evaluate whether the pipenv module bin is installed or not
+        Add a check to evaluate whether the virtualenv module bin is installed or not
         Returns: str
         """
         return self.create_is_installed_script(module=self.name, module_bin=self.config['virtualenv_bin'])

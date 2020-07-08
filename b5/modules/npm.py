@@ -21,7 +21,7 @@ class NpmModule(BaseModule):
 
     def is_installed_script(self):
         """
-        Add a check to evaluate whether the pipenv module bin is installed or not
+        Add a check to evaluate whether the npm module bin is installed or not
         Returns: str
         """
         return self.create_is_installed_script(module=self.name, module_bin=self.config['npm_bin'])

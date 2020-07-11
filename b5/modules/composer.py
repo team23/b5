@@ -24,6 +24,13 @@ class ComposerModule(BaseModule):
             self.config['vendor_path'],
         ))
 
+    def is_installed_script(self):
+        """
+        Add a check to evaluate whether the pipenv module bin is installed or not
+        Returns: str
+        """
+        return self.create_is_installed_script(module=self.name, module_bin=self.config['composer_bin'])
+
     def get_script(self):
         script = [super(ComposerModule, self).get_script()]
 

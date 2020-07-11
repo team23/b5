@@ -30,6 +30,13 @@ class VirtualenvModule(BaseModule):
             self.config['requirements_file'],
         ))
 
+    def is_installed_script(self):
+        """
+        Add a check to evaluate whether the virtualenv module bin is installed or not
+        Returns: str
+        """
+        return self.create_is_installed_script(module=self.name, module_bin=self.config['virtualenv_bin'])
+
     def get_script(self):
         script = [super(VirtualenvModule, self).get_script()]
 

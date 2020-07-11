@@ -57,6 +57,7 @@ You may need to install the following packages in addition, as some of the proje
 require them:
 
 * python2 and python3
+* poetry python package
 * virtualenv
 * pyenv and pipenv
 * sassc

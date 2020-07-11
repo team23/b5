@@ -20,17 +20,22 @@ b5:error_exit() {
     set +o xtrace
     local code="${1:-1}"
     echo
-    echo "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err"
-    # Print out the stack trace described by $function_stack
-    if [ ${#FUNCNAME[@]} -gt 2 ]
+    #echo "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err"
+    echo "Error: '${BASH_COMMAND}' exited with status $err"
+    if [ ${_DEBUG_TRACEBACK:-0} -gt 0 ]
     then
-        echo "Call tree:"
-        for ((i=1;i<${#FUNCNAME[@]}-1;i++))
-        do
-            echo " $i: ${BASH_SOURCE[$i+1]}:${BASH_LINENO[$i]} ${FUNCNAME[$i]}(...)"
-        done
+        # Print out the stack trace described by $function_stack
+        if [ ${#FUNCNAME[@]} -gt 2 ]
+        then
+            echo "Call tree:"
+            for ((i=1;i<${#FUNCNAME[@]}-1;i++))
+            do
+                #echo " $i: ${BASH_SOURCE[$i+1]}:${BASH_LINENO[$i]} ${FUNCNAME[$i]}(...)"
+                echo " $i: ${FUNCNAME[$i]}(...)"
+            done
+        fi
     fi
-    echo "Exiting with status ${code}"
+    echo "b5 exiting with status ${code}"
     echo -e "\n${B5_FONT_RED}Task failed, see error above${B5_FONT_RESTORE}"
     exit "${code}"
 }

@@ -3,7 +3,6 @@ from .detect import DETECT
 
 
 class ArgumentParser:
-
     def __init__(self, prog='b5', description='', formatter_class=argparse.ArgumentDefaultsHelpFormatter):
         self.parser = argparse.ArgumentParser(
             prog=prog,
@@ -49,6 +48,7 @@ class MainArgumentParser(ArgumentParser):
         self.__add_argument_run_path()
         self.__add_argument_detect()
         self.__add_argument_shell()
+        self.__add_argument_traceback()
         self.__add_argument_quiet()
         self.__add_argument_command()
 
@@ -105,6 +105,14 @@ class MainArgumentParser(ArgumentParser):
             default='/bin/bash',
         )
 
+    def __add_argument_traceback(self):
+        self.parser.add_argument(
+            '--traceback',
+            action='store_true',
+            dest='traceback',
+            default=False,
+        )
+
     def __add_argument_quiet(self):
         self.parser.add_argument(
             '-q', '--quiet',
@@ -112,7 +120,6 @@ class MainArgumentParser(ArgumentParser):
             dest='quiet',
             default=False,
         )
-        self.parser.set_defaults()
 
     def __add_argument_command(self):
         self.parser.add_argument('command')
@@ -150,7 +157,7 @@ class ExecuteArgumentParser(ArgumentParser):
     def add_arguments(self):
         self.__add_argument_state_file()
         self.__add_argument_module()
-        self._add_argument_method()
+        self.__add_argument_method()
         self.__add_argument_args()
 
     def __add_argument_state_file(self):
@@ -165,7 +172,7 @@ class ExecuteArgumentParser(ArgumentParser):
             dest='module',
         )
 
-    def _add_argument_method(self):
+    def __add_argument_method(self):
         self.parser.add_argument(
             '--method', nargs='?',
             dest='method',

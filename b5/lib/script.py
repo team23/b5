@@ -94,6 +94,7 @@ def construct_script_run(state):
     # Run everything
     return '''
 TASKNAME={taskname}
+_DEBUG_TRACEBACK={traceback}
 if b5:function_exists {taskfunc}
 then
     b5:run {taskfunc} {taskparams}
@@ -105,7 +106,8 @@ fi
         taskfunc=shlex.quote('task:%s' % state.args['command']),
         taskparams=' '.join(
             [shlex.quote(a) for a in state.args['command_args']]
-        )
+        ),
+        traceback='1' if state.args['traceback'] else '0',
     )
 
 

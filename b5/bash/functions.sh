@@ -71,9 +71,11 @@ b5:help() {
         fi
     fi
 
-    echo "b5 <task> <args>"
+    echo "Usage: b5 <task> <args>"
+    echo
     echo "Tasks:"
     compgen -A function | sed -En 's/task:(.*)/\1/p' | cat -n
+    echo
 }
 
 b5:run() {

@@ -93,16 +93,18 @@ def construct_script_source(state):
 def construct_script_run(state):
     # Run everything
     return '''
-if b5:function_exists %s
+TASKNAME={taskname}
+if b5:function_exists {taskfunc}
 then
-   b5:run %s
+    b5:run {taskfunc} {taskparams}
 else
-    b5:error "Task not found"
+    b5:abort "Task $TASKNAME not found, see 'b5 help'"
 fi     
-    ''' % (
-        shlex.quote('task:%s' % state.args['command']),
-        ' '.join(
-            [shlex.quote('task:%s' % state.args['command'])] + [shlex.quote(a) for a in state.args['command_args']]
+    '''.format(
+        taskname=shlex.quote(state.args['command']),
+        taskfunc=shlex.quote('task:%s' % state.args['command']),
+        taskparams=' '.join(
+            [shlex.quote(a) for a in state.args['command_args']]
         )
     )
 

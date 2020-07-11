@@ -67,22 +67,35 @@ def main():
             with StoredScriptSource(state, script_source) as source:
                 if state.run_path:
                     os.chdir(state.run_path)
+                proc = subprocess.Popen(
+                    [
+                        args.shell,
+                        source.name,
+                    ],
+                    shell=False,
+                )
                 try:
-                    subprocess.run(
-                        [
-                            args.shell,
-                            source.name,
-                        ],
-                        shell=False,
-                        check=True,
-                    )
+                    proc.wait()
                 except KeyboardInterrupt:
-                    termcolor.cprint('Task was stopped by keyboard interupt', color='yellow')
+                    termcolor.cprint('Received keyboard interrupt, waiting for task to exit...', color='yellow', end='', flush=True)
+                    try:
+                        proc.wait(timeout=30)
+                    except subprocess.TimeoutExpired:
+                        termcolor.cprint('still waiting, sending SIGTERM...', color='yellow', end='', flush=True)
+                        proc.terminate()
+                        try:
+                            proc.wait(timeout=30)
+                        except subprocess.TimeoutExpired:
+                            termcolor.cprint('did not exit, sending SIGKILL', color='red')
+                            proc.kill()
+                            sys.exit(1)
+                    termcolor.cprint('exited ok', color='yellow')
                     sys.exit(0)
-                except subprocess.CalledProcessError:
+                if proc.returncode == 0:
+                    _print('Task exited ok', color='green')
+                else:
                     termcolor.cprint('Task execution failed, see above', color='red')
                     sys.exit(1)
-                _print('Task exited ok', color='green')
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)

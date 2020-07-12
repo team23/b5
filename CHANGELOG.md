@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.1.9
+
+* Packaging fixes
+
 # 1.1.8
 
 * Better handling for keyboard interrupt

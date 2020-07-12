@@ -2,13 +2,17 @@
 
 * work in progress ;-)
 
-# 1.1.7
+# 1.1.8
 
 * Better handling for keyboard interrupt
 * New comlipy module (thanks to Emanuel Jacob)
 * Only show stacktrace when --traceback was used
 * Docker module can now automatically create networks, can be used to have multi-project networks automatically created
 * Modules now check, that required binary is installed (using which)
+
+# 1.1.7
+
+* Packaging fixes
 
 # 1.1.6
 

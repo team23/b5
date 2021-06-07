@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.2.1
+
+* Add packaging dependency again (sorry!)
+
 # 1.2.0
 
 * Update all dependencies to their current version

@@ -36,6 +36,7 @@ Jinja2 = "^3.0.1"
 MarkupSafe = "^2.0.1"
 PyYAML = "^5.4.1"
 termcolor = "^1.1.0"
+packaging = "^20.9"
 
 [tool.poetry.dev-dependencies]
 pylint = ">=2.3.1"

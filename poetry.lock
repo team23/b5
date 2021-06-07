@@ -119,15 +119,14 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "packaging"
-version = "16.8"
+version = "20.9"
 description = "Core utilities for Python packages"
-category = "dev"
+category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.dependencies]
-pyparsing = "*"
-six = "*"
+pyparsing = ">=2.0.2"
 
 [[package]]
 name = "pluggy"
@@ -170,7 +169,7 @@ toml = ">=0.7.1"
 name = "pyparsing"
 version = "2.4.7"
 description = "Python parsing module"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
@@ -268,7 +267,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7"
-content-hash = "e09ff8a1d112ebd6affd3b70d70faefe0676c5966a5bb2be98a11778e27da1bd"
+content-hash = "8d445088688a39749e9727230d7a42b5ebddc57774feb1626c57e39238a4fbe8"
 
 [metadata.files]
 astroid = [
@@ -367,8 +366,8 @@ more-itertools = [
     {file = "more_itertools-8.2.0-py3-none-any.whl", hash = "sha256:5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"},
 ]
 packaging = [
-    {file = "packaging-16.8-py2.py3-none-any.whl", hash = "sha256:99276dc6e3a7851f32027a68f1095cd3f77c148091b092ea867a351811cfe388"},
-    {file = "packaging-16.8.tar.gz", hash = "sha256:5d50835fdf0a7edf0b55e311b7c887786504efea1177abd7e69329a8e5ea619e"},
+    {file = "packaging-20.9-py2.py3-none-any.whl", hash = "sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a"},
+    {file = "packaging-20.9.tar.gz", hash = "sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5"},
 ]
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},

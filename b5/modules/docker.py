@@ -202,25 +202,33 @@ class DockerModule(BaseModule):
 
         script.append(self._script_function_source('container_id', '''
             (
-                cd {base_path} && \\
-                {name}:docker-compose ps -q "$@" | awk 'NR == 1'
+                cd {base_path} || return 1
+                
+                local CONTAINER_NAME=$( {name}:docker-compose ps | ( grep {project_name}_"$1" || true ) | awk '{{print $1}}' | head -n 1 )
+                if [ -z "$CONTAINER_NAME" ]
+                then
+                    return 1
+                fi
+                
+                {name}:docker ps -f "name=$CONTAINER_NAME" -q
             )
         '''.format(
             base_path=shlex.quote(self.config['base_path']),
+            project_name=shlex.quote(self.config['project_name']),
             name=self.name,
         )))
 
         script.append(self._script_function_source('is_running', '''
             (
                 cd {base_path} || return 1
-                local CONTAINER=$( {name}:container_id "$@" )
 
-                if [ -z $CONTAINER ]
+                local CONTAINER_ID=$( {name}:container_id "$1" || true )
+                if [ -z "$CONTAINER_ID" ]
                 then
                     return 1
                 fi
 
-                if $( docker inspect -f {{{{.State.Running}}}} "$CONTAINER" )
+                if $( docker inspect -f {{{{.State.Running}}}} "$CONTAINER_ID" )
                 then
                     return 0
                 else

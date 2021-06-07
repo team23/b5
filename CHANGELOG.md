@@ -1,6 +1,8 @@
 # DEV
 
 * work in progress ;-)
+* Update all dependencies to their current version
+* New 'docker compose ps' does not allow filter by service name, work around this
 
 # 1.1.9
 

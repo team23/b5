@@ -4,6 +4,7 @@
 * b5 now used flake8 for better code quality
 * All code now contains type annotations
 * Support for docker compose v2 (and usage "docker compose" instead of "docker-compose")
+* Update all dependencies to their current version
 
 # 1.2.1
 

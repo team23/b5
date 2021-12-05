@@ -235,7 +235,7 @@ class DockerModule(BaseModule):
                         --filter label=com.docker.compose.service="$1" \
                     | head -n 1
                 )"
-                
+
                 if [ -z "$CONTAINER_ID" ]
                 then
                     return 1

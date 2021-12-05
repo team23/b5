@@ -146,8 +146,8 @@ class DockerModule(BaseModule):
         script.append(self._script_config_vars())
 
         script.append(self._script_function_source('install', '''
-            {name}:docker-compose pull
-            {name}:docker-compose build --pull
+            {name}:docker compose pull
+            {name}:docker compose build --pull
         '''.format(
             name=self.name,
         )))
@@ -181,7 +181,24 @@ class DockerModule(BaseModule):
             docker_bin=shlex.quote(self.config['docker_bin']),
         )))
 
+        script.append(self._script_function_source('compose', '''
+            (
+                cd {base_path} && \\
+                {name}:run {docker_bin} compose {docker_compose_configs} "$@"
+            )
+        '''.format(
+            base_path=shlex.quote(self.config['base_path']),
+            name=self.name,
+            docker_bin=shlex.quote(self.config['docker_bin']),
+            docker_compose_configs=(
+                '-f %s' % ' -f '.join(map(shlex.quote, self.config['docker_compose_configs']))
+                if self.config['docker_compose_configs']
+                else ''
+            ),
+        )))
+
         script.append(self._script_function_source('docker-compose', '''
+            b5:warn "Using old docker-compose callable, you should switch to use 'docker:compose'"
             (
                 cd {base_path} && \\
                 {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
@@ -212,13 +229,19 @@ class DockerModule(BaseModule):
             (
                 cd {base_path} || return 1
 
-                local CONTAINER_NAME=$( {name}:docker-compose ps | ( grep {project_name}_"$1" || true ) | awk '{{print $1}}' | head -n 1 )
-                if [ -z "$CONTAINER_NAME" ]
+                local CONTAINER_ID="$(
+                    {name}:docker ps -q \
+                        --filter label=com.docker.compose.project={project_name} \
+                        --filter label=com.docker.compose.service="$1" \
+                    | head -n 1
+                )"
+                
+                if [ -z "$CONTAINER_ID" ]
                 then
                     return 1
                 fi
 
-                {name}:docker ps -f "name=$CONTAINER_NAME" -q
+                echo "$CONTAINER_ID"
             )
         '''.format(
             base_path=shlex.quote(self.config['base_path']),
@@ -248,20 +271,12 @@ class DockerModule(BaseModule):
             name=self.name,
         )))
 
-        # See https://github.com/docker/compose/issues/3352 for why we are not using docker-compose exec here,
-        # this basically is broken on many levels. See for example this comment:
-        # https://github.com/docker/compose/issues/3352#issuecomment-299868032
         script.append(self._script_function_source('container_run', '''
             # docker-compose options
             local options=()
             local exec_options=()
             local run_options=("--rm")
             local use_tty=1
-            # raw docker options (prefix "d_")
-            local d_options=()
-            local d_exec_options=()
-            local d_run_options=("--rm")
-            local d_use_tty=1
 
             local has_valid_options=1
             local force_run=0
@@ -281,7 +296,6 @@ class DockerModule(BaseModule):
                         shift
                         ;;
                     --pipe-in)
-                        d_options+=("-i")
                         d_use_tty=0
                         shift
                         ;;
@@ -303,8 +317,6 @@ class DockerModule(BaseModule):
                         fi
                         options+=("-u")
                         options+=("$2")
-                        d_options+=("-u")
-                        d_options+=("$2")
                         shift
                         shift
                         ;;
@@ -315,8 +327,6 @@ class DockerModule(BaseModule):
                         fi
                         options+=("-e")
                         options+=("$2")
-                        d_options+=("-e")
-                        d_options+=("$2")
                         shift
                         shift
                         ;;
@@ -327,8 +337,6 @@ class DockerModule(BaseModule):
                         fi
                         options+=("-w")
                         options+=("$2")
-                        d_options+=("-w")
-                        d_options+=("$2")
                         shift
                         shift
                         ;;
@@ -345,8 +353,6 @@ class DockerModule(BaseModule):
                         fi
                         options+=("-l")
                         options+=("$2")
-                        d_options+=("-l")
-                        d_options+=("$2")
                         force_run=1
                         shift
                         shift
@@ -395,20 +401,15 @@ class DockerModule(BaseModule):
             then
                 options+=("-T")
             fi
-            if [ $d_use_tty -gt 0 ]
-            then
-                d_options+=("-it")
-            fi
 
             (
                 cd {base_path} || return 1
 
                 if [ $command_strategy == 'exec' ]
                 then
-                    local container_id=$( {name}:container_id "$container" | head -n 1 )
-                    {name}:docker exec "${{d_options[@]}}" "${{d_exec_options[@]}}" "$container_id" "$@"
+                    {name}:docker compose exec "${{options[@]}}" "${{exec_options[@]}}" "$container" "$@"
                 else
-                    {name}:docker-compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"
+                    {name}:docker compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"
                 fi
             )
         '''.format(
@@ -600,7 +601,11 @@ class DockerModule(BaseModule):
                 # create volumes if it does not exist
                 if [ {volume_path_from_type} == "volume" ]
                 then
-                    local VOLUME_FROM_EXISTS="$( docker volume ls | awk '{{print $2}}' | grep -Fxc {volume_path_from} || true )"
+                    local VOLUME_FROM_EXISTS="$(
+                        docker volume ls \
+                        | awk '{{print $2}}' \
+                        | grep -Fxc {volume_path_from} || true
+                    )"
                     if [ "$VOLUME_FROM_EXISTS" -eq 0 ]
                     then
                         docker volume create {volume_path_from} > /dev/null
@@ -608,7 +613,11 @@ class DockerModule(BaseModule):
                 fi
                 if [ {volume_path_to_type} == "volume" ]
                 then
-                    local VOLUME_TO_EXISTS="$( docker volume ls | awk '{{print $2}}' | grep -Fxc {volume_path_to} || true )"
+                    local VOLUME_TO_EXISTS="$(
+                        docker volume ls \
+                        | awk '{{print $2}}' \
+                        | grep -Fxc {volume_path_to} || true
+                    )"
                     if [ "$VOLUME_TO_EXISTS" -eq 0 ]
                     then
                         docker volume create {volume_path_to} > /dev/null

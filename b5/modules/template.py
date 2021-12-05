@@ -1,11 +1,12 @@
 import datetime
 import os
 import sys
-import termcolor
-import jinja2
 
-from b5.lib.argumentparser import TemplateArgumentParser
+import jinja2
+import termcolor
+
 from b5 import VERSION
+from b5.lib.argumentparser import TemplateArgumentParser
 from b5.modules import BaseModule
 
 

@@ -1,0 +1,23 @@
+[flake8]
+max-line-length = 120
+max-complexity = 10
+
+# Ignore the following linter problems:
+# * A003 class attribute "id" is shadowing a python builtin -> Class attributes don't really shadow
+# * E704 multiple statements on one line (def) -> Seems to be faulty
+# * W503 line break before binary operator -> We need the like break for complex cases
+# * ANN101 Missing type annotation for self in method -> We won't annotate self
+# * ANN102 Missing type annotation for cls in classmethod -> We won't annotate cls
+ignore = A003,E704,W503,ANN101,ANN102
+
+# We ignore some problems by file:
+# * T001 -> Allow print statements in cli tools and error handlers
+# * ANN001 -> No type annotations necessary in tests (and fixtures)
+per-file-ignores =
+    main.py:T001
+    init.py:T001
+    execute.py:T001
+    test_*.py:ANN001
+    *_fixture.py:ANN001
+
+exclude = .git,__pycache__,__init__.py,.mypy_cache,.pytest_cache,test_*.py

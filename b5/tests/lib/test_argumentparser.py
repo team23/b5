@@ -1,6 +1,6 @@
 import unittest
 
-from b5.lib.argumentparser import MainArgumentParser, InitArgumentParser, ExecuteArgumentParser, TemplateArgumentParser
+from b5.lib.argumentparser import ExecuteArgumentParser, InitArgumentParser, MainArgumentParser, TemplateArgumentParser
 
 
 class TestMainArgumentParser(unittest.TestCase):

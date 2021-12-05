@@ -48,9 +48,13 @@ task:pypi:release() {
 }
 
 task:lint() {
-    pkg:poetry run pylint --rcfile=pylintrc --exit-zero b5/
+    pkg:poetry run flake8 b5/
 }
 
 task:test() {
-    pkg:poetry run pytest b5/tests -v
+    pkg:poetry run pytest b5/
+}
+
+task:isort() {
+    pkg:poetry run isort b5/
 }

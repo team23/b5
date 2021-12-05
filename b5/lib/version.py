@@ -1,7 +1,7 @@
 from packaging import version
+
 from .. import VERSION
 from ..exceptions import B5ExecutionError
-
 
 B5_VERSION = version.parse(VERSION)
 

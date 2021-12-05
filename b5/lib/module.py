@@ -1,6 +1,6 @@
-from .importutils import import_string
 from ..exceptions import B5ExecutionError
 from ..modules import MODULES
+from .importutils import import_string
 
 
 def load_module(state, module_key):

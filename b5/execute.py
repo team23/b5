@@ -3,8 +3,8 @@ import sys
 
 import termcolor
 
-from .lib.argumentparser import ExecuteArgumentParser
 from .exceptions import B5ExecutionError
+from .lib.argumentparser import ExecuteArgumentParser
 from .lib.module import load_module
 from .lib.state import State
 

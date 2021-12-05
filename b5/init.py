@@ -2,11 +2,12 @@ import os
 import shutil
 import subprocess
 import sys
+
 import termcolor
 
-from .lib.skeleton import Skeleton
-from .lib.argumentparser import InitArgumentParser
 from .exceptions import B5ExecutionError
+from .lib.argumentparser import InitArgumentParser
+from .lib.skeleton import Skeleton
 
 
 def _run_cmd(cmd, error='Command execution failed, see above'):

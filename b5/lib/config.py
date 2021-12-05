@@ -2,8 +2,8 @@ import os
 
 import yaml
 
-from .version import ensure_config_version
 from ..exceptions import B5ExecutionError
+from .version import ensure_config_version
 
 
 def find_configs(state, configs):

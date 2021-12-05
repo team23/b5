@@ -5,7 +5,6 @@ import tempfile
 
 from .module import load_module
 
-
 RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
 CONFIG_SUB = '%s_%s'
 CONFIG_KEYS = '%s_KEYS'

@@ -1,5 +1,5 @@
-import shlex
 import os
+import shlex
 
 from b5.modules import BaseModule
 

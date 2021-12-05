@@ -1,9 +1,12 @@
 import re
+from typing import Any, Dict, Optional
 
-from b5.lib.config import merge_config
+from lib.state import State
+
+from ..lib.config import merge_config
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
-MODULES = {
+MODULES: Dict[str, str] = {
     'test': 'b5.modules.test.TestModule',
     'legacy': 'b5.modules.legacy.LegacyModule',
     'virtualenv': 'b5.modules.virtualenv.VirtualenvModule',
@@ -19,7 +22,13 @@ MODULES = {
 class BaseModule:
     DEFAULT_CONFIG = {}
 
-    def __init__(self, name, config, state, **kwargs):
+    def __init__(
+            self,
+            name: str,
+            config: Dict[str, Any],
+            state: State,
+            **kwargs: Any,
+    ):
         self.name = name
         self.config = merge_config(self.DEFAULT_CONFIG, config)
         self.state = state
@@ -27,18 +36,22 @@ class BaseModule:
         self.validate_config()
         self.prepare_config()
 
-    def validate_config(self):
+    def validate_config(self) -> None:
         pass
 
-    def prepare_config(self):
+    def prepare_config(self) -> None:
         pass
 
-    def _script_config_vars(self):
-        from b5.lib.script import config_script_source
+    def _script_config_vars(self) -> str:
+        from ..lib.script import config_script_source
 
         return config_script_source(self.config, prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper()))
 
-    def _script_function_call(self, external_method, method=None):
+    def _script_function_call(
+            self,
+            external_method: str,
+            method: Optional[str] = None,
+    ) -> str:
         return '''
 {module}:{external_method}() {{
     b5-execute --state-file {state_file} --module {module} --method {method} --args "$@"
@@ -50,7 +63,11 @@ class BaseModule:
             method=method if method else 'execute_%s' % external_method,
         )
 
-    def _script_function_source(self, external_method, source):
+    def _script_function_source(
+            self,
+            external_method: str,
+            source: str,
+    ) -> str:
         """
         Create a shell function script for a b5 module.
         This also prepends the return value of `is_installed_script` for (optional) evaluation whether the given
@@ -75,10 +92,14 @@ class BaseModule:
             installed_script=self.is_installed_script()
         )
 
-    def get_script(self):
+    def get_script(self) -> str:
         return ''
 
-    def create_is_installed_script(self, module=None, module_bin=None):
+    def create_is_installed_script(
+            self,
+            module: Optional[str] = None,
+            module_bin: Optional[str] = None,
+    ) -> str:
         """
         Generate an is_installed_script using the passed parameters.
 
@@ -99,7 +120,7 @@ class BaseModule:
                 module_bin=module_bin if module_bin else module,
         )
 
-    def is_installed_script(self):
+    def is_installed_script(self) -> str:
         """
         Can be overridden by child classes in order to run a check to determine whether the local bin is
         available or not. This can be done manually or by using the `create_is_installed_script` method

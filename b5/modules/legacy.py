@@ -2,11 +2,12 @@ import os
 import shlex
 
 from b5 import B5_PATH
-from b5.modules import BaseModule
+
+from . import BaseModule
 
 
 class LegacyModule(BaseModule):
-    def get_script(self):
+    def get_script(self) -> str:
         script = [super(LegacyModule, self).get_script()]
         script.append('LEGACY_MODULES_PATH=%s\n' % shlex.quote(os.path.join(B5_PATH, 'legacy', 'modules')))  # legacy
         script.append(open(os.path.join(B5_PATH, 'legacy', 'legacy.sh'), 'r').read())

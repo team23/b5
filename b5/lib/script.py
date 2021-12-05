@@ -2,15 +2,18 @@ import os
 import re
 import shlex
 import tempfile
+from types import TracebackType
+from typing import Any, Dict, Optional, Type
 
 from .module import load_module
+from .state import State
 
 RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
 CONFIG_SUB = '%s_%s'
 CONFIG_KEYS = '%s_KEYS'
 
 
-def modules_script_source(state):
+def modules_script_source(state: State) -> str:
     script = []
     if 'modules' in state.config:
         for module_key in state.config['modules']:
@@ -19,8 +22,8 @@ def modules_script_source(state):
     return '\n'.join(script)
 
 
-def config_script_source(config, prefix='CONFIG'):
-    def _gen_config(config_node, prefix):
+def config_script_source(config: Dict[str, Any], prefix: str = 'CONFIG') -> str:
+    def _gen_config(config_node: Any, prefix: str) -> str:
         script = []
 
         if isinstance(config_node, dict):
@@ -52,7 +55,7 @@ def config_script_source(config, prefix='CONFIG'):
     return _gen_config(config, prefix)
 
 
-def construct_script_source(state):
+def construct_script_source(state: State) -> str:
     from .. import B5_BASH_PATH
 
     script = []
@@ -89,7 +92,7 @@ def construct_script_source(state):
     return '\n'.join(script)
 
 
-def construct_script_run(state):
+def construct_script_run(state: State) -> str:
     # Run everything
     return '''
 TASKNAME={taskname}
@@ -99,34 +102,39 @@ then
     b5:run {taskfunc} {taskparams}
 else
     b5:abort "Task $TASKNAME not found, see 'b5 help'"
-fi     
+fi
     '''.format(
         taskname=shlex.quote(state.args['command']),
         taskfunc=shlex.quote('task:%s' % state.args['command']),
         taskparams=' '.join(
-            [shlex.quote(a) for a in state.args['command_args']]
+            [shlex.quote(a) for a in state.args['command_args']],
         ),
         traceback='1' if state.args['traceback'] else '0',
     )
 
 
 class StoredScriptSource:
-    def __init__(self, state, source):
+    def __init__(self, state: State, source: str) -> None:
         self.state = state
         self.source = source
         self.file_handle = tempfile.NamedTemporaryFile(suffix='b5-compiled', delete=False)
         self.file_handle.write(self.source.encode('utf-8'))
         self.file_handle.close()
 
-    def close(self):
+    def close(self) -> None:
         os.unlink(self.file_handle.name)
 
-    def __enter__(self):
+    def __enter__(self) -> "StoredScriptSource":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+            self,
+            exc_type: Optional[Type[BaseException]],
+            exc: Optional[BaseException],
+            traceback: Optional[TracebackType],
+    ) -> None:
         self.close()
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.file_handle.name

@@ -1,7 +1,7 @@
 import os
 import shlex
 
-from b5.modules import BaseModule
+from . import BaseModule
 
 
 class PipenvModule(BaseModule):
@@ -18,32 +18,35 @@ class PipenvModule(BaseModule):
         'pipfile': 'Pipfile',  # Sets PIPENV_PIPFILE
     }
 
-    def prepare_config(self):
+    def prepare_config(self) -> None:
         self.config['base_path'] = os.path.realpath(os.path.join(
             self.state.run_path,
             self.config['base_path'],
         ))
 
-    def _pipenv_environment(self):
+    def _pipenv_environment(self) -> str:
         return '''
             {pyenv_init}
             export PIPENV_VENV_IN_PROJECT="{store_venv_in_project}"
             export PIPENV_PIPFILE={pipfile}
         '''.format(
-            pyenv_init='eval "$( {pyenv_bin} init - )"'.format(pyenv_bin=shlex.quote(self.config['pyenv_bin'])) \
-                        if self.config['use_pyenv'] else '',
+            pyenv_init=(
+                'eval "$( {pyenv_bin} init - )"'.format(pyenv_bin=shlex.quote(self.config['pyenv_bin']))
+                if self.config['use_pyenv']
+                else ''
+            ),
             store_venv_in_project='1' if self.config['store_venv_in_project'] else '',
             pipfile=shlex.quote(self.config['pipfile']),
         )
 
-    def is_installed_script(self):
+    def is_installed_script(self) -> str:
         """
         Add a check to evaluate whether the pipenv module bin is installed or not
         Returns: str
         """
         return self.create_is_installed_script(module=self.name, module_bin=self.config['pipenv_bin'])
 
-    def get_script(self):
+    def get_script(self) -> str:
         script = [super(PipenvModule, self).get_script()]
 
         script.append(self._script_config_vars())

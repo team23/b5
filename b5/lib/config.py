@@ -1,12 +1,17 @@
 import os
+from typing import Any, Dict, List
 
 import yaml
 
 from ..exceptions import B5ExecutionError
+from .state import State
 from .version import ensure_config_version
 
 
-def find_configs(state, configs):
+def find_configs(
+        state: State,
+        configs: List[str],
+) -> List[Dict[str, str]]:
     run_path = os.path.realpath(state.run_path)
     found_configs = []
     for config in configs:
@@ -21,7 +26,10 @@ def find_configs(state, configs):
     return found_configs
 
 
-def merge_config(cur_config, new_config):
+def merge_config(
+        cur_config: Dict[str, Any],
+        new_config: Dict[str, Any],
+) -> Dict[str, Any]:
     result_config = cur_config.copy()
     for key, value in new_config.items():
         if isinstance(value, dict):
@@ -41,13 +49,13 @@ def merge_config(cur_config, new_config):
     return result_config
 
 
-def validate_config(config):
+def validate_config(config: Dict[str, Any]) -> Dict[str, Any]:
     if 'version' in config:
         ensure_config_version(config['version'])
     return config
 
 
-def load_config(state):
+def load_config(state: State) -> Dict[str, Any]:
     configfiles = state.configfiles
     config = {}
     for configfile in configfiles:

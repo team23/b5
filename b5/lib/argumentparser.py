@@ -1,18 +1,28 @@
 import argparse
+from typing import List, Optional, Type
 
 from .detect import DETECT
 
 
 class ArgumentParser:
-    def __init__(self, prog='b5', description='', formatter_class=argparse.ArgumentDefaultsHelpFormatter):
+    def __init__(
+            self,
+            prog: str = 'b5',
+            description: str = '',
+            formatter_class: Type[argparse.HelpFormatter] = argparse.ArgumentDefaultsHelpFormatter,
+    ) -> None:
         self.parser = argparse.ArgumentParser(
             prog=prog,
             formatter_class=formatter_class,
-            description=description
+            description=description,
         )
         self.defaults = {}
 
-    def parse(self, arguments=None, help_as_default=False):
+    def parse(
+            self,
+            arguments: Optional[List[str]] = None,
+            help_as_default: bool = False,
+    ) -> argparse.Namespace:
         if help_as_default:
             if not arguments:
                 arguments = ['help']
@@ -24,7 +34,7 @@ class ArgumentParser:
 
         return args
 
-    def set_default(self, key, value):
+    def set_default(self, key: str, value: str) -> None:
         self.defaults.update({key: value})
 
 
@@ -42,18 +52,18 @@ class MainArgumentParser(ArgumentParser):
         --quiet -q Determine if the script should print out stuff
     """
 
-    def add_arguments(self):
-        self.__add_argument_config()
-        self.__add_argument_taskfile()
-        self.__add_argument_project_path()
-        self.__add_argument_run_path()
-        self.__add_argument_detect()
-        self.__add_argument_shell()
-        self.__add_argument_traceback()
-        self.__add_argument_quiet()
-        self.__add_argument_command()
+    def add_arguments(self) -> None:
+        self._add_argument_config()
+        self._add_argument_taskfile()
+        self._add_argument_project_path()
+        self._add_argument_run_path()
+        self._add_argument_detect()
+        self._add_argument_shell()
+        self._add_argument_traceback()
+        self._add_argument_quiet()
+        self._add_argument_command()
 
-    def __add_argument_config(self):
+    def _add_argument_config(self) -> None:
         self.parser.add_argument(
             '-c', '--config',
             nargs='?',
@@ -62,7 +72,7 @@ class MainArgumentParser(ArgumentParser):
             dest='configfiles',
         )
 
-    def __add_argument_taskfile(self):
+    def _add_argument_taskfile(self) -> None:
         self.parser.add_argument(
             '-t', '--taskfile',
             nargs='?',
@@ -71,7 +81,7 @@ class MainArgumentParser(ArgumentParser):
             dest='taskfiles',
         )
 
-    def __add_argument_project_path(self):
+    def _add_argument_project_path(self) -> None:
         self.parser.add_argument(
             '-p', '--project-path',
             nargs='?',
@@ -79,7 +89,7 @@ class MainArgumentParser(ArgumentParser):
             dest='project_path',
         )
 
-    def __add_argument_run_path(self):
+    def _add_argument_run_path(self) -> None:
         self.parser.add_argument(
             '-r', '--run-path',
             nargs='?',
@@ -88,7 +98,7 @@ class MainArgumentParser(ArgumentParser):
             default='build',
         )
 
-    def __add_argument_detect(self):
+    def _add_argument_detect(self) -> None:
         self.parser.add_argument(
             '-d', '--detect',
             nargs='?',
@@ -98,7 +108,7 @@ class MainArgumentParser(ArgumentParser):
             default='git',
         )
 
-    def __add_argument_shell(self):
+    def _add_argument_shell(self) -> None:
         self.parser.add_argument(
             '-s', '--shell', nargs='?',
             help='Shell to run the generated script in (should be bash)',
@@ -106,7 +116,7 @@ class MainArgumentParser(ArgumentParser):
             default='/bin/bash',
         )
 
-    def __add_argument_traceback(self):
+    def _add_argument_traceback(self) -> None:
         self.parser.add_argument(
             '--traceback',
             action='store_true',
@@ -114,7 +124,7 @@ class MainArgumentParser(ArgumentParser):
             default=False,
         )
 
-    def __add_argument_quiet(self):
+    def _add_argument_quiet(self) -> None:
         self.parser.add_argument(
             '-q', '--quiet',
             action='store_true',
@@ -122,18 +132,18 @@ class MainArgumentParser(ArgumentParser):
             default=False,
         )
 
-    def __add_argument_command(self):
+    def _add_argument_command(self) -> None:
         self.parser.add_argument('command')
         self.parser.add_argument('command_args', nargs=argparse.REMAINDER)
 
 
 class InitArgumentParser(ArgumentParser):
-    def add_arguments(self):
-        self.__add_argument_skeleton()
-        self.__add_argument_branch()
-        self.__add_argument_path()
+    def add_arguments(self) -> None:
+        self._add_argument_skeleton()
+        self._add_argument_branch()
+        self._add_argument_path()
 
-    def __add_argument_skeleton(self):
+    def _add_argument_skeleton(self) -> None:
         self.parser.add_argument(
             '-s', '--skeleton',
             nargs='?',
@@ -141,68 +151,68 @@ class InitArgumentParser(ArgumentParser):
             default='basic',
         )
 
-    def __add_argument_branch(self):
+    def _add_argument_branch(self) -> None:
         self.parser.add_argument(
             '-b', '--branch',
             nargs='?',
             dest='branch',
         )
 
-    def __add_argument_path(self):
+    def _add_argument_path(self) -> None:
         self.parser.add_argument(
-            dest='path'
+            dest='path',
         )
 
 
 class ExecuteArgumentParser(ArgumentParser):
-    def add_arguments(self):
-        self.__add_argument_state_file()
-        self.__add_argument_module()
-        self.__add_argument_method()
-        self.__add_argument_args()
+    def add_arguments(self) -> None:
+        self._add_argument_state_file()
+        self._add_argument_module()
+        self._add_argument_method()
+        self._add_argument_args()
 
-    def __add_argument_state_file(self):
+    def _add_argument_state_file(self) -> None:
         self.parser.add_argument(
             '--state-file', nargs='?',
             dest='state_file',
         )
 
-    def __add_argument_module(self):
+    def _add_argument_module(self) -> None:
         self.parser.add_argument(
             '--module', nargs='?',
             dest='module',
         )
 
-    def __add_argument_method(self):
+    def _add_argument_method(self) -> None:
         self.parser.add_argument(
             '--method', nargs='?',
             dest='method',
         )
 
-    def __add_argument_args(self):
+    def _add_argument_args(self) -> None:
         self.parser.add_argument(
             '--args',
             nargs=argparse.REMAINDER,
-            dest='args'
+            dest='args',
         )
 
 
 class TemplateArgumentParser(ArgumentParser):
-    def add_arguments(self):
-        self.__add_argument_overwrite()
-        self.__add_argument_template_file()
-        self.__add_argument_output_file()
+    def add_arguments(self) -> None:
+        self._add_argument_overwrite()
+        self._add_argument_template_file()
+        self._add_argument_output_file()
 
-    def __add_argument_overwrite(self):
+    def _add_argument_overwrite(self) -> None:
         self.parser.add_argument(
             '-o', '--overwrite', nargs='?',
             help='Control if existing files should be overwritten',
             dest='overwrite', default='ask',
-            choices=['yes', 'if-older', 'no', 'ask', 'ask-if-older']
+            choices=['yes', 'if-older', 'no', 'ask', 'ask-if-older'],
         )
 
-    def __add_argument_template_file(self):
+    def _add_argument_template_file(self) -> None:
         self.parser.add_argument('template_file')
 
-    def __add_argument_output_file(self):
+    def _add_argument_output_file(self) -> None:
         self.parser.add_argument('output_file', nargs='?')

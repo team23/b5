@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import sys
+from typing import List
 
 import termcolor
 
@@ -10,7 +11,7 @@ from .lib.argumentparser import InitArgumentParser
 from .lib.skeleton import Skeleton
 
 
-def _run_cmd(cmd, error='Command execution failed, see above'):
+def _run_cmd(cmd: List[str], error: str = 'Command execution failed, see above') -> None:
     try:
         subprocess.run(
             cmd,
@@ -22,7 +23,7 @@ def _run_cmd(cmd, error='Command execution failed, see above'):
         sys.exit(1)
 
 
-def main():
+def main() -> None:
     try:
         parser = InitArgumentParser('b5-init', 'b5-init might be used to setup new projects')
         parser.add_arguments()
@@ -40,7 +41,7 @@ def main():
 
         _run_cmd(['git', 'clone', skeleton.get_url(), full_path], 'Could not clone skeleton repository, see above')
         os.chdir(full_path)
-        if not branch is None:
+        if branch is not None:
             _run_cmd(['git', 'checkout', branch], 'Could not checkout required branch, see above')
 
         shutil.rmtree(os.path.join(full_path, '.git'))

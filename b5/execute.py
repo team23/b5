@@ -9,7 +9,7 @@ from .lib.module import load_module
 from .lib.state import State
 
 
-def main():
+def main() -> None:
     try:
         parser = ExecuteArgumentParser('b5-execute', 'b5-execute is not intended to be called directly!')
         parser.add_arguments()

@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+from typing import Any
 
 import termcolor
 
@@ -14,7 +15,7 @@ from b5.lib.state import State
 from b5.lib.taskfile import find_taskfiles
 
 
-def main():
+def main() -> None:  # noqa: C901
     try:
         # Parse all arguments
         parser = MainArgumentParser('b5')
@@ -29,7 +30,7 @@ def main():
             run_path=None,
             taskfiles=[],
             config={},
-            args=vars(args)
+            args=vars(args),
         )
 
         # Find project dir
@@ -43,7 +44,7 @@ def main():
             state.configfiles = find_configs(state, args.configfiles)
             state.config = load_config(state)
 
-        def _print(*args, **kwargs):
+        def _print(*args: Any, **kwargs: Any) -> None:
             if state.args['quiet']:
                 return
             termcolor.cprint(*args, **kwargs)
@@ -57,7 +58,7 @@ def main():
         _print('Executing task %s' % args.command)
         _print('')  # empty line
 
-        with state.stored() as _stored_state:
+        with state.stored():
             # Construct and execute bash script (and Taskfile)
             script_source = '\n'.join([
                 construct_script_source(state),
@@ -76,7 +77,8 @@ def main():
                 try:
                     proc.wait()
                 except KeyboardInterrupt:
-                    termcolor.cprint('Received keyboard interrupt, waiting for task to exit...', color='yellow', end='', flush=True)
+                    termcolor.cprint('Received keyboard interrupt, waiting for task to exit...',
+                                     color='yellow', end='', flush=True)
                     try:
                         proc.wait(timeout=30)
                     except subprocess.TimeoutExpired:
@@ -98,6 +100,7 @@ def main():
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main()

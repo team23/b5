@@ -14,18 +14,18 @@ class ComlipyModule(BaseModule):
         'config_path': '',
     }
 
-    def prepare_config(self):
+    def prepare_config(self) -> None:
         if self.config['config_path']:
             self.config['config_path'] = os.path.realpath(os.path.join(self.state.run_path, self.config['config_path']))
 
-    def is_installed_script(self):
+    def is_installed_script(self) -> str:
         """
         Add a check to evaluate whether the comlipy module bin is installed or not
         Returns: str
         """
         return self.create_is_installed_script(module=self.name, module_bin=self.config['comlipy_bin'])
 
-    def get_script(self):
+    def get_script(self) -> str:
         script = [super(ComlipyModule, self).get_script()]
 
         script.append(self._script_config_vars())
@@ -36,9 +36,8 @@ class ComlipyModule(BaseModule):
             {comlipy_bin}{comlipy_config_param} "$@"
         )
         '''.format(
-                name=self.name,
-                comlipy_bin=self.config['comlipy_bin'],
-                comlipy_config_param=config_param,
+            comlipy_bin=self.config['comlipy_bin'],
+            comlipy_config_param=config_param,
         )))
 
         script.append(self._script_function_source('install', '''
@@ -46,19 +45,17 @@ class ComlipyModule(BaseModule):
             {comlipy_install_bin}{comlipy_config_param}
         )
         '''.format(
-                name=self.name,
-                comlipy_install_bin=self.config['comlipy_install_bin'],
-                comlipy_config_param=config_param,
+            comlipy_install_bin=self.config['comlipy_install_bin'],
+            comlipy_config_param=config_param,
         )))
 
         script.append(self._script_function_source('update', '''
             (
                 {comlipy_install_bin}{comlipy_config_param}
             )
-            '''.format(
-                name=self.name,
-                comlipy_install_bin=self.config['comlipy_install_bin'],
-                comlipy_config_param=config_param,
+        '''.format(
+            comlipy_install_bin=self.config['comlipy_install_bin'],
+            comlipy_config_param=config_param,
         )))
 
         return '\n'.join(script)

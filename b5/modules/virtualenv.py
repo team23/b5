@@ -1,7 +1,7 @@
 import os
 import shlex
 
-from b5.modules import BaseModule
+from . import BaseModule
 
 
 class VirtualenvModule(BaseModule):
@@ -16,7 +16,7 @@ class VirtualenvModule(BaseModule):
         'requirements_file': 'requirements.txt',
     }
 
-    def prepare_config(self):
+    def prepare_config(self) -> None:
         self.config['base_path'] = os.path.realpath(os.path.join(
             self.state.run_path,
             self.config['base_path'],
@@ -30,14 +30,14 @@ class VirtualenvModule(BaseModule):
             self.config['requirements_file'],
         ))
 
-    def is_installed_script(self):
+    def is_installed_script(self) -> str:
         """
         Add a check to evaluate whether the virtualenv module bin is installed or not
         Returns: str
         """
         return self.create_is_installed_script(module=self.name, module_bin=self.config['virtualenv_bin'])
 
-    def get_script(self):
+    def get_script(self) -> str:
         script = [super(VirtualenvModule, self).get_script()]
 
         script.append(self._script_config_vars())
@@ -76,7 +76,7 @@ class VirtualenvModule(BaseModule):
             activate_path=shlex.quote(os.path.join(
                 self.config['env_path'],
                 'bin',
-                'activate'
+                'activate',
             )),
         )))
 

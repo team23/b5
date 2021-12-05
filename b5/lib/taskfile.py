@@ -1,9 +1,11 @@
 import os
+from typing import Dict, List
 
 from ..exceptions import B5ExecutionError
+from .state import State
 
 
-def find_taskfiles(state, taskfiles):
+def find_taskfiles(state: State, taskfiles: List[str]) -> List[Dict[str, str]]:
     run_path = os.path.realpath(state.run_path)
     found_taskfiles = []
     for taskfile in taskfiles:

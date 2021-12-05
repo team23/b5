@@ -1,17 +1,20 @@
 import datetime
 import os
 import sys
+from typing import List
 
 import jinja2
 import termcolor
 
 from b5 import VERSION
-from b5.lib.argumentparser import TemplateArgumentParser
-from b5.modules import BaseModule
+
+from ..lib.argumentparser import TemplateArgumentParser
+from ..lib.state import State
+from . import BaseModule
 
 
 class TemplateModule(BaseModule):
-    def execute_render(self, state, sys_args):
+    def execute_render(self, state: State, sys_args: List[str]) -> None:  # noqa: C901
         parser = TemplateArgumentParser('{name}:render'.format(name=self.name))
         parser.add_arguments()
         args = parser.parse(sys_args)
@@ -51,11 +54,13 @@ class TemplateModule(BaseModule):
                         if yesno is not None:
                             termcolor.cprint('Invalid input: %s' % yesno, color='yellow')
                         if overwrite == 'ask-if-older':
-                            yesno = input('Template output file (%s) already exists, but is older than template, overwrite? [Yn] ' % args.output_file)
+                            yesno = input('Template output file (%s) already exists, '
+                                          'but is older than template, overwrite? [Yn] ' % args.output_file)
                             if yesno == '':
                                 yesno = 'y'
                         else:
-                            yesno = input('Template output file (%s) already exists, overwrite? [yN] ' % args.output_file)
+                            yesno = input('Template output file (%s) already exists, '
+                                          'overwrite? [yN] ' % args.output_file)
                             if yesno == '':
                                 yesno = 'n'
                         yesno = yesno.lower()
@@ -93,7 +98,7 @@ class TemplateModule(BaseModule):
             print(rendered)
     execute_render.task_executable = True
 
-    def get_script(self):
+    def get_script(self) -> str:
         script = [super(TemplateModule, self).get_script()]
 
         script.append(self._script_config_vars())

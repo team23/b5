@@ -1,6 +1,9 @@
 # DEV
 
 * work in progress ;-)
+* b5 now used flake8 for better code quality
+* All code now contains type annotations
+* Support for docker compose v2 (and usage "docker compose" instead of "docker-compose")
 
 # 1.2.1
 

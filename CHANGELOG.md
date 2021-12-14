@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.3.1
+
+* Fix issue that `docker compose` is not always called using the internal structures and thus may miss config overrides
+
 # 1.3.0
 
 * b5 now used flake8 for better code quality

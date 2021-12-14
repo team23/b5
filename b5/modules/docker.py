@@ -146,8 +146,8 @@ class DockerModule(BaseModule):
         script.append(self._script_config_vars())
 
         script.append(self._script_function_source('install', '''
-            {name}:docker compose pull
-            {name}:docker compose build --pull
+            {name}:compose pull
+            {name}:compose build --pull
         '''.format(
             name=self.name,
         )))
@@ -407,9 +407,9 @@ class DockerModule(BaseModule):
 
                 if [ $command_strategy == 'exec' ]
                 then
-                    {name}:docker compose exec "${{options[@]}}" "${{exec_options[@]}}" "$container" "$@"
+                    {name}:compose exec "${{options[@]}}" "${{exec_options[@]}}" "$container" "$@"
                 else
-                    {name}:docker compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"
+                    {name}:compose run "${{options[@]}}" "${{run_options[@]}}" "$container" "$@"
                 fi
             )
         '''.format(

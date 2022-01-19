@@ -198,7 +198,9 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('docker-compose', '''
-            b5:warn "Using old docker-compose callable, you should switch to use 'docker:compose'"
+            b5:warn "You are the old docker-compose v1 callable, you should switch to use '{name}:compose'"
+            b5:warn "in your Taskfile to start using docker compose v2. Note that all internal commands"
+            b5:warn "like '{name}:update' already use '{name}:compose'."
             (
                 cd {base_path} && \\
                 {name}:run {docker_compose_bin} {docker_compose_configs} "$@"
@@ -296,18 +298,16 @@ class DockerModule(BaseModule):
                         shift
                         ;;
                     --pipe-in)
-                        d_use_tty=0
+                        use_tty=0
                         shift
                         ;;
                     --pipe-out)
-                        d_use_tty=0
                         use_tty=0
                         shift
                         ;;
                     # Generic options
                     --disable-tty|-T)
                         use_tty=0
-                        d_use_tty=0
                         shift
                         ;;
                     -u|--user)

@@ -198,7 +198,7 @@ class DockerModule(BaseModule):
         )))
 
         script.append(self._script_function_source('docker-compose', '''
-            b5:warn "You are the old docker-compose v1 callable, you should switch to use '{name}:compose'"
+            b5:warn "You are using the old docker-compose v1 callable, you should switch to use '{name}:compose'"
             b5:warn "in your Taskfile to start using docker compose v2. Note that all internal commands"
             b5:warn "like '{name}:update' already use '{name}:compose'."
             (

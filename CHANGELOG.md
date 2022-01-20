@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.3.2
+
+* Fix issue with docker compose needing `-T` for all pipes now (docker compose 2.2.3 seems to have introduced this)
+
 # 1.3.1
 
 * Fix issue that `docker compose` is not always called using the internal structures and thus may miss config overrides

@@ -76,6 +76,10 @@ b5:help() {
     compgen -A function | sed -En 's/task:(.*)/\1/p' | cat -n
 }
 
+b5:tasks() {
+    compgen -A function | sed -En 's/task:(.*)/\1/p'
+}
+
 b5:run() {
     "$@"
     # echo -e "\n${B5_FONT_GREEN}Task exited ok${B5_FONT_RESTORE}"

@@ -9,7 +9,7 @@ brew install b5
 
 ## Installing as normal Python package
 
-When manually installing b5 I recommend using [pipsi](https://github.com/mitsuhiko/pipsi) to keep b5 and its
+When manually installing b5 I recommend using [pipx](https://github.com/pypa/pipx) to keep b5 and its
 dependencies separated from the system packages. You may install it using:
 
 ```bash

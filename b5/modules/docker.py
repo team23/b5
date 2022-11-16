@@ -60,6 +60,11 @@ class DockerModule(BaseModule):
         if self.config['docker_compose_configs'] is not None:
             if not isinstance(self.config['docker_compose_configs'], list):
                 self.config['docker_compose_configs'] = [self.config['docker_compose_configs']]
+            for docker_compose_config in self.config['docker_compose_configs']:
+                if docker_compose_config.startswith('docker-compose'):
+                    warnings.warn(f'The compose file {docker_compose_config} should be renamed to'
+                                  'comply with the newest Compose File Specification. Compose implementations '
+                                  'are no longer required to support the old docker-compose naming scheme.')
         # make sure docker_compose_config_overrides is a list if set
         if self.config['docker_compose_config_overrides'] is not None:
             if not isinstance(self.config['docker_compose_config_overrides'], list):
@@ -81,9 +86,37 @@ class DockerModule(BaseModule):
             docker_compose_configs_was_empty = False
             if not isinstance(self.config['docker_compose_configs'], list):
                 docker_compose_configs_was_empty = True
-                self.config['docker_compose_configs'] = ['docker-compose.yml']
+                self.config['docker_compose_configs'] = []
+                for prefix, extension in [
+                    ('compose', 'yaml'),
+                    ('compose', 'yml'),
+                    ('docker-compose', 'yaml'),
+                    ('docker-compose', 'yaml'),
+                ]:
+                    if os.path.exists(os.path.join(self.config['base_path'], f'{prefix}.{extension}')):
+                        self.config['docker_compose_configs'].append(f'{prefix}.{extension}')
+                        if prefix == 'docker-compose':
+                            # If compose file with old naming scheme exists, warn the user
+                            warnings.warn(f'The compose override file {prefix}.{extension} should be '
+                                          'renamed to comply with the newest Compose File Specification. '
+                                          'Compose implementations are no longer required to support the '
+                                          'old docker-compose naming scheme.')
             for override in self.config['docker_compose_config_overrides']:
-                self.config['docker_compose_configs'].append('docker-compose.%s.yml' % override)
+                # Add only overrides that actually exist to docker_compose_configs
+                for prefix, extension in [
+                    ('compose', 'yaml'),
+                    ('compose', 'yml'),
+                    ('docker-compose', 'yaml'),
+                    ('docker-compose', 'yaml'),
+                ]:
+                    if os.path.exists(os.path.join(self.config['base_path'], f'{prefix}.{override}.{extension}')):
+                        self.config['docker_compose_configs'].append(f'{prefix}.{override}.{extension}')
+                        if prefix == 'docker-compose':
+                            # If override file with old naming scheme exists, warn the user
+                            warnings.warn(f'The compose override file {prefix}.{override}.{extension} should be '
+                                          'renamed to comply with the newest Compose File Specification. '
+                                          'Compose implementations are no longer required to support the '
+                                          'old docker-compose naming scheme.')
             if (
                 docker_compose_configs_was_empty
                 and os.path.exists(os.path.join(self.config['base_path'], 'docker-compose.override.yml'))

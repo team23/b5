@@ -71,7 +71,7 @@ class DockerModule(BaseModule):
                 self.config['docker_compose_configs'] = [self.config['docker_compose_configs']]
             for docker_compose_config in self.config['docker_compose_configs']:
                 if docker_compose_config.startswith('docker-compose'):
-                    warnings.warn(f'The compose file {docker_compose_config} should be renamed to'
+                    warnings.warn(f'The compose file {docker_compose_config} should be renamed to '
                                   f'comply with the newest Compose File Specification. Compose implementations '
                                   f'are no longer required to support the old docker-compose naming scheme.')
         # make sure docker_compose_config_overrides is a list if set

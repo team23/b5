@@ -97,10 +97,14 @@ class DockerModule(BaseModule):
                         self.config['docker_compose_configs'].append(f'{prefix}.{extension}')
                         if prefix == 'docker-compose':
                             # If compose file with old naming scheme exists, warn the user
-                            warnings.warn(f'The compose override file {prefix}.{extension} should be '
-                                          f'renamed to comply with the newest Compose File Specification. '
-                                          f'Compose implementations are no longer required to support the '
-                                          f'old docker-compose naming scheme.')
+                            warnings.warn(
+                                f'The compose override file {prefix}.{extension} should be '
+                                f'renamed to comply with the newest Compose File Specification. '
+                                f'Compose implementations are no longer required to support the '
+                                f'old docker-compose naming scheme.',
+                                DeprecationWarning,
+                                stacklevel=2,
+                            )
             for override in self.config['docker_compose_config_overrides']:
                 # Add only overrides that actually exist to docker_compose_configs
                 for prefix, extension in [
@@ -113,10 +117,14 @@ class DockerModule(BaseModule):
                         self.config['docker_compose_configs'].append(f'{prefix}.{override}.{extension}')
                         if prefix == 'docker-compose':
                             # If override file with old naming scheme exists, warn the user
-                            warnings.warn(f'The compose override file {prefix}.{override}.{extension} should be '
-                                          f'renamed to comply with the newest Compose File Specification. '
-                                          f'Compose implementations are no longer required to support the '
-                                          f'old docker-compose naming scheme.')
+                            warnings.warn(
+                                f'The compose override file {prefix}.{override}.{extension} should be '
+                                f'renamed to comply with the newest Compose File Specification. '
+                                f'Compose implementations are no longer required to support the '
+                                f'old docker-compose naming scheme.',
+                                DeprecationWarning,
+                                stacklevel=2,
+                            )
             if (
                 docker_compose_configs_was_empty
                 and os.path.exists(os.path.join(self.config['base_path'], 'docker-compose.override.yml'))

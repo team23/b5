@@ -28,6 +28,15 @@ class DockerModule(BaseModule):
         'setup': {},
     }
 
+    # Valid combinations of compose filenames according to Compose File Specification
+    # See https://docs.docker.com/compose/compose-file/#compose-file
+    COMPOSE_CONFIG_FILENAMES = [
+        ('compose', 'yaml'),
+        ('compose', 'yml'),
+        ('docker-compose', 'yaml'),
+        ('docker-compose', 'yml'),
+    ]
+
     def prepare_config(self) -> None:  # noqa: C901
         self.config['base_path'] = os.path.realpath(os.path.join(
             self.state.run_path,
@@ -87,12 +96,7 @@ class DockerModule(BaseModule):
             if not isinstance(self.config['docker_compose_configs'], list):
                 docker_compose_configs_was_empty = True
                 self.config['docker_compose_configs'] = []
-                for prefix, extension in [
-                    ('compose', 'yaml'),
-                    ('compose', 'yml'),
-                    ('docker-compose', 'yaml'),
-                    ('docker-compose', 'yml'),
-                ]:
+                for prefix, extension in self.COMPOSE_CONFIG_FILENAMES:
                     if os.path.exists(os.path.join(self.config['base_path'], f'{prefix}.{extension}')):
                         self.config['docker_compose_configs'].append(f'{prefix}.{extension}')
                         if prefix == 'docker-compose':
@@ -107,12 +111,7 @@ class DockerModule(BaseModule):
                             )
             for override in self.config['docker_compose_config_overrides']:
                 # Add only overrides that actually exist to docker_compose_configs
-                for prefix, extension in [
-                    ('compose', 'yaml'),
-                    ('compose', 'yml'),
-                    ('docker-compose', 'yaml'),
-                    ('docker-compose', 'yml'),
-                ]:
+                for prefix, extension in self.COMPOSE_CONFIG_FILENAMES:
                     if os.path.exists(os.path.join(self.config['base_path'], f'{prefix}.{override}.{extension}')):
                         self.config['docker_compose_configs'].append(f'{prefix}.{override}.{extension}')
                         if prefix == 'docker-compose':

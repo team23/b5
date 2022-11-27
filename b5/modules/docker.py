@@ -128,14 +128,21 @@ class DockerModule(BaseModule):
         # Merge docker_compose_config_overrides and docker_compose_configs
         if isinstance(self.config['docker_compose_config_overrides'], list):
             for override in self.config['docker_compose_config_overrides']:
-                self.config['docker_compose_configs'].append(f'{docker_compose_config_prefix}.{override}.{docker_compose_config_extension}')
+                self.config['docker_compose_configs'].append(f'{docker_compose_config_prefix}'
+                                                             f'.{override}'
+                                                             f'.{docker_compose_config_extension}')
 
         # Add default override file, if it exists
         if (
             docker_compose_configs_was_empty
-            and os.path.exists(os.path.join(self.config['base_path'], f'{docker_compose_config_prefix}.override.{docker_compose_config_extension}'))
+            and os.path.exists(os.path.join(
+                self.config['base_path'],
+                f'{docker_compose_config_prefix}.override.{docker_compose_config_extension}',
+            ))
         ):
-            self.config['docker_compose_configs'].append(f'{docker_compose_config_prefix}.override.{docker_compose_config_extension}')
+            self.config['docker_compose_configs'].append(f'{docker_compose_config_prefix}'
+                                                         f'.override'
+                                                         f'.{docker_compose_config_extension}')
 
     def get_script_env(self) -> str:
         import os

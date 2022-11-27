@@ -8,12 +8,17 @@ you probably want to put inside build/, too.
 * **base_path:** Base path for all further paths/files. Defaults to ".", which normally means build/.
 * **docker_bin:** docker binary to be used. Defaults to "docker".
 * **docker_compose_bin:** docker-compose binary to be used, defaults to "docker-compose".
-* **docker_compose_configs:** List of configuration files to be used. `docker-compose` defaults to `docker-compose.yml`,
-  `docker-compose.override.yml` by default. 
+* **docker_compose_configs:** List of configuration files to be used. `docker-compose` defaults to compose config files
+  by default (`compose.yaml`, `compose.yml`, `docker-compose.yaml`, `docker-compose.yml`). In addition an override file
+  will automatically added if found (like `compose.override.yaml`).
 * **docker_compose_config_overrides:** Shortcut for adding an additional configuration files. Passing "something" will set
-  `docker_compose_configs` to `docker-compose.yml`, `docker-compose.something.yml`, `docker-compose.override.yml`. If
-  `docker_compose_configs` is set, the file `docker-compose.something.yml` will just be appended.You may use this
-  as a list to pass multiple overrides.
+  `docker_compose_configs` to `compose.yaml`, `compose.something.yaml`, `compose.override.yaml`. If
+  `docker_compose_configs` is set, the file `compose.something.yaml` will just be appended.You may use this
+  as a list to pass multiple overrides.  
+  **Note:** The actual file name depends on either the first file name used in `docker_compose_configs` or the first file
+  found following the docker compose file naming convention. All overrides MUST follow the SAME naming schema. So if
+  you use `docker-compose.yml` instead of `compose.yaml` the override file must be named
+  `docker-compose.something.yml`.
 * **docker_compose_config_override:** DEPRECATED single override form of docker_compose_config_overrides, use
   docker_compose_config_overrides instead.
 * **docker_machine_bin:** docker-machine binary to be used, defaults to "docker-machine".

@@ -1,6 +1,7 @@
 # DEV
 
 * work in progress ;-)
+* You now can get a raw task list using `b5 --quiet help --tasks`
 
 # 1.3.2
 

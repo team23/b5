@@ -1,8 +1,8 @@
 import re
 from typing import Any, Dict, Optional
 
-from ..lib.state import State
 from ..lib.config import merge_config
+from ..lib.state import State
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
 MODULES: Dict[str, str] = {

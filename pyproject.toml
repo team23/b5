@@ -39,7 +39,7 @@ PyYAML = "^6.0"
 termcolor = "^1.1.0"
 packaging = "^21.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "6.2.5"
 isort = "^5.10.1"
 flake8 = "^4.0.1"

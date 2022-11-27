@@ -62,25 +62,37 @@ b5:bin_exists() {
 }
 
 b5:help() {
-    local taskname="${1:-}"
-    if [ ! -z "$taskname" ]
-    then
-        if b5:function_exists "help:$taskname"
-        then
-            shift 1  # remove $taskname from $@
-            help:$taskname "$@"
-            return 0
-        else
-            b5:warn "No dedicated help found for ${taskname}"
-            echo
-        fi
-    fi
+    local arg="${1:-}"
 
-    echo "Usage: b5 <task> <args>"
-    echo
-    echo "Tasks:"
-    compgen -A function | sed -En 's/task:(.*)/\1/p' | cat -n
-    echo
+    case $arg in
+        "--tasks")
+            compgen -A function | sed -En 's/task:(.*)/\1/p'
+            ;;
+        "--usage")
+            echo "Usage: b5 <task> [args]"
+            ;;
+        *)
+            local taskname="$arg"
+            if [ ! -z "$taskname" ]
+            then
+                if b5:function_exists "help:$taskname"
+                then
+                    shift 1  # remove $taskname from $@
+                    help:$taskname "$@"
+                    return 0
+                else
+                    b5:warn "No dedicated help found for ${taskname}"
+                    echo
+                fi
+            fi
+
+            echo "Usage: b5 <task> <args>"
+            echo
+            echo "Tasks:"
+            compgen -A function | sed -En 's/task:(.*)/\1/p' | cat -n
+            echo
+            ;;
+    esac
 }
 
 b5:run() {

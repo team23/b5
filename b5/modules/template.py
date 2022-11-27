@@ -28,6 +28,7 @@ class TemplateModule(BaseModule):
         env = jinja2.Environment(
             loader=jinja2.FileSystemLoader([state.run_path]),
             autoescape=jinja2.select_autoescape(),
+            keep_trailing_newline=True,
         )
         try:
             template = env.get_template(args.template_file)

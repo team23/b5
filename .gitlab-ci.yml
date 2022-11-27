@@ -1,10 +1,21 @@
 stages:
-  - test
+  - quality
 
 pytest:
-  image: python:3.8
-  stage: test
+  image: docker.team23.de/docker/hub/python:3.11
+  stage: quality
   script:
-    - pip install poetry
-    - poetry install
-    - poetry run pytest b5/tests -v
+    - python3 -m pip install pipx
+    - pipx install poetry
+    - /root/.local/bin/poetry install
+    - /root/.local/bin/poetry run pytest b5/tests -v
+
+
+flake8:
+  image: docker.team23.de/docker/hub/python:3.11
+  stage: quality
+  script:
+    - python3 -m pip install pipx
+    - pipx install poetry
+    - /root/.local/bin/poetry install
+    - /root/.local/bin/poetry run flake8 --count b5/

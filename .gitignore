@@ -1,8 +1,28 @@
-/build/Taskfile.local
-/build/local.yml
 /ENV
 /.venv
 /b5.egg-info
 /dist
+
+# Some conventions
+/_*
+
+# Generated files
 *.pyc
 *.pyo
+__pycache__
+
+# Build files
+/build/Taskfile.local
+/build/local.yml
+/build/config.local.yml
+/build/docker-compose.override.yml
+
+# development environment
+.idea
+*.iml
+*.swp
+.vscode/
+*.code-workspace
+
+# macOS
+*.DS_Store

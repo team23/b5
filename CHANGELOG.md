@@ -4,7 +4,7 @@
 
 # 1.3.3
 
-You now can get a raw task list using `b5 --quiet help --tasks`
+* You now can get a raw task list using `b5 --quiet help --tasks`
 * Support for new docker compose path spec (see https://docs.docker.com/compose/compose-file/#compose-file)
 
 # 1.3.2

@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.3.5
+
+* Fix version number in code 🙈
+
 # 1.3.4
 
 * Fix regression with docker compose config file name detection. When no file is found in the current directory, 

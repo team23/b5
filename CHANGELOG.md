@@ -2,6 +2,11 @@
 
 * work in progress ;-)
 
+# 1.3.4
+
+* Fix regression with docker compose config file name detection. When no file is found in the current directory, 
+  the old default file name is now used (`docker-compose.yml`). This will change in b5 1.4.0.
+
 # 1.3.3
 
 * You now can get a raw task list using `b5 --quiet help --tasks`

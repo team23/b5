@@ -11,9 +11,12 @@ you probably want to put inside build/, too.
 * **docker_compose_configs:** List of configuration files to be used. `docker-compose` defaults to compose config files
   by default (`compose.yaml`, `compose.yml`, `docker-compose.yaml`, `docker-compose.yml`). In addition an override file
   will automatically added if found (like `compose.override.yaml`).
+  **Note:** b5 will try to find the correct config file name by default. If the file does not exists yet when you run
+  b5 you will get an error. You can use this parameter to provide a file name and thus avoid this error - as the
+  detection will be skipped then.
 * **docker_compose_config_overrides:** Shortcut for adding an additional configuration files. Passing "something" will set
   `docker_compose_configs` to `compose.yaml`, `compose.something.yaml`, `compose.override.yaml`. If
-  `docker_compose_configs` is set, the file `compose.something.yaml` will just be appended.You may use this
+  `docker_compose_configs` is set, the file `compose.something.yaml` will just be appended. You may use this
   as a list to pass multiple overrides.  
   **Note:** The actual file name depends on either the first file name used in `docker_compose_configs` or the first file
   found following the docker compose file naming convention. All overrides MUST follow the SAME naming schema. So if

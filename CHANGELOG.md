@@ -2,6 +2,14 @@
 
 * work in progress ;-)
 
+# 1.4.0 - PREPARATION, NOT RELEASED YET
+
+* BREAKING: b5 will require to have a docker compose config file available for config file name detection. See
+  https://docs.docker.com/compose/compose-file/#compose-file for details about the new naming schema. If you cannot
+  provide an appropriate file (for example in skeletons), you may use the option `docker_compose_configs` to provide
+  a file name. The first file name provided here will determine the config file prefix and extension used for
+  `docker_compose_config_overrides`.
+
 # 1.3.5
 
 * Fix version number in code 🙈

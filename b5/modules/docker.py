@@ -120,20 +120,10 @@ class DockerModule(BaseModule):
 
         # Abort if we found no config file
         if docker_compose_config_prefix is None:
-            docker_compose_config_prefix = "docker-compose"
-            docker_compose_config_extension = "yml"
-            warnings.warn(
-                f'No docker compose config file found in run path. Will fallback to old '
-                f'filename schema {docker_compose_config_prefix}.{docker_compose_config_extension}. '
-                f'Note this warning will turn into an error in the future.',
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            # TODO: Enable exception again with b5 1.4.0
-            # raise B5ExecutionError('No docker compose config file found in run path. Either provide a '
-            #                        'valid docker compose config file '
-            #                        '(see https://docs.docker.com/compose/compose-file/#compose-file) or use '
-            #                        'the docker_compose_configs config option.')
+            raise B5ExecutionError('No docker compose config file found in run path. Either provide a '
+                                   'valid docker compose config file '
+                                   '(see https://docs.docker.com/compose/compose-file/#compose-file) or use '
+                                   'the docker_compose_configs config option.')
 
         # Merge docker_compose_config_overrides and docker_compose_configs
         if isinstance(self.config['docker_compose_config_overrides'], list):

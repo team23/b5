@@ -9,6 +9,9 @@
   provide an appropriate file (for example in skeletons), you may use the option `docker_compose_configs` to provide
   a file name. The first file name provided here will determine the config file prefix and extension used for
   `docker_compose_config_overrides`.
+* b5 will now also support config files ending in `.yaml`. Loading config files ending in `.yml` will be deprecated
+  in the future. Also note that the old `local.yml` local config file is not supported as `local.yaml` - as you should
+  use `config.local.y(a)ml` instead for some time now.
 
 # 1.3.5
 

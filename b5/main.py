@@ -20,8 +20,20 @@ def main() -> None:  # noqa: C901
         # Parse all arguments
         parser = MainArgumentParser('b5')
         parser.add_arguments()
-        parser.set_default('taskfiles', ['~/.b5/Taskfile', 'Taskfile', 'Taskfile.local'])
-        parser.set_default('configfiles', ['~/.b5/config.yml', 'config.yml', 'config.local.yml', 'local.yml'])
+        parser.set_default('taskfiles', [
+            '~/.b5/Taskfile',
+            'Taskfile',
+            'Taskfile.local',
+        ])
+        parser.set_default('configfiles', [
+            '~/.b5/config.yaml',
+            '~/.b5/config.yml',
+            'config.yaml',
+            'config.yml',
+            'config.local.yaml',
+            'config.local.yml',
+            'local.yml',
+        ])
         args = parser.parse(sys.argv[1:], True)
 
         # State vars
@@ -55,6 +67,10 @@ def main() -> None:  # noqa: C901
             _print('Found project path (%s)' % state.project_path)
             if state.taskfiles:
                 _print('Found Taskfile (%s)' % ', '.join([t['taskfile'] for t in state.taskfiles]))
+            if state.configfiles:
+                _print('Found config (%s)' % ', '.join([c['config'] for c in state.configfiles]))
+                if any([c['config'].endswith('.yml') for c in state.configfiles]):
+                    _print('Config files ending in ".yml" are deprecated, please use ".yaml" instead', color='yellow')
         _print('Executing task %s' % args.command)
         _print('')  # empty line
 

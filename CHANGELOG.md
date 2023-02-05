@@ -11,7 +11,8 @@
   `docker_compose_config_overrides`.
 * b5 will now also support config files ending in `.yaml`. Loading config files ending in `.yml` will be deprecated
   in the future. Also note that the old `local.yml` local config file is not supported as `local.yaml` - as you should
-  use `config.local.y(a)ml` instead for some time now.
+  use `config.local.y(a)ml` instead for some time now. Thanks to Andreas Rau for noticing the
+  [missing support for `.yaml` files](https://git.team23.de/build/b5/-/issues/4).
 
 # 1.3.5
 

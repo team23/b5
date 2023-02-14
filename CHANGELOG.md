@@ -2,15 +2,15 @@
 
 * work in progress ;-)
 
-# 1.4.0 - PREPARATION, NOT RELEASED YET
+# 1.4.0
 
-* BREAKING: b5 now requires at least Python 3.8.1.
-* Updated all dependencies to their latest versions.
+* BREAKING: b5 now requires at least Python 3.8. (>3.8.1)
 * BREAKING: b5 will require to have a docker compose config file available for config file name detection. See
   https://docs.docker.com/compose/compose-file/#compose-file for details about the new naming schema. If you cannot
   provide an appropriate file (for example in skeletons), you may use the option `docker_compose_configs` to provide
   a file name. The first file name provided here will determine the config file prefix and extension used for
   `docker_compose_config_overrides`.
+* Updated all dependencies to their latest versions.
 * b5 will now also support config files ending in `.yaml`. Loading config files ending in `.yml` will be deprecated
   in the future. Also note that the old `local.yml` local config file is not supported as `local.yaml` - as you should
   use `config.local.y(a)ml` instead for some time now. Thanks to Andreas Rau for noticing the

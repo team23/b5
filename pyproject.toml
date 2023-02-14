@@ -32,23 +32,23 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-Jinja2 = "^3.0.1"
-MarkupSafe = "^2.0.1"
+python = ">=3.8.1,<4.0"
+Jinja2 = "^3.1.2"
+MarkupSafe = "^2.1.2"
 PyYAML = "^6.0"
-termcolor = "^1.1.0"
-packaging = "^21.3"
+termcolor = "^2.2.0"
+packaging = "^23.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "6.2.5"
-isort = "^5.10.1"
-flake8 = "^4.0.1"
-flake8-builtins = "^1.5.3"
+pytest = "^7.2.1"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+flake8-builtins = "^2.1.0"
 flake8-commas = "^2.1.0"
-flake8-isort = "^4.1.1"
-flake8-debugger = "^4.0.0"
-flake8-annotations = "^2.7.0"
-pytest-cov = "^3.0.0"
+flake8-isort = "^6.0.0"
+flake8-debugger = "^4.1.2"
+flake8-annotations = "^3.0.0"
+pytest-cov = "^4.0.0"
 
 [tool.poetry.scripts]
 b5 = 'b5.main:main'

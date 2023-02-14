@@ -4,6 +4,8 @@
 
 # 1.4.0 - PREPARATION, NOT RELEASED YET
 
+* BREAKING: b5 now requires at least Python 3.8.1.
+* Updated all dependencies to their latest versions.
 * BREAKING: b5 will require to have a docker compose config file available for config file name detection. See
   https://docs.docker.com/compose/compose-file/#compose-file for details about the new naming schema. If you cannot
   provide an appropriate file (for example in skeletons), you may use the option `docker_compose_configs` to provide

@@ -8,7 +8,8 @@ max-complexity = 10
 # * W503 line break before binary operator -> We need the like break for complex cases
 # * ANN101 Missing type annotation for self in method -> We won't annotate self
 # * ANN102 Missing type annotation for cls in classmethod -> We won't annotate cls
-ignore = A003,E704,W503,ANN101,ANN102
+# * ANN401 Dynamically typed expressions (typing.Any) are disallowed -> We allow Any
+ignore = A003,E704,W503,ANN101,ANN102,ANN401
 
 # We ignore some problems by file:
 # * T001 -> Allow print statements in cli tools and error handlers

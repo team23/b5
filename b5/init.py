@@ -51,8 +51,11 @@ def main() -> None:
             _run_cmd(['b5',
                       '--quiet',
                       '--run-path', 'init',
+                      '--config', 'config.yaml',
                       '--config', 'config.yml',
+                      '--config', 'config.init.yaml',
                       '--config', 'config.init.yml',
+                      '--config', 'config.local.yaml',
                       '--config', 'config.local.yml',
                       'project:init'])
             shutil.rmtree(init_path)

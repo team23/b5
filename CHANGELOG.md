@@ -2,6 +2,10 @@
 
 * work in progress ;-)
 
+# 1.4.1
+
+* `b5-init` now also allows usage of `.yaml` file extension for configs. 
+
 # 1.4.0
 
 * BREAKING: b5 now requires at least Python 3.8. (>3.8.1)

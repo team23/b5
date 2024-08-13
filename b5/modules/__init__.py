@@ -7,7 +7,6 @@ from ..lib.state import State
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
 MODULES: Dict[str, str] = {
     'test': 'b5.modules.test.TestModule',
-    'legacy': 'b5.modules.legacy.LegacyModule',
     'virtualenv': 'b5.modules.virtualenv.VirtualenvModule',
     'pipenv': 'b5.modules.pipenv.PipenvModule',
     'npm': 'b5.modules.npm.NpmModule',

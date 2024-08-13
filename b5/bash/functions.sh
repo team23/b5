@@ -113,20 +113,3 @@ b5:config_get() {
     local default="$2"
     eval "echo \"\${${config_name}:-${default}}\""
 }
-
-# Legacy support
-
-b5:module_load() {
-    echo -e "${B5_FONT_YELLOW}Seems like you are using the old module loading mechanism!${B5_FONT_RESTORE}"
-    echo -e "${B5_FONT_YELLOW}It has been made obsolete and will not be supported in the${B5_FONT_RESTORE}"
-    echo -e "${B5_FONT_YELLOW}future.${B5_FONT_RESTORE}"
-    echo -e ""
-    echo -e "${B5_FONT_YELLOW}You may reenable using 'b5:module_load' and all legacy modules${B5_FONT_RESTORE}"
-    echo -e "${B5_FONT_YELLOW}by adding the 'legacy' module to your config.yml${B5_FONT_RESTORE}"
-    echo -e ""
-    echo -e "${B5_FONT_YELLOW}Example config.yml:${B5_FONT_RESTORE}"
-    echo -e "${B5_FONT_YELLOW}modules:${B5_FONT_RESTORE}"
-    echo -e "${B5_FONT_YELLOW}  legacy:${B5_FONT_RESTORE}"
-    echo -e ""
-    exit 1
-}

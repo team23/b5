@@ -1,6 +1,6 @@
 [project]
 name = "b5"
-version = "1.4.3"
+version = "1.4.4"
 description = "b5 - simple and sane task runner"
 authors = [
     {name = "David Danier",email = "danier@team23.de"}

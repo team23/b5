@@ -53,3 +53,8 @@ task:lint() {
 task:test() {
     pkg:uv run pytest b5/
 }
+
+task:qa() {
+    task:lint
+    task:test
+}

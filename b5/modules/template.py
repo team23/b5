@@ -83,7 +83,10 @@ class TemplateModule(BaseModule):
                 },
             )
         except jinja2.UndefinedError as error:
-            termcolor.cprint('Template could not be rendered (%s), error message' % args.template_file, color='red')
+            termcolor.cprint(
+                'Template could not be rendered (%s), error message' % args.template_file,
+                color='red',
+            )
             termcolor.cprint(error.message, color='yellow')
             sys.exit(1)
 

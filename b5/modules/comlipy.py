@@ -16,7 +16,9 @@ class ComlipyModule(BaseModule):
 
     def prepare_config(self) -> None:
         if self.config['config_path']:
-            self.config['config_path'] = os.path.realpath(os.path.join(self.state.run_path, self.config['config_path']))
+            self.config['config_path'] = os.path.realpath(
+                os.path.join(self.state.run_path, self.config['config_path']),
+            )
 
     def is_installed_script(self) -> str:
         """

@@ -14,4 +14,6 @@ def ensure_config_version(config_version_str: str) -> None:
     except TypeError as O_o:
         raise B5ExecutionError('Version in config.yml (%s) could not be parsed' % config_version_str) from O_o
     if config_version > B5_VERSION:
-        raise B5ExecutionError('config.yml requires more recent version of b5 (>=%s), aborting' % config_version_str)
+        raise B5ExecutionError(
+            'config.yml requires more recent version of b5 (>=%s), aborting' % config_version_str,
+        )

@@ -45,7 +45,8 @@ class MainArgumentParser(ArgumentParser):
         Possible command line argument:
         --config -c Path to config (inside run path)
         --taskfile -t Path to Taskfile (inside run path)
-        --project-path -p Project path if not part of parent paths, normally b5 tries to get the project path by itself
+        --project-path -p Project path if not part of parent paths, normally b5 tries to get the project path
+          by itself
         --run-path -r Path inside the project b5 will execute in (cd into)
         --detect -d Version Control System detection (git or hg)
         --shell -s Shell to run the generated script in (should be bash)

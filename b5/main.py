@@ -70,7 +70,10 @@ def main() -> None:  # noqa: C901
             if state.configfiles:
                 _print('Found config (%s)' % ', '.join([c['config'] for c in state.configfiles]))
                 if any([c['config'].endswith('.yml') for c in state.configfiles]):
-                    _print('Config files ending in ".yml" are deprecated, please use ".yaml" instead', color='yellow')
+                    _print(
+                        'Config files ending in ".yml" are deprecated, please use ".yaml" instead',
+                        color='yellow',
+                    )
         _print('Executing task %s' % args.command)
         _print('')  # empty line
 

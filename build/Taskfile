@@ -1,59 +1,55 @@
 #!/usr/bin/env bash
 # b5 Taskfile, see https://git.team23.de/build/b5 for details
 
-pkg:poetry() {
+pkg:uv() {
     (
         cd .. &&
-        poetry "$@"
+        uv "$@"
     )
 
 }
 
-task:poetry() {
-    pkg:poetry "$@"
+task:uv() {
+    pkg:uv "$@"
 }
 
 task:install() {
-    pkg:poetry install
+    pkg:uv sync --group dev
 }
 
 task:update() {
-    pkg:poetry install
+    pkg:uv sync --group dev
 }
 
 task:b5() {
     # Runs the dev version of b5 inside the virtualenv
     # Use Taskfile.local and local.yml for testing
-    pkg:poetry run b5 "$@"
+    pkg:uv run b5 "$@"
 }
 
 task:b5-init() {
     # Runs the dev version of b5 inside the virtualenv
     # Use Taskfile.local and local.yml for testing
-    pkg:poetry run b5-init "$@"
+    pkg:uv run b5-init "$@"
 }
 
 task:shell() {
     (
-        source "$( pkg:poetry env info -p )/bin/activate"
+        source "${PROJECT_PATH}/.venv/bin/activate"
         echo -e "${B5_FONT_GREEN}Starting ${SHELL:-/bin/zsh} in a new virtualenv environment, happy developing${B5_FONT_RESTORE}"
         ${SHELL:-/bin/zsh} "$@"
     )
 }
 
 task:pypi:release() {
-    pkg:poetry build && \
-    pkg:poetry publish
+    pkg:uv build && \
+    pkg:uv publish
 }
 
 task:lint() {
-    pkg:poetry run flake8 b5/
+    pkg:uv run ruff check b5/
 }
 
 task:test() {
-    pkg:poetry run pytest b5/
-}
-
-task:isort() {
-    pkg:poetry run isort b5/
+    pkg:uv run pytest b5/
 }

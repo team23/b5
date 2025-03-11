@@ -42,18 +42,14 @@ Homepage = "https://github.com/team23/b5"
 Repository = "https://github.com/team23/b5"
 Documentation = "https://github.com/team23/b5/tree/master/docs"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3"
-isort = "^6.0"
-flake8 = "^7.1"
-flake8-builtins = "^2.5"
-flake8-commas = "^4.0"
-flake8-isort = "^6.1"
-flake8-debugger = "^4.1"
-flake8-annotations = "^3.1"
-pytest-cov = "^6.0"
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9.0",
+    "pytest-cov>=6.0,<7.0",
+    "ruff>=0.9.10",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 b5 = 'b5.main:main'
 b5-init = 'b5.init:main'
 b5-execute = 'b5.execute:main'
@@ -64,5 +60,10 @@ include_trailing_comma = true
 line_length = 140
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+    "b5",
+]

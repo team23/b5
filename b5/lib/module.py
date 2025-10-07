@@ -6,7 +6,7 @@ from .state import State
 
 def load_module(state: State, module_key: str) -> BaseModule:
     if 'modules' not in state.config or module_key not in state.config['modules']:
-        raise RuntimeError('Module %s is not defined in config' % module_key)
+        raise RuntimeError(f'Module {module_key} is not defined in config')
     module_config = state.config['modules'][module_key]
 
     module_class_key = module_key
@@ -20,16 +20,13 @@ def load_module(state: State, module_key: str) -> BaseModule:
         module_import_path = MODULES[module_class_key]
     if '.' not in module_import_path:
         raise B5ExecutionError(
-            'Module seems not to be valid (key=%s/import=%s), please check config' %
-            (
-                module_key, module_import_path,
-            ),
+            f'Module seems not to be valid (key={module_key}/import={module_import_path}), please check config',
         )
 
     try:
         module_class = import_string(module_import_path)
-    except ImportError:
-        raise B5ExecutionError('Module could not be imported (%s), please check config' % module_key)
+    except ImportError as e:
+        raise B5ExecutionError(f'Module could not be imported ({module_key}), please check config') from e
 
     module = module_class(
         name=module_key,

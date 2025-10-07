@@ -1,11 +1,11 @@
 import re
-from typing import Any, Dict, Optional
+from typing import Any, ClassVar, Optional
 
 from ..lib.config import merge_config
 from ..lib.state import State
 
 CONFIG_PREFIX_RE = re.compile('[^A-Z0-9]')
-MODULES: Dict[str, str] = {
+MODULES: dict[str, str] = {
     'test': 'b5.modules.test.TestModule',
     'virtualenv': 'b5.modules.virtualenv.VirtualenvModule',
     'pipenv': 'b5.modules.pipenv.PipenvModule',
@@ -18,15 +18,15 @@ MODULES: Dict[str, str] = {
 
 
 class BaseModule:
-    DEFAULT_CONFIG = {}
+    DEFAULT_CONFIG: ClassVar = {}
 
     def __init__(
             self,
             name: str,
-            config: Dict[str, Any],
+            config: dict[str, Any],
             state: State,
             **kwargs: Any,
-    ):
+    ) -> None:
         self.name = name
         self.config = merge_config(self.DEFAULT_CONFIG, config)
         self.state = state
@@ -48,7 +48,7 @@ class BaseModule:
     def _script_function_call(
             self,
             external_method: str,
-            method: Optional[str] = None,
+            method: str | None = None,
     ) -> str:
         return '''
 {module}:{external_method}() {{
@@ -58,7 +58,7 @@ class BaseModule:
             module=self.name,
             external_method=external_method,
             state_file=self.state.stored_name,
-            method=method if method else 'execute_%s' % external_method,
+            method=method if method else f'execute_{external_method}',
         )
 
     def _script_function_source(
@@ -78,25 +78,20 @@ class BaseModule:
 
         Returns: str
         """
-        return '''
-{module}:{external_method}() {{
-    {installed_script}
+        return f'''
+{self.name}:{external_method}() {{
+    {self.is_installed_script()}
     {source}
 }}
-        '''.format(
-            module=self.name,
-            external_method=external_method,
-            source=source,
-            installed_script=self.is_installed_script()
-        )
+        '''
 
     def get_script(self) -> str:
         return ''
 
     def create_is_installed_script(
             self,
-            module: Optional[str] = None,
-            module_bin: Optional[str] = None,
+            module: str | None = None,
+            module_bin: str | None = None,
     ) -> str:
         """
         Generate an is_installed_script using the passed parameters.
@@ -108,15 +103,13 @@ class BaseModule:
         Returns: str
         """
         module = module if module else self.name
+        module_bin = module_bin if module_bin else module
 
-        return '''
-                    if ! b5:bin_exists "{module_bin}"; then 
-                        b5:error "'{module}' (bin: '{module_bin}') seems not to be installed!"; 
+        return f'''
+                    if ! b5:bin_exists "{module_bin}"; then
+                        b5:error "'{module}' (bin: '{module_bin}') seems not to be installed!";
                     fi
-                '''.format(
-                module=module if module else self.name,
-                module_bin=module_bin if module_bin else module,
-        )
+                '''
 
     def is_installed_script(self) -> str:
         """

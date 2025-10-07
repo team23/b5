@@ -1,7 +1,7 @@
 import os
 import tempfile
 from types import TracebackType
-from typing import Any, BinaryIO, Optional, TextIO, Type, Union
+from typing import Any, BinaryIO, ClassVar, TextIO
 
 import yaml
 
@@ -29,9 +29,9 @@ class StoredState:
 
     def __exit__(
             self,
-            exc_type: Optional[Type[BaseException]],
-            exc: Optional[BaseException],
-            traceback: Optional[TracebackType],
+            exc_type: type[BaseException] | None,
+            exc: BaseException | None,
+            traceback: TracebackType | None,
     ) -> None:
         self.close()
 
@@ -41,24 +41,28 @@ class StoredState:
 
 
 class State:
-    KEYS = ('project_path', 'run_path', 'taskfiles', 'configfiles', 'config', 'args', 'stored_name')
+    KEYS: ClassVar = ('project_path', 'run_path', 'taskfiles', 'configfiles', 'config', 'args', 'stored_name')
+    DEFAULTS: ClassVar = {"taskfiles": list, "configfiles": list, "args": dict}
 
-    taskfiles = []
-    configfiles = []
-    args = {}
+    taskfiles: list
+    configfiles: list
+    args: dict
 
     def __init__(self, **kwargs: Any) -> None:
         for key in self.KEYS:
             if not hasattr(self, key):
-                setattr(self, key, None)
+                default = self.DEFAULTS.get(key, None)
+                if callable(default):
+                    default = default()
+                setattr(self, key, default)
         for key in kwargs:
             if key not in self.KEYS:
-                raise RuntimeError('Key %s is not a valid state attribute' % key)
+                raise RuntimeError(f'Key {key} is not a valid state attribute')
             setattr(self, key, kwargs[key])
 
     def stored(self) -> StoredState:
         return StoredState(self)
 
     @classmethod
-    def load(cls, file_handle: Union[BinaryIO, TextIO]) -> "State":
+    def load(cls, file_handle: BinaryIO | TextIO) -> "State":
         return cls(**yaml.safe_load(file_handle))

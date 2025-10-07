@@ -1,5 +1,4 @@
 import argparse
-from typing import List, Optional, Type
 
 from .detect import DETECT
 
@@ -9,7 +8,7 @@ class ArgumentParser:
             self,
             prog: str = 'b5',
             description: str = '',
-            formatter_class: Type[argparse.HelpFormatter] = argparse.ArgumentDefaultsHelpFormatter,
+            formatter_class: type[argparse.HelpFormatter] = argparse.ArgumentDefaultsHelpFormatter,
     ) -> None:
         self.parser = argparse.ArgumentParser(
             prog=prog,
@@ -20,7 +19,7 @@ class ArgumentParser:
 
     def parse(
             self,
-            arguments: Optional[List[str]] = None,
+            arguments: list[str] | None = None,
             help_as_default: bool = False,
     ) -> argparse.Namespace:
         if help_as_default:

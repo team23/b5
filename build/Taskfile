@@ -50,6 +50,10 @@ task:lint() {
     pkg:uv run ruff check b5/
 }
 
+task:ruff() {
+    pkg:uv run ruff check b5/ "$@"
+}
+
 task:test() {
     pkg:uv run pytest b5/
 }

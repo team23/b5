@@ -17,19 +17,15 @@ class Skeleton:
         except AttributeError:
             skeleton_url = self._skeleton_identified
             if self.NON_URL_SKELETON.match(skeleton_url):
-                skeleton_url = 'https://git.team23.de/build/b5-skel-{skeleton}.git'.format(
-                    skeleton=self._skeleton_identified,
-                )
+                skeleton_url = f'https://git.team23.de/build/b5-skel-{self._skeleton_identified}.git'
                 # If it's not a public repository, clone using ssh in order to allow ssh key file auth
                 if not self._is_public_repository(skeleton_url):
-                    skeleton_url = 'git@git.team23.de:build/b5-skel-{skeleton}.git'.format(
-                        skeleton=self._skeleton_identified,
-                    )
+                    skeleton_url = f'git@git.team23.de:build/b5-skel-{self._skeleton_identified}.git'
             self._url = skeleton_url
             return self._url
 
     def _is_public_repository(self, url: str) -> bool:
-        request = urllib.request.urlopen(url)
+        request = urllib.request.urlopen(url)  # noqa: S310
         request_url = request.geturl()
 
         if url == request_url or url.rsplit('.', 1)[0] == request_url:

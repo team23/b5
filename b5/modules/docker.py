@@ -2,7 +2,7 @@ import os
 import pwd
 import shlex
 import warnings
-from typing import Tuple
+from typing import ClassVar
 
 from ..exceptions import B5ExecutionError
 from . import CONFIG_PREFIX_RE, BaseModule
@@ -12,7 +12,7 @@ class DockerModule(BaseModule):
     '''docker module
     '''
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ClassVar = {
         'base_path': '.',
         'docker_bin': 'docker',
         'docker_compose_bin': 'docker-compose',
@@ -30,14 +30,14 @@ class DockerModule(BaseModule):
 
     # Valid combinations of compose filenames according to Compose File Specification
     # See https://docs.docker.com/compose/compose-file/#compose-file
-    COMPOSE_CONFIG_FILENAMES = [
+    COMPOSE_CONFIG_FILENAMES: ClassVar = [
         ('compose', 'yaml'),
         ('compose', 'yml'),
         ('docker-compose', 'yaml'),
         ('docker-compose', 'yml'),
     ]
 
-    def prepare_config(self) -> None:  # noqa: C901
+    def prepare_config(self) -> None:
         self.config['base_path'] = os.path.realpath(os.path.join(
             self.state.run_path,
             self.config['base_path'],
@@ -73,7 +73,8 @@ class DockerModule(BaseModule):
                 if docker_compose_config.startswith('docker-compose'):
                     warnings.warn(f'The compose file {docker_compose_config} should be renamed to '
                                   f'comply with the newest Compose File Specification. Compose implementations '
-                                  f'are no longer required to support the old docker-compose naming scheme.')
+                                  f'are no longer required to support the old docker-compose naming scheme.',
+                                  stacklevel=2)
         # Make sure docker_compose_config_overrides is a list if set
         if self.config['docker_compose_config_overrides'] is not None:
             if not isinstance(self.config['docker_compose_config_overrides'], list):
@@ -82,7 +83,8 @@ class DockerModule(BaseModule):
         # (+ warn user to use docker_compose_config_overrides)
         if self.config['docker_compose_config_override'] is not None:
             warnings.warn('Use docker_compose_config_overrides instead of '
-                          'docker_compose_config_override (mind the plural form)')
+                          'docker_compose_config_override (mind the plural form)',
+                          stacklevel=2)
             if isinstance(self.config['docker_compose_config_overrides'], list):
                 raise B5ExecutionError('You cannot mix docker_compose_config_override '
                                        'and docker_compose_config_overrides, normally '
@@ -162,7 +164,7 @@ class DockerModule(BaseModule):
             })
         if self.config['docker_machine']:
             params.update({
-                'docker_machine_env': 'eval $(docker-machine env %s)' % shlex.quote(self.config['docker_machine']),
+                'docker_machine_env': f"eval $(docker-machine env {shlex.quote(self.config['docker_machine'])})",
             })
 
         return '''
@@ -181,7 +183,7 @@ class DockerModule(BaseModule):
         """
         return self.create_is_installed_script(module=self.name, module_bin=self.config['docker_bin'])
 
-    def _docker_volume_path_str(self, volume_path_name: str) -> Tuple[str, str]:
+    def _docker_volume_path_str(self, volume_path_name: str) -> tuple[str, str]:
         # this should be a path
         if '.' in volume_path_name or '/' in volume_path_name:
             return os.path.join(self.config['base_path'], volume_path_name), 'path'
@@ -194,35 +196,28 @@ class DockerModule(BaseModule):
             else:
                 return '_'.join([self.config['project_name'], volume_path_name]), 'volume'
 
-    def get_script(self) -> str:  # noqa: C901
-        script = [super(DockerModule, self).get_script()]
+    def get_script(self) -> str:
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 
-        script.append(self._script_function_source('install', '''
-            {name}:compose pull
-            {name}:compose build --pull
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('install', f'''
+            {self.name}:compose pull
+            {self.name}:compose build --pull
+        '''))
 
-        script.append(self._script_function_source('update', '''
-            {name}:install
-            {name}:sync
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('update', f'''
+            {self.name}:install
+            {self.name}:sync
+        '''))
 
-        script.append(self._script_function_source('run', '''
-            {name}:setup
+        script.append(self._script_function_source('run', f'''
+            {self.name}:setup
             (
-                {docker_env}
+                {self.get_script_env()}
                 "$@"
             )
-        '''.format(
-            name=self.name,
-            docker_env=self.get_script_env(),
-        )))
+        '''))
 
         script.append(self._script_function_source('docker', '''
             (
@@ -245,7 +240,7 @@ class DockerModule(BaseModule):
             name=self.name,
             docker_bin=shlex.quote(self.config['docker_bin']),
             docker_compose_configs=(
-                '-f %s' % ' -f '.join(map(shlex.quote, self.config['docker_compose_configs']))
+                f"-f {' -f '.join(map(shlex.quote, self.config['docker_compose_configs']))}"
                 if self.config['docker_compose_configs']
                 else ''
             ),
@@ -264,7 +259,7 @@ class DockerModule(BaseModule):
             name=self.name,
             docker_compose_bin=shlex.quote(self.config['docker_compose_bin']),
             docker_compose_configs=(
-                '-f %s' % ' -f '.join(map(shlex.quote, self.config['docker_compose_configs']))
+                f"-f {' -f '.join(map(shlex.quote, self.config['docker_compose_configs']))}"
                 if self.config['docker_compose_configs']
                 else ''
             ),
@@ -479,7 +474,7 @@ class DockerModule(BaseModule):
             if 'bin' not in command_options or 'service' not in command_options:
                 raise B5ExecutionError('You have to specify at least "bin" and "service"')
 
-            script.append(self._script_function_source('command:{command}'.format(command=command), '''
+            script.append(self._script_function_source(f'command:{command}', '''
                 local has_valid_options=1
                 local extra_options=()
                 while [ $has_valid_options -gt 0 ]
@@ -517,10 +512,7 @@ class DockerModule(BaseModule):
                 no_deps='--no-deps' if command_options.get('no_deps') else '',
                 labels=' '.join([
                     '--label {label}'.format(
-                        label=shlex.quote('{key}={value}'.format(
-                            key=key,
-                            value=value,
-                        )),
+                        label=shlex.quote(f'{key}={value}'),
                     )
                     for key, value
                     in command_options['labels'].items()
@@ -537,17 +529,14 @@ class DockerModule(BaseModule):
                 ),
                 environment=' '.join([
                     '--env {environment}'.format(
-                        environment=shlex.quote('{key}={value}'.format(
-                            key=key,
-                            value=value,
-                        )),
+                        environment=shlex.quote(f'{key}={value}'),
                     )
                     for key, value
                     in command_options['environment'].items()
                 ]) if command_options.get('environment') else '',
                 service=shlex.quote(command_options.get('service')),
                 bin=' '.join(shlex.quote(bit) for bit in command_options.get('bin'))
-                    if isinstance(command_options.get('bin'), (list, tuple))
+                    if isinstance(command_options.get('bin'), list | tuple)
                     else shlex.quote(command_options.get('bin')),
             )))
 
@@ -558,7 +547,7 @@ class DockerModule(BaseModule):
                 for setup_network_name in self.config['setup']['networks']:
                     script.append(
                         self._script_function_source(
-                            'setup:network:{network}'.format(network=setup_network_name), '''
+                            f'setup:network:{setup_network_name}', '''
                                 {name}:docker network inspect {network} &>/dev/null || (
                                     {name}:docker network create {network} && echo \"Created network {network}.\"
                                 );
@@ -573,10 +562,7 @@ class DockerModule(BaseModule):
                     {setup_all_networks}
                 '''.format(
                     setup_all_networks='\n                    '.join([
-                        '{name}:setup:network:{network}'.format(
-                            name=self.name,
-                            network=setup_network_name,
-                        )
+                        f'{self.name}:setup:network:{setup_network_name}'
                         for setup_network_name
                         in self.config['setup']['networks']
                     ]),
@@ -585,11 +571,11 @@ class DockerModule(BaseModule):
             setup_ran_var_name = '_{prefix}_SETUP_RAN'.format(
                 prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper()),
             )
-            script.append('{setup_ran_var}=0'.format(setup_ran_var=setup_ran_var_name))
+            script.append(f'{setup_ran_var_name}=0')
             setup_running_var_name = '_{prefix}_SETUP_RUNNING'.format(
                 prefix=CONFIG_PREFIX_RE.sub('_', self.name.upper()),
             )
-            script.append('{setup_running_var_name}=0'.format(setup_running_var_name=setup_running_var_name))
+            script.append(f'{setup_running_var_name}=0')
             script.append(self._script_function_source('setup', '''
                 if [ "${setup_ran_var_name}" -eq 1 ]
                 then
@@ -604,7 +590,7 @@ class DockerModule(BaseModule):
                 {setup_ran_var_name}=1
             '''.format(
                 setup_networks=(
-                    '{name}:setup:network'.format(name=self.name)
+                    f'{self.name}:setup:network'
                     if 'networks' in self.config['setup'] and self.config['setup']['networks']
                     else ''
                 ),
@@ -627,25 +613,25 @@ class DockerModule(BaseModule):
             volume_path_to, volume_path_to_type = self._docker_volume_path_str(sync_options['to'])
 
             rsync_options = ['-grltp', '--omit-link-times']
-            if 'delete' in sync_options and sync_options['delete']:
+            if sync_options.get('delete'):
                 rsync_options.append('--delete')
                 rsync_options.append('--delete-after')
-            if 'chmod' in sync_options and sync_options['chmod']:
+            if sync_options.get('chmod'):
                 rsync_options.append('--chmod={chmod}'.format(chmod=sync_options['chmod']))
-            if 'include' in sync_options and sync_options['include']:
+            if sync_options.get('include'):
                 sync_options_includes = sync_options['include']
-                if not isinstance(sync_options_includes, (list, tuple)):
+                if not isinstance(sync_options_includes, list | tuple):
                     sync_options_includes = [sync_options_includes]
                 for sync_options_include in sync_options_includes:
-                    rsync_options.append('--include={include}'.format(include=shlex.quote(sync_options_include)))
-            if 'exclude' in sync_options and sync_options['exclude']:
+                    rsync_options.append(f'--include={shlex.quote(sync_options_include)}')
+            if sync_options.get('exclude'):
                 sync_options_excludes = sync_options['exclude']
-                if not isinstance(sync_options_excludes, (list, tuple)):
+                if not isinstance(sync_options_excludes, list | tuple):
                     sync_options_excludes = [sync_options_excludes]
                 for sync_options_exclude in sync_options_excludes:
-                    rsync_options.append('--exclude={exclude}'.format(exclude=shlex.quote(sync_options_exclude)))
+                    rsync_options.append(f'--exclude={shlex.quote(sync_options_exclude)}')
 
-            script.append(self._script_function_source('sync:{sync}'.format(sync=sync), '''
+            script.append(self._script_function_source(f'sync:{sync}', '''
                 local SYNC_SUBPATH=""
                 if [ ! -z "${{1:-}}" ]
                 then
@@ -694,7 +680,7 @@ class DockerModule(BaseModule):
                 volume_path_to_type=shlex.quote(volume_path_to_type),
                 docker_image=(
                     shlex.quote(sync_options['image'])
-                    if ('image' in sync_options and sync_options['image'])
+                    if (sync_options.get('image'))
                     else 'instrumentisto/rsync-ssh:latest'
                 ),
                 rsync_options=' '.join(rsync_options),
@@ -705,10 +691,7 @@ class DockerModule(BaseModule):
         '''.format(
             syncs='\n'.join(
                 [
-                    shlex.quote('{name}:sync:{sync}'.format(
-                        name=self.name,
-                        sync=sync,
-                    ))
+                    shlex.quote(f'{self.name}:sync:{sync}')
                     for sync, sync_options
                     in self.config['sync'].items()
                     if sync_options.get('auto', True)

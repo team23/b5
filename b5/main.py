@@ -15,7 +15,7 @@ from b5.lib.state import State
 from b5.lib.taskfile import find_taskfiles
 
 
-def main() -> None:  # noqa: C901
+def main() -> None:
     try:
         # Parse all arguments
         parser = MainArgumentParser('b5')
@@ -51,7 +51,7 @@ def main() -> None:  # noqa: C901
         if state.project_path is not None:
             state.run_path = os.path.join(state.project_path, args.run_path)
             if not os.path.exists(state.run_path) or not os.path.isdir(state.run_path):
-                raise B5ExecutionError('Run path does not exist (%s)' % state.run_path)
+                raise B5ExecutionError(f'Run path does not exist ({state.run_path})')
             state.taskfiles = find_taskfiles(state, args.taskfiles)
             state.configfiles = find_configs(state, args.configfiles)
             state.config = load_config(state)
@@ -62,19 +62,19 @@ def main() -> None:  # noqa: C901
             termcolor.cprint(*args, **kwargs)
 
         # Run header
-        _print('b5 %s' % VERSION)
+        _print(f'b5 {VERSION}')
         if state.project_path is not None:
-            _print('Found project path (%s)' % state.project_path)
+            _print(f'Found project path ({state.project_path})')
             if state.taskfiles:
-                _print('Found Taskfile (%s)' % ', '.join([t['taskfile'] for t in state.taskfiles]))
+                _print(f"Found Taskfile ({', '.join([t['taskfile'] for t in state.taskfiles])})")
             if state.configfiles:
-                _print('Found config (%s)' % ', '.join([c['config'] for c in state.configfiles]))
-                if any([c['config'].endswith('.yml') for c in state.configfiles]):
+                _print(f"Found config ({', '.join([c['config'] for c in state.configfiles])})")
+                if any(c['config'].endswith('.yml') for c in state.configfiles):
                     _print(
                         'Config files ending in ".yml" are deprecated, please use ".yaml" instead',
                         color='yellow',
                     )
-        _print('Executing task %s' % args.command)
+        _print(f'Executing task {args.command}')
         _print('')  # empty line
 
         with state.stored():
@@ -86,7 +86,7 @@ def main() -> None:  # noqa: C901
             with StoredScriptSource(state, script_source) as source:
                 if state.run_path:
                     os.chdir(state.run_path)
-                proc = subprocess.Popen(
+                proc = subprocess.Popen(  # noqa: S603
                     [
                         args.shell,
                         source.name,

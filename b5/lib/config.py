@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 import yaml
 
@@ -10,8 +10,8 @@ from .version import ensure_config_version
 
 def find_configs(
         state: State,
-        configs: List[str],
-) -> List[Dict[str, str]]:
+        configs: list[str],
+) -> list[dict[str, str]]:
     run_path = os.path.realpath(state.run_path)
     found_configs = []
     for config in configs:
@@ -27,9 +27,9 @@ def find_configs(
 
 
 def merge_config(
-        cur_config: Dict[str, Any],
-        new_config: Dict[str, Any],
-) -> Dict[str, Any]:
+        cur_config: dict[str, Any],
+        new_config: dict[str, Any],
+) -> dict[str, Any]:
     result_config = cur_config.copy()
     for key, value in new_config.items():
         if isinstance(value, dict):
@@ -40,26 +40,26 @@ def merge_config(
                 result_config[key] = value
         elif isinstance(value, list):
             result_config[key] = value
-        elif isinstance(value, (str, bytes, bool, int, float)):
+        elif isinstance(value, str | bytes | bool | int | float):
             result_config[key] = value
         elif value is None:
             result_config[key] = value
         else:
-            raise B5ExecutionError('Unknown type for config export %s' % type(value))
+            raise B5ExecutionError(f'Unknown type for config export {type(value)}')
     return result_config
 
 
-def validate_config(config: Dict[str, Any]) -> Dict[str, Any]:
+def validate_config(config: dict[str, Any]) -> dict[str, Any]:
     if 'version' in config:
         ensure_config_version(config['version'])
     return config
 
 
-def load_config(state: State) -> Dict[str, Any]:
+def load_config(state: State) -> dict[str, Any]:
     configfiles = state.configfiles
     config = {}
     for configfile in configfiles:
-        file_handle = open(configfile['path'], 'r')
+        file_handle = open(configfile['path'])
         file_config = yaml.safe_load(file_handle)
         if not isinstance(file_config, dict):
             file_config = {}

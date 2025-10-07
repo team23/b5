@@ -2,7 +2,6 @@ import os
 import shutil
 import subprocess
 import sys
-from typing import List
 
 import termcolor
 
@@ -11,9 +10,9 @@ from .lib.argumentparser import InitArgumentParser
 from .lib.skeleton import Skeleton
 
 
-def _run_cmd(cmd: List[str], error: str = 'Command execution failed, see above') -> None:
+def _run_cmd(cmd: list[str], error: str = 'Command execution failed, see above') -> None:
     try:
-        subprocess.run(
+        subprocess.run(  # noqa: S603
             cmd,
             shell=False,
             check=True,
@@ -60,9 +59,9 @@ def main() -> None:
                       'project:init'])
             shutil.rmtree(init_path)
         # _run_cmd(['git', 'add', '-A'])
-        termcolor.cprint('Successful initialized {path}'.format(path=path), 'green')
-        termcolor.cprint('  skeleton used: {skeleton_url}'.format(skeleton_url=skeleton.get_url()), 'green')
-        termcolor.cprint('  project path: {full_path}'.format(full_path=full_path), 'green')
+        termcolor.cprint(f'Successful initialized {path}', 'green')
+        termcolor.cprint(f'  skeleton used: {skeleton.get_url()}', 'green')
+        termcolor.cprint(f'  project path: {full_path}', 'green')
     except B5ExecutionError as error:
         termcolor.cprint(str(error), 'red')
         sys.exit(1)

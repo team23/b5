@@ -3,14 +3,14 @@ import re
 import shlex
 import tempfile
 from types import TracebackType
-from typing import Any, Dict, Optional, Type
+from typing import Any
 
 from .module import load_module
 from .state import State
 
 RE_KEY_ESCAPE = re.compile('[^a-zA-Z0-9]+')
-CONFIG_SUB = '%s_%s'
-CONFIG_KEYS = '%s_KEYS'
+CONFIG_SUB = '{prefix}_{key}'
+CONFIG_KEYS = '{key}_KEYS'
 
 
 def modules_script_source(state: State) -> str:
@@ -22,33 +22,34 @@ def modules_script_source(state: State) -> str:
     return '\n'.join(script)
 
 
-def config_script_source(config: Dict[str, Any], prefix: str = 'CONFIG') -> str:
+def config_script_source(config: dict[str, Any], prefix: str = 'CONFIG') -> str:
     def _gen_config(config_node: Any, prefix: str) -> str:
         script = []
 
         if isinstance(config_node, dict):
             for key in config_node:
                 escaped_key = RE_KEY_ESCAPE.sub('_', key)
-                script.append(_gen_config(config_node[key], CONFIG_SUB % (prefix, escaped_key)))
-            script.append('%s=(%s)' % (CONFIG_KEYS % prefix, ' '.join([shlex.quote(k) for k in config_node])))
+                script.append(_gen_config(config_node[key], CONFIG_SUB.format(prefix=prefix,key=escaped_key)))
+            script.append(f"{CONFIG_KEYS.format(key=prefix)}=({' '.join([shlex.quote(k) for k in config_node])})")
         elif isinstance(config_node, list):
-            script.append('%s=(%s)' % (prefix, ' '.join([
+            list_contents = ' '.join([
                 shlex.quote(k)
                 for k
                 in config_node
                 # Make sure we can escape this bit - if not just skip it
-                if isinstance(k, (str, bytes))
-            ])))
-        elif isinstance(config_node, (str, bytes)):
-            script.append('%s=%s' % (prefix, shlex.quote(config_node)))
-        elif isinstance(config_node, (bool)):
-            script.append('%s=%s' % (prefix, '1' if config_node else '0'))
-        elif isinstance(config_node, (int, float)):
-            script.append('%s=%s' % (prefix, shlex.quote(str(config_node))))
+                if isinstance(k, str | bytes)
+            ])
+            script.append(f'{prefix}=({list_contents})')
+        elif isinstance(config_node, str | bytes):
+            script.append(f'{prefix}={shlex.quote(config_node)}')
+        elif isinstance(config_node, bool):
+            script.append(f"{prefix}={'1' if config_node else '0'}")
+        elif isinstance(config_node, int | float):
+            script.append(f'{prefix}={shlex.quote(str(config_node))}')
         elif config_node is None:
-            script.append('%s=""' % prefix)
+            script.append(f'{prefix}=""')
         else:
-            raise RuntimeError('Unknown type for config export %s' % type(config_node))
+            raise RuntimeError(f'Unknown type for config export {type(config_node)}')
 
         return '\n'.join(script)
 
@@ -61,33 +62,33 @@ def construct_script_source(state: State) -> str:
     script = []
 
     # Basic script initialisation
-    script.append(open(os.path.join(B5_BASH_PATH, 'init.sh'), 'r').read())
-    script.append(open(os.path.join(B5_BASH_PATH, 'functions.sh'), 'r').read())
-    script.append(open(os.path.join(B5_BASH_PATH, 'default_tasks.sh'), 'r').read())
+    script.append(open(os.path.join(B5_BASH_PATH, 'init.sh')).read())
+    script.append(open(os.path.join(B5_BASH_PATH, 'functions.sh')).read())
+    script.append(open(os.path.join(B5_BASH_PATH, 'default_tasks.sh')).read())
 
     # State
-    script.append('PROJECT_PATH=%s\n' % shlex.quote(state.project_path))
-    script.append('RUN_PATH=%s\n' % shlex.quote(state.run_path))
-    script.append('TASKFILE_PATHS=(%s)\n' % ' '.join([shlex.quote(t['path']) for t in state.taskfiles]))
-    script.append('CONFIG_PATHS=(%s)\n' % ' '.join([shlex.quote(c['path']) for c in state.configfiles]))
+    script.append(f'PROJECT_PATH={shlex.quote(state.project_path)}\n')
+    script.append(f'RUN_PATH={shlex.quote(state.run_path)}\n')
+    script.append(f"TASKFILE_PATHS=({' '.join([shlex.quote(t['path']) for t in state.taskfiles])})\n")
+    script.append(f"CONFIG_PATHS=({' '.join([shlex.quote(c['path']) for c in state.configfiles])})\n")
     if state.stored_name:
-        script.append('STATE_FILE=%s\n' % shlex.quote(state.stored_name))
+        script.append(f'STATE_FILE={shlex.quote(state.stored_name)}\n')
         # Provide state for subshells and called programs (B5 prefix added)
         script.append('export B5_STATE_FILE="${STATE_FILE}"')
 
     # BACKWARDS COMPATIBILITY AND LEGACY CODE
-    script.append('BUILD_PATH=%s\n' % shlex.quote(state.run_path))  # backwards compatibility
+    script.append(f'BUILD_PATH={shlex.quote(state.run_path)}\n')  # backwards compatibility
     if state.taskfiles:
-        script.append('TASKFILE_PATH=%s\n' % shlex.quote(state.taskfiles[0]['path']))  # backwards compatibility
+        script.append(f"TASKFILE_PATH={shlex.quote(state.taskfiles[0]['path'])}\n")  # backwards compatibility
 
     # Generated sources
     script.append(config_script_source(state.config))
     script.append(modules_script_source(state))
 
     # run_path and parse Taskfile's
-    script.append('cd %s\n' % shlex.quote(state.run_path))
+    script.append(f'cd {shlex.quote(state.run_path)}\n')
     for taskfile in state.taskfiles:
-        script.append(open(taskfile['path'], 'r').read())
+        script.append(open(taskfile['path']).read())
 
     return '\n'.join(script)
 
@@ -105,7 +106,7 @@ else
 fi
     '''.format(
         taskname=shlex.quote(state.args['command']),
-        taskfunc=shlex.quote('task:%s' % state.args['command']),
+        taskfunc=shlex.quote(f"task:{state.args['command']}"),
         taskparams=' '.join(
             [shlex.quote(a) for a in state.args['command_args']],
         ),
@@ -129,9 +130,9 @@ class StoredScriptSource:
 
     def __exit__(
             self,
-            exc_type: Optional[Type[BaseException]],
-            exc: Optional[BaseException],
-            traceback: Optional[TracebackType],
+            exc_type: type[BaseException] | None,
+            exc: BaseException | None,
+            traceback: TracebackType | None,
     ) -> None:
         self.close()
 

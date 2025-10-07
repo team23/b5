@@ -1,5 +1,6 @@
 import os
 import shlex
+from typing import ClassVar
 
 from . import BaseModule
 
@@ -8,7 +9,7 @@ class PipenvModule(BaseModule):
     '''Pipenv module
     '''
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ClassVar = {
         'base_path': '.',
         'pipenv_bin': 'pipenv',
         'pyenv_bin': 'pyenv',
@@ -47,7 +48,7 @@ class PipenvModule(BaseModule):
         return self.create_is_installed_script(module=self.name, module_bin=self.config['pipenv_bin'])
 
     def get_script(self) -> str:
-        script = [super(PipenvModule, self).get_script()]
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 
@@ -64,11 +65,9 @@ class PipenvModule(BaseModule):
             install_dev='--dev' if self.config['install_dev'] else '',
         )))
 
-        script.append(self._script_function_source('update', '''
-            {name}:install
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('update', f'''
+            {self.name}:install
+        '''))
 
         script.append(self._script_function_source('run', '''
             (

@@ -1,5 +1,6 @@
 import os
 import shlex
+from typing import ClassVar
 
 from . import BaseModule
 
@@ -8,7 +9,7 @@ class VirtualenvModule(BaseModule):
     '''Virtualenv module
     '''
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ClassVar = {
         'base_path': '.',
         'virtualenv_bin': 'virtualenv',
         'python_bin': 'python3',
@@ -38,7 +39,7 @@ class VirtualenvModule(BaseModule):
         return self.create_is_installed_script(module=self.name, module_bin=self.config['virtualenv_bin'])
 
     def get_script(self) -> str:
-        script = [super(VirtualenvModule, self).get_script()]
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 
@@ -80,10 +81,8 @@ class VirtualenvModule(BaseModule):
             )),
         )))
 
-        script.append(self._script_function_source('pip', '''
-            {name}:run pip "$@"
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('pip', f'''
+            {self.name}:run pip "$@"
+        '''))
 
         return '\n'.join(script)

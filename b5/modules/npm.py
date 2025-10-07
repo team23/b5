@@ -1,5 +1,6 @@
 import os
 import shlex
+from typing import ClassVar
 
 from . import BaseModule
 
@@ -8,7 +9,7 @@ class NpmModule(BaseModule):
     '''npm module
     '''
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ClassVar = {
         'base_path': '.',
         'npm_bin': 'npm',
     }
@@ -27,21 +28,17 @@ class NpmModule(BaseModule):
         return self.create_is_installed_script(module=self.name, module_bin=self.config['npm_bin'])
 
     def get_script(self) -> str:
-        script = [super(NpmModule, self).get_script()]
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 
-        script.append(self._script_function_source('install', '''
-            {name}:npm install
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('install', f'''
+            {self.name}:npm install
+        '''))
 
-        script.append(self._script_function_source('update', '''
-            {name}:npm install
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('update', f'''
+            {self.name}:npm install
+        '''))
 
         script.append(self._script_function_source('run', '''
             (

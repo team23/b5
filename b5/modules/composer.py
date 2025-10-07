@@ -1,5 +1,6 @@
 import os
 import shlex
+from typing import ClassVar
 
 from . import BaseModule
 
@@ -8,7 +9,7 @@ class ComposerModule(BaseModule):
     '''Composer module
     '''
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ClassVar = {
         'base_path': '.',
         'composer_bin': 'composer',
         'vendor_path': 'vendor',
@@ -32,23 +33,19 @@ class ComposerModule(BaseModule):
         return self.create_is_installed_script(module=self.name, module_bin=self.config['composer_bin'])
 
     def get_script(self) -> str:
-        script = [super(ComposerModule, self).get_script()]
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 
-        script.append(self._script_function_source('install', '''
-            {name}:composer install
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('install', f'''
+            {self.name}:composer install
+        '''))
 
         # "composer install" will update the dependencies, "composer update" will
         # upgrade the installed version. So we use "composer install" here, too.
-        script.append(self._script_function_source('update', '''
-            {name}:composer install
-        '''.format(
-            name=self.name,
-        )))
+        script.append(self._script_function_source('update', f'''
+            {self.name}:composer install
+        '''))
 
         script.append(self._script_function_source('run', '''
             (

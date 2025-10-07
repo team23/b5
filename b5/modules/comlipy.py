@@ -1,4 +1,5 @@
 import os
+from typing import ClassVar
 
 from . import BaseModule
 
@@ -8,7 +9,7 @@ class ComlipyModule(BaseModule):
     Comlipy module
     """
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ClassVar = {
         'comlipy_bin': 'comlipy',
         'comlipy_install_bin': 'comlipy-install',
         'config_path': '',
@@ -28,7 +29,7 @@ class ComlipyModule(BaseModule):
         return self.create_is_installed_script(module=self.name, module_bin=self.config['comlipy_bin'])
 
     def get_script(self) -> str:
-        script = [super(ComlipyModule, self).get_script()]
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 

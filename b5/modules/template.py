@@ -1,7 +1,6 @@
 import datetime
 import os
 import sys
-from typing import List
 
 import jinja2
 import termcolor
@@ -14,8 +13,8 @@ from . import BaseModule
 
 
 class TemplateModule(BaseModule):
-    def execute_render(self, state: State, sys_args: List[str]) -> None:  # noqa: C901
-        parser = TemplateArgumentParser('{name}:render'.format(name=self.name))
+    def execute_render(self, state: State, sys_args: list[str]) -> None:
+        parser = TemplateArgumentParser(f'{self.name}:render')
         parser.add_arguments()
         args = parser.parse(sys_args)
 
@@ -33,7 +32,7 @@ class TemplateModule(BaseModule):
         try:
             template = env.get_template(args.template_file)
         except jinja2.TemplateNotFound:
-            termcolor.cprint('Template file could not be found (%s)' % args.template_file, color='red')
+            termcolor.cprint(f'Template file could not be found ({args.template_file})', color='red')
             sys.exit(1)
 
         if output_file:
@@ -53,15 +52,15 @@ class TemplateModule(BaseModule):
                     yesno = None
                     while yesno not in ('y', 'n', 'yes', 'no'):
                         if yesno is not None:
-                            termcolor.cprint('Invalid input: %s' % yesno, color='yellow')
+                            termcolor.cprint(f'Invalid input: {yesno}', color='yellow')
                         if overwrite == 'ask-if-older':
-                            yesno = input('Template output file (%s) already exists, '
-                                          'but is older than template, overwrite? [Yn] ' % args.output_file)
+                            yesno = input(f'Template output file ({args.output_file}) already exists, '
+                                          f'but is older than template, overwrite? [Yn] ')
                             if yesno == '':
                                 yesno = 'y'
                         else:
-                            yesno = input('Template output file (%s) already exists, '
-                                          'overwrite? [yN] ' % args.output_file)
+                            yesno = input(f'Template output file ({args.output_file}) already exists, '
+                                          f'overwrite? [yN] ')
                             if yesno == '':
                                 yesno = 'n'
                         yesno = yesno.lower()
@@ -84,7 +83,7 @@ class TemplateModule(BaseModule):
             )
         except jinja2.UndefinedError as error:
             termcolor.cprint(
-                'Template could not be rendered (%s), error message' % args.template_file,
+                f'Template could not be rendered ({args.template_file}), error message',
                 color='red',
             )
             termcolor.cprint(error.message, color='yellow')
@@ -94,16 +93,16 @@ class TemplateModule(BaseModule):
             try:
                 with open(output_file, 'w') as file_handle:
                     file_handle.write(rendered)
-            except IOError as error:
-                termcolor.cprint('Template output could not be saved (%s)' % args.output_file, color='red')
+            except OSError as error:
+                termcolor.cprint(f'Template output could not be saved ({args.output_file})', color='red')
                 termcolor.cprint(str(error), color='yellow')
                 sys.exit(1)
         else:
-            print(rendered)
+            print(rendered)  # noqa: T201
     execute_render.task_executable = True
 
     def get_script(self) -> str:
-        script = [super(TemplateModule, self).get_script()]
+        script = [super().get_script()]
 
         script.append(self._script_config_vars())
 

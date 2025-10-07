@@ -2,33 +2,30 @@
 name = "b5"
 version = "1.4.5"
 description = "b5 - simple and sane task runner"
-authors = [
-    {name = "David Danier",email = "danier@team23.de"}
-]
+authors = [{ name = "David Danier", email = "danier@team23.de" }]
 license = "MIT"
 readme = "README.md"
 classifiers = [
-    'Development Status :: 5 - Production/Stable',
-    'Environment :: Console',
-    'Intended Audience :: Developers',
-    'Intended Audience :: System Administrators',
-    'License :: OSI Approved :: BSD License',
-    'Operating System :: MacOS :: MacOS X',
-    'Operating System :: Unix',
-    'Operating System :: POSIX',
-    'Operating System :: POSIX :: Linux',
-    'Programming Language :: Python',
-    'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
-    'Programming Language :: Python :: 3.13',
-    'Topic :: Software Development',
-    'Topic :: Software Development :: Build Tools',
-    'Topic :: System :: Systems Administration',
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: System :: Systems Administration",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "Jinja2>=3.1,<4.0",
     "MarkupSafe>=3.0,<4.0",
@@ -50,9 +47,9 @@ dev = [
 ]
 
 [project.scripts]
-b5 = 'b5.main:main'
-b5-init = 'b5.init:main'
-b5-execute = 'b5.execute:main'
+b5 = "b5.main:main"
+b5-init = "b5.init:main"
+b5-execute = "b5.execute:main"
 
 [tool.isort]
 multi_line_output = 3
@@ -60,10 +57,9 @@ include_trailing_comma = true
 line_length = 140
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.8.22,<0.9.0"]
+build-backend = "uv_build"
 
-[tool.hatch.build]
-include = [
-    "b5",
-]
+[tool.uv.build-backend]
+module-name = "b5"
+module-root = ""

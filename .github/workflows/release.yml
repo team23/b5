@@ -1,0 +1,17 @@
+name: "RELEASE: Upload Python Package to PyPI"
+on:
+  release:
+    types: [published]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Build package
+        run: uv build
+      - name: Publish package
+        run: uv publish

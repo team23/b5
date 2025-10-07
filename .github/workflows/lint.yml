@@ -1,0 +1,22 @@
+name: "LINT: Run ruff & pyright"
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 7 * * 1'
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install the dependencies
+        run: uv sync --all-extras --dev
+      - name: Lint with ruff
+        run: |
+          uv run ruff check b5/

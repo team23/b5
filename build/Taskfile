@@ -73,6 +73,7 @@ task:release() {
 
     cd "$PROJECT_PATH"
     uv version "${VERSION}"
+    sed -i '' "s/^VERSION = .*/VERSION = '${VERSION}'/" b5/__init__.py
     git add pyproject.toml uv.lock
     git commit -m "release: 🔖 v${VERSION}" --no-verify
     git tag "v${VERSION}"

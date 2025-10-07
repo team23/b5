@@ -1,4 +1,4 @@
-name: "LINT: Run ruff & pyright"
+name: "LINT: Run ruff"
 on:
   push:
   pull_request:

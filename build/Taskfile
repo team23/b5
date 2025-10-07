@@ -71,7 +71,7 @@ task:release() {
         b5:abort "Usage: b5 release <version>"
     fi
 
-    uv version ${VERSION}
+    uv version "${VERSION}"
     git add pyproject.toml
     git commit -m "release: 🔖 v${VERSION}" --no-verify
     git tag "v${VERSION}"

@@ -62,3 +62,19 @@ task:qa() {
     task:lint
     task:test
 }
+
+task:release() {
+    VERSION="${1:-}"
+
+    if [ -z "${VERSION}" ]
+    then
+        b5:abort "Usage: b5 release <version>"
+    fi
+
+    uv version ${VERSION}
+    git add pyproject.toml
+    git commit -m "release: 🔖 v${VERSION}" --no-verify
+    git tag "v${VERSION}"
+    git push
+    git push --tags
+}

@@ -41,7 +41,7 @@ Documentation = "https://github.com/team23/b5/tree/master/docs"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.4,<9.0",
+    "pytest>=8.4,<10.0",
     "pytest-cov>=7.0,<8.0",
     "ruff>=0.13.0,<1.0",
 ]

@@ -5,10 +5,10 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - "ddanier"
+      - "patrickschroeter"
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
     assignees:
-      - "ddanier"
+      - "patrickschroeter"

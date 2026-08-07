@@ -3,7 +3,9 @@ import os
 
 def detect_git(path: str) -> bool:
     git_path = os.path.join(path, '.git')
-    return os.path.exists(git_path) and os.path.isdir(git_path)
+    # `.git` is a directory in a normal checkout, but only a file (containing a
+    # `gitdir:` pointer) inside linked worktrees and submodules - accept both.
+    return os.path.exists(git_path)
 
 
 def detect_hg(path: str) -> bool:

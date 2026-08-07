@@ -2,6 +2,11 @@
 
 * work in progress ;-)
 
+# 1.4.2
+
+* b5 now detects the project path when working inside a git worktree (or submodule), where `.git` is a file
+  pointing to the real git directory instead of a directory itself.
+
 # 1.4.1
 
 * `b5-init` now also allows usage of `.yaml` file extension for configs. 
